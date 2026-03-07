@@ -2,6 +2,42 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 const AUTH_TOKEN_KEY = 'bagandshop_token';
 
+const DUMMY_COOKIE = 'use-dummy-data';
+
+/** Whether to use JSON dummy data (env or cookie). Server reads cookie; client reads cookie + env. */
+export async function getDummyMode(): Promise<boolean> {
+  if (typeof window !== 'undefined') {
+    return (
+      process.env.NEXT_PUBLIC_USE_DUMMY_DATA === 'true' ||
+      document.cookie.includes(`${DUMMY_COOKIE}=1`)
+    );
+  }
+  try {
+    const { cookies } = await import('next/headers');
+    const c = await cookies();
+    return c.get(DUMMY_COOKIE)?.value === '1' || process.env.NEXT_PUBLIC_USE_DUMMY_DATA === 'true';
+  } catch {
+    return process.env.NEXT_PUBLIC_USE_DUMMY_DATA === 'true';
+  }
+}
+
+/** Site-wide copy/config (from API content/site-config). Used in layout + provider. */
+export async function fetchSiteConfig(locale = 'default'): Promise<Record<string, string>> {
+  if (await getDummyMode()) {
+    const { getDummySiteConfig } = await import('@/lib/dummy');
+    return getDummySiteConfig();
+  }
+  try {
+    const res = await fetch(`${API_BASE}/content/site-config?locale=${encodeURIComponent(locale)}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return {};
+    return res.json();
+  } catch {
+    return {};
+  }
+}
+
 export function getStoredToken(): string | null {
   if (typeof window === 'undefined') return null;
   return localStorage.getItem(AUTH_TOKEN_KEY);
@@ -81,6 +117,10 @@ export async function fetchPage(
   contextId?: string,
   preview = false,
 ): Promise<PageResponse | null> {
+  if (await getDummyMode()) {
+    const { getDummyPage } = await import('@/lib/dummy');
+    return getDummyPage(slug, template ?? undefined);
+  }
   const params = new URLSearchParams();
   if (slug) params.set('slug', slug);
   if (template) params.set('template', template);
@@ -94,6 +134,10 @@ export async function fetchPage(
 }
 
 export async function fetchCategories(parentId?: string | null): Promise<CategoryRecord[]> {
+  if (await getDummyMode()) {
+    const { getDummyCategories } = await import('@/lib/dummy');
+    return getDummyCategories(parentId);
+  }
   const params = new URLSearchParams();
   if (parentId !== undefined) params.set('parent_id', parentId === null ? 'null' : parentId);
   const res = await fetch(`${API_BASE}/categories?${params.toString()}`, {
@@ -104,6 +148,10 @@ export async function fetchCategories(parentId?: string | null): Promise<Categor
 }
 
 export async function fetchCategoryBySlug(slug: string): Promise<CategoryRecord | null> {
+  if (await getDummyMode()) {
+    const { getDummyCategoryBySlug } = await import('@/lib/dummy');
+    return getDummyCategoryBySlug(slug);
+  }
   const res = await fetch(`${API_BASE}/categories/by-slug/${slug}`, {
     next: { revalidate: 60 },
   });
@@ -112,6 +160,10 @@ export async function fetchCategoryBySlug(slug: string): Promise<CategoryRecord 
 }
 
 export async function fetchProducts(categoryId?: string | null, status = 'active'): Promise<ProductRecord[]> {
+  if (await getDummyMode()) {
+    const { getDummyProducts } = await import('@/lib/dummy');
+    return getDummyProducts(categoryId, status);
+  }
   const params = new URLSearchParams();
   if (categoryId !== undefined) params.set('category_id', categoryId === null ? 'null' : categoryId);
   params.set('status', status);
@@ -123,6 +175,10 @@ export async function fetchProducts(categoryId?: string | null, status = 'active
 }
 
 export async function fetchProductByHandle(handle: string): Promise<ProductRecord | null> {
+  if (await getDummyMode()) {
+    const { getDummyProductByHandle } = await import('@/lib/dummy');
+    return getDummyProductByHandle(handle);
+  }
   const res = await fetch(`${API_BASE}/products/by-handle/${handle}`, {
     next: { revalidate: 60 },
   });
@@ -154,6 +210,10 @@ export interface ComboRecord {
 }
 
 export async function fetchCombos(status = 'active'): Promise<ComboRecord[]> {
+  if (await getDummyMode()) {
+    const { getDummyCombos } = await import('@/lib/dummy');
+    return getDummyCombos(status);
+  }
   const res = await fetch(`${API_BASE}/combos?status=${status}`, {
     next: { revalidate: 60 },
   });
@@ -162,6 +222,10 @@ export async function fetchCombos(status = 'active'): Promise<ComboRecord[]> {
 }
 
 export async function fetchComboByHandle(handle: string): Promise<ComboRecord | null> {
+  if (await getDummyMode()) {
+    const { getDummyComboByHandle } = await import('@/lib/dummy');
+    return getDummyComboByHandle(handle);
+  }
   const res = await fetch(`${API_BASE}/combos/by-handle/${handle}`, {
     next: { revalidate: 60 },
   });
@@ -170,6 +234,10 @@ export async function fetchComboByHandle(handle: string): Promise<ComboRecord | 
 }
 
 export async function fetchComboInventory(comboId: string): Promise<number> {
+  if (await getDummyMode()) {
+    const { getDummyComboInventory } = await import('@/lib/dummy');
+    return getDummyComboInventory(comboId);
+  }
   const res = await fetch(`${API_BASE}/combos/inventory/${comboId}`, {
     next: { revalidate: 60 },
   });

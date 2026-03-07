@@ -1,6 +1,13 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+config({ path: resolve(__dirname, '..', '.env') });
+
 import { DataSource } from 'typeorm';
+import { DEFAULT_SITE_COPY } from '@bagandshop/shared';
 import { PageEntity } from './pages/entities/page.entity';
 import { PageSection } from './sections/entities/page-section.entity';
+import { ContentEntity } from './content/entities/content.entity';
 
 const dataSource = new DataSource({
   type: 'postgres',
@@ -9,7 +16,7 @@ const dataSource = new DataSource({
   username: process.env.DB_USER ?? 'postgres',
   password: process.env.DB_PASSWORD ?? 'postgres',
   database: process.env.DB_NAME ?? 'bagandshop',
-  entities: [PageEntity, PageSection],
+  entities: [PageEntity, PageSection, ContentEntity],
   synchronize: false,
 });
 
@@ -17,6 +24,17 @@ async function seed() {
   await dataSource.initialize();
   const pageRepo = dataSource.getRepository(PageEntity);
   const sectionRepo = dataSource.getRepository(PageSection);
+  const contentRepo = dataSource.getRepository(ContentEntity);
+
+  // Seed site copy (idempotent: only insert missing keys)
+  const copyDefaults = DEFAULT_SITE_COPY ?? {};
+  for (const [key, value] of Object.entries(copyDefaults)) {
+    const existing = await contentRepo.findOne({ where: { key, locale: 'default' } });
+    if (!existing) {
+      await contentRepo.save(contentRepo.create({ key, locale: 'default', value }));
+    }
+  }
+  console.log('Site copy keys ensured');
 
   const existing = await pageRepo.findOne({ where: { slug: '/' } });
   if (existing) {

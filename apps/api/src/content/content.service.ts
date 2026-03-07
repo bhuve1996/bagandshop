@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { DEFAULT_SITE_COPY } from '@bagandshop/shared';
 import { ContentEntity } from './entities/content.entity';
 
 @Injectable()
@@ -9,6 +10,12 @@ export class ContentService {
     @InjectRepository(ContentEntity)
     private readonly contentRepo: Repository<ContentEntity>,
   ) {}
+
+  /** Site-wide copy/config: defaults merged with DB overrides (DRY). */
+  async getSiteConfig(locale = 'default'): Promise<Record<string, string>> {
+    const fromDb = await this.getAll(locale);
+    return { ...DEFAULT_SITE_COPY, ...fromDb };
+  }
 
   async get(key: string, locale = 'default'): Promise<string | null> {
     const row = await this.contentRepo.findOne({

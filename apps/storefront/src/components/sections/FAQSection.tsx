@@ -13,19 +13,19 @@ export function FAQSection({ settings }: { settings: FAQSettings }) {
   const { title = 'FAQ', items = [] } = settings;
 
   return (
-    <section className="py-12 px-6">
-      <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-8 text-center">{title}</h2>
-        <ul className="space-y-4">
+    <section className="section-pad bg-[rgb(var(--color-card))]">
+      <div className="container-narrow max-w-2xl">
+        <h2 className="heading-2 text-[rgb(var(--color-foreground))] mb-8 text-center">{title}</h2>
+        <ul className="space-y-6">
           {items.map((item, i) => (
-            <li key={i} className="border-b pb-4">
-              <h3 className="font-semibold mb-2">{item.question ?? ''}</h3>
-              <p className="text-gray-600 text-sm">{item.answer ?? ''}</p>
+            <li key={i} className="border-b border-[rgb(var(--color-border))] pb-6 last:border-0">
+              <h3 className="font-semibold text-[rgb(var(--color-foreground))] mb-2">{item.question ?? ''}</h3>
+              <p className="prose-custom text-sm">{item.answer ?? ''}</p>
             </li>
           ))}
         </ul>
         {items.length === 0 && (
-          <p className="text-gray-500 text-center">No FAQ items yet.</p>
+          <p className="text-center text-[rgb(var(--color-muted))] py-8">No FAQ items yet.</p>
         )}
       </div>
     </section>

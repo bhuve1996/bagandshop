@@ -50,7 +50,16 @@ Headless eCommerce platform with section-based page builder, products/variants/c
    ```
    Storefront: http://localhost:3000
 
-Set `NEXT_PUBLIC_API_URL=http://localhost:3001` for admin/storefront if the API is not on the same host. Set `NEXT_PUBLIC_STOREFRONT_URL=http://localhost:3000` for canonical URLs, sitemap, and OpenGraph. Set `NEXT_PUBLIC_GA_ID` (e.g. `G-XXXX`) in the storefront to enable Google Analytics (add_to_cart and purchase events).
+Set `NEXT_PUBLIC_API_URL=http://localhost:3001` for admin/storefront if the API is not on the same host. Set `NEXT_PUBLIC_STOREFRONT_URL=http://localhost:3000` for canonical URLs, sitemap, and OpenGraph. Set `NEXT_PUBLIC_GA_ID` (e.g. `G-XXXX`) in the storefront to enable Google Analytics (add_to_cart and purchase events). Set `NEXT_PUBLIC_SITE_NAME` for the default site name in metadata (default: "Bag and Shop").
+
+## Configurable copy (DRY)
+
+All storefront labels and small text are configurable. Defaults live in **`packages/shared`** (`copy-defaults.ts`); the API merges DB overrides and exposes **`GET /content/site-config`**. The storefront fetches this once per layout and uses it via `useT(key)` (e.g. `t('nav.cart')`, `t('cart.empty')`). To change any string:
+
+- **API**: `PUT /content` with body `{ "key": "site.name", "value": "My Store" }` (and optional `locale`). Keys match `packages/shared/src/copy-defaults.ts` (e.g. `site.name`, `nav.collections`, `cart.empty`, `auth.loginTitle`).
+- **Seed**: `npm run db:seed` ensures all default keys exist in the `content` table so you can edit them (e.g. via a future admin “Site copy” screen).
+
+Default pages (homepage, 404) use the same copy; the homepage is created by seed with section-based content.
 
 ## SEO & analytics
 

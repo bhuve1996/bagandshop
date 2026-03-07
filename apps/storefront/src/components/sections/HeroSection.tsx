@@ -20,13 +20,19 @@ export function HeroSection({ settings }: { settings: HeroSettings }) {
   } = settings;
 
   const content = (
-    <div className="py-16 px-6 text-center">
-      <h1 className="text-4xl font-bold mb-4">{heading}</h1>
-      {subheading && <p className="text-xl text-gray-600 mb-6">{subheading}</p>}
+    <div className={`py-20 md:py-28 lg:py-36 px-6 md:px-10 ${layout === 'center' ? 'text-center' : layout === 'right' ? 'text-right md:ml-auto md:pl-16' : 'text-left md:mr-auto md:pr-16'}`}>
+      <h1 className="heading-1 text-[rgb(var(--color-foreground))] mb-4 md:mb-6 max-w-3xl mx-auto">
+        {heading}
+      </h1>
+      {subheading && (
+        <p className="text-lg md:text-xl text-[rgb(var(--color-muted))] mb-8 md:mb-10 max-w-2xl mx-auto">
+          {subheading}
+        </p>
+      )}
       {cta_url && (
         <Link
           href={cta_url}
-          className="inline-block px-6 py-3 bg-gray-900 text-white rounded hover:bg-gray-800"
+          className="btn-primary inline-block"
         >
           {cta_text}
         </Link>
@@ -36,22 +42,27 @@ export function HeroSection({ settings }: { settings: HeroSettings }) {
 
   if (image) {
     return (
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden min-h-[70vh] flex items-center">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${image})` }}
         />
-        <div className="relative z-10 max-w-4xl mx-auto">
-          {content}
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 w-full max-w-[var(--container-max)] mx-auto px-[var(--section-padding-x)]">
+          <div className={`max-w-2xl ${layout === 'center' ? 'mx-auto' : ''}`}>
+            {content}
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="bg-gray-100">
-      <div className={`max-w-4xl mx-auto ${layout === 'center' ? 'text-center' : ''}`}>
-        {content}
+    <section className="bg-[rgb(var(--color-card))]">
+      <div className="container-narrow">
+        <div className={`max-w-3xl ${layout === 'center' ? 'mx-auto' : ''}`}>
+          {content}
+        </div>
       </div>
     </section>
   );

@@ -13,7 +13,7 @@
     "admin": "npm run dev -w @bagandshop/admin",
     "storefront": "npm run dev -w @bagandshop/storefront",
     "db:migrate": "npm run migrate -w @bagandshop/api",
-    "db:seed": "npm run seed -w @bagandshop/api"
+    "db:seed": "npm run build -w @bagandshop/shared && npm run seed -w @bagandshop/api"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",

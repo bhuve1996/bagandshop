@@ -15,10 +15,10 @@ export function RichTextSection({ settings }: { settings: RichTextSettings }) {
   const className = widthClass[max_width] ?? widthClass.medium;
 
   return (
-    <section className="py-12 px-6">
-      <div className={`mx-auto ${className}`}>
+    <section className="section-pad bg-[rgb(var(--color-card))]">
+      <div className={`container-narrow ${className}`}>
         <div
-          className="prose prose-gray"
+          className="prose-custom prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-[rgb(var(--color-foreground))] prose-p:text-[rgb(var(--color-muted))] prose-a:text-[rgb(var(--color-accent))] prose-a:no-underline hover:prose-a:underline"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </div>

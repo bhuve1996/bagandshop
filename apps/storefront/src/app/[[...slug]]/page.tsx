@@ -1,4 +1,4 @@
-import { fetchPage } from '@/lib/api';
+import { fetchPage, fetchSiteConfig } from '@/lib/api';
 import { SectionRenderer } from '@/components/SectionRenderer';
 import { notFound } from 'next/navigation';
 
@@ -39,10 +39,14 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
     ? `/${resolvedParams.slug.join('/')}`
     : '/';
   const preview = resolvedSearch.preview === '1' || resolvedSearch.preview === 'true';
-  const data = await fetchPage(slug, undefined, undefined, preview);
+  const [data, config] = await Promise.all([
+    fetchPage(slug, undefined, undefined, preview),
+    fetchSiteConfig(),
+  ]);
   const meta = data?.page?.meta as { title?: string; description?: string } | undefined;
+  const defaultSiteName = config['site.name'] ?? 'Bag and Shop';
   return {
-    title: meta?.title ?? data?.page?.title ?? (slug === '/' ? 'Bag and Shop' : undefined),
+    title: meta?.title ?? data?.page?.title ?? (slug === '/' ? defaultSiteName : undefined),
     description: meta?.description,
   };
 }

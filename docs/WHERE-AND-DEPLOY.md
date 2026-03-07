@@ -70,6 +70,16 @@ You have **3 deployable pieces**:
 
 ---
 
+## Demo / dummy data (storefront)
+
+The storefront can run **without the API** using JSON-driven dummy data and placeholder images:
+
+- **Toggle in the UI:** Use **“View demo site”** (when on real data) or **“Use real data”** (when on demo). This sets or clears a cookie and reloads so the whole site uses one source.
+- **Env:** Set `NEXT_PUBLIC_USE_DUMMY_DATA=true` to force dummy mode (e.g. for preview or demos).
+- **Data:** Dummy content lives in `apps/storefront/src/data/dummy-data.json` (categories, products, combos, homepage sections). Images use `https://picsum.photos/seed/...` placeholders.
+
+---
+
 ## Quick reference
 
 | Question | Answer |

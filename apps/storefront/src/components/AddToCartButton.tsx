@@ -1,6 +1,7 @@
 'use client';
 
 import { useCart } from '@/context/CartContext';
+import { useT } from '@/context/SiteConfigContext';
 import { trackAddToCart } from '@/lib/analytics';
 
 interface AddToCartProductProps {
@@ -12,6 +13,7 @@ interface AddToCartProductProps {
 }
 
 export function AddToCartProduct({ productId, variantId, price, title, disabled }: AddToCartProductProps) {
+  const t = useT();
   const { addItem } = useCart();
   return (
     <button
@@ -28,9 +30,9 @@ export function AddToCartProduct({ productId, variantId, price, title, disabled 
         });
         trackAddToCart({ item_id: productId, item_name: title, price, quantity: 1 });
       }}
-      className="px-6 py-3 bg-gray-900 text-white rounded hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      Add to cart
+      {t('product.addToCart')}
     </button>
   );
 }
@@ -43,6 +45,7 @@ interface AddToCartComboProps {
 }
 
 export function AddToCartCombo({ comboId, price, title, disabled }: AddToCartComboProps) {
+  const t = useT();
   const { addItem } = useCart();
   return (
     <button
@@ -59,9 +62,9 @@ export function AddToCartCombo({ comboId, price, title, disabled }: AddToCartCom
         });
         trackAddToCart({ item_id: comboId, item_name: title, price, quantity: 1 });
       }}
-      className="px-6 py-3 bg-gray-900 text-white rounded hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      Add combo to cart
+      {t('product.addComboToCart')}
     </button>
   );
 }

@@ -5,6 +5,11 @@ import { ContentService } from './content.service';
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
 
+  @Get('site-config')
+  async getSiteConfig(@Query('locale') locale?: string) {
+    return this.contentService.getSiteConfig(locale ?? 'default');
+  }
+
   @Get()
   async getAll(@Query('locale') locale?: string) {
     return this.contentService.getAll(locale ?? 'default');

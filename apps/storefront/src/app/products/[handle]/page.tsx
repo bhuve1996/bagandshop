@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { fetchProductByHandle } from '@/lib/api';
+import { DEFAULT_SITE_COPY } from '@bagandshop/shared';
+import { fetchProductByHandle, fetchSiteConfig } from '@/lib/api';
 import { AddToCartProduct } from '@/components/AddToCartButton';
 import { ProductReviews } from '@/components/ProductReviews';
 
@@ -39,75 +41,96 @@ function ProductJsonLd({ product }: { product: { handle: string; title: string; 
 
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const product = await fetchProductByHandle(handle);
+  const [product, config] = await Promise.all([
+    fetchProductByHandle(handle),
+    fetchSiteConfig(),
+  ]);
   if (!product) notFound();
 
   const defaultVariant = product.variants?.[0];
+  const copy = (key: string) => config[key] ?? DEFAULT_SITE_COPY[key] ?? key;
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12">
+    <main className="section-pad">
       <ProductJsonLd product={product} />
-      <div className="grid md:grid-cols-2 gap-12">
-        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-          {product.media?.[0] ? (
-            <img
-              src={product.media[0].url}
-              alt={product.media[0].alt ?? product.title}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              No image
-            </div>
-          )}
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">{product.title}</h1>
-          {defaultVariant && (
-            <p className="text-xl text-gray-600 mt-2">${defaultVariant.price}</p>
-          )}
-          {product.description && (
-            <div className="mt-6 prose prose-gray max-w-none">
-              <p>{product.description}</p>
-            </div>
-          )}
-          {product.variants && product.variants.length > 1 && (
-            <div className="mt-6">
-              <p className="text-sm font-medium text-gray-700 mb-2">Variants</p>
-              <ul className="space-y-1">
-                {product.variants.map((v) => (
-                  <li key={v.id} className="flex justify-between text-sm">
-                    <span>{v.title || v.sku}</span>
-                    <span>${v.price} {v.inventory_quantity > 0 ? `(${v.inventory_quantity} in stock)` : '(out of stock)'}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {defaultVariant && defaultVariant.inventory_quantity > 0 && (
-            <div className="mt-8">
-              <AddToCartProduct
-                productId={product.id}
-                variantId={defaultVariant.id}
-                price={defaultVariant.price}
-                title={product.title}
+      <div className="container-narrow">
+        <nav className="text-sm text-[rgb(var(--color-muted))] mb-6">
+          <Link href="/collections" className="hover:text-[rgb(var(--color-foreground))]">Collections</Link>
+          <span className="mx-2">/</span>
+          <span className="text-[rgb(var(--color-foreground))]">{product.title}</span>
+        </nav>
+        <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
+          <div className="aspect-square rounded-[var(--radius-xl)] overflow-hidden bg-[rgb(var(--color-card))] shadow-soft">
+            {product.media?.[0] ? (
+              <img
+                src={product.media[0].url}
+                alt={product.media[0].alt ?? product.title}
+                className="w-full h-full object-cover"
               />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-[rgb(var(--color-muted-foreground))]">
+                No image
+              </div>
+            )}
+          </div>
+          <div className="md:sticky md:top-24 md:self-start">
+            <h1 className="heading-2 text-[rgb(var(--color-foreground))]">
+              {product.title}
+            </h1>
+            {defaultVariant && (
+              <p className="mt-3 text-2xl font-semibold text-[rgb(var(--color-foreground))]">
+                ${defaultVariant.price}
+                {product.variants && product.variants.length > 1 && (
+                  <span className="ml-2 text-base font-normal text-[rgb(var(--color-muted))]">from</span>
+                )}
+              </p>
+            )}
+            {product.description && (
+              <div className="mt-6 prose-custom">
+                <p>{product.description}</p>
+              </div>
+            )}
+            {product.variants && product.variants.length > 1 && (
+              <div className="mt-6 p-4 rounded-lg bg-[rgb(var(--color-card))]">
+                <p className="text-sm font-semibold text-[rgb(var(--color-foreground))] mb-2">{copy('product.variants')}</p>
+                <ul className="space-y-2">
+                  {product.variants.map((v) => (
+                    <li key={v.id} className="flex justify-between text-sm">
+                      <span>{v.title || v.sku}</span>
+                      <span>${v.price} {v.inventory_quantity > 0 ? `(${v.inventory_quantity} ${copy('product.inStock')})` : `(${copy('product.outOfStock')})`}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {defaultVariant && defaultVariant.inventory_quantity > 0 && (
+              <div className="mt-8">
+                <AddToCartProduct
+                  productId={product.id}
+                  variantId={defaultVariant.id}
+                  price={defaultVariant.price}
+                  title={product.title}
+                />
+              </div>
+            )}
+            <div className="mt-8 pt-8 border-t border-[rgb(var(--color-border))] text-sm text-[rgb(var(--color-muted))]">
+              Free shipping on orders over $50 · Easy 30-day returns
             </div>
-          )}
-          {product.faqs && product.faqs.length > 0 && (
-            <div className="mt-12 border-t pt-8">
-              <h2 className="text-xl font-bold mb-4">FAQ</h2>
-              <ul className="space-y-4">
-                {product.faqs.map((faq) => (
-                  <li key={faq.id}>
-                    <p className="font-medium">{faq.question}</p>
-                    <p className="text-gray-600 text-sm mt-1">{faq.answer}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <ProductReviews productId={product.id} />
+            {product.faqs && product.faqs.length > 0 && (
+              <div className="mt-12 border-t border-[rgb(var(--color-border))] pt-8">
+                <h2 className="heading-3 text-[rgb(var(--color-foreground))] mb-4">{copy('product.faq')}</h2>
+                <ul className="space-y-4">
+                  {product.faqs.map((faq) => (
+                    <li key={faq.id}>
+                      <p className="font-medium text-[rgb(var(--color-foreground))]">{faq.question}</p>
+                      <p className="prose-custom text-sm mt-1">{faq.answer}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <ProductReviews productId={product.id} />
+          </div>
         </div>
       </div>
     </main>

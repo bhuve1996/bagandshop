@@ -2,56 +2,65 @@
 
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
+import { useT } from '@/context/SiteConfigContext';
 
 export default function CartPage() {
+  const t = useT();
   const { items, removeItem, updateQuantity, total } = useCart();
 
   if (items.length === 0) {
     return (
-      <main className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold mb-6">Cart</h1>
-        <p className="text-gray-500 mb-6">Your cart is empty.</p>
-        <Link href="/collections" className="text-blue-600 hover:underline">Continue shopping</Link>
+      <main className="section-pad">
+        <div className="container-narrow max-w-xl text-center">
+          <h1 className="heading-2 text-[rgb(var(--color-foreground))] mb-4">{t('cart.title')}</h1>
+          <p className="prose-custom mb-8">{t('cart.empty')}</p>
+          <Link href="/collections" className="btn-primary">
+            {t('cart.continueShopping')}
+          </Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-12">
-      <h1 className="text-2xl font-bold mb-6">Cart</h1>
-      <ul className="divide-y mb-8">
-        {items.map((item) => (
-          <li key={item.key} className="py-4 flex justify-between items-center">
-            <div>
-              <p className="font-medium">{item.title}</p>
-              <p className="text-sm text-gray-500">${item.price} × {item.quantity}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                min={1}
-                className="w-16 border rounded px-2 py-1 text-sm"
-                value={item.quantity}
-                onChange={(e) => updateQuantity(item.key, parseInt(e.target.value, 10) || 1)}
-              />
-              <button
-                type="button"
-                onClick={() => removeItem(item.key)}
-                className="text-red-600 text-sm hover:underline"
-              >
-                Remove
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <p className="text-lg font-semibold mb-6">Total: ${total.toFixed(2)}</p>
-      <Link
-        href="/checkout"
-        className="inline-block px-6 py-3 bg-gray-900 text-white rounded hover:bg-gray-800"
-      >
-        Checkout
-      </Link>
+    <main className="section-pad">
+      <div className="container-narrow max-w-3xl">
+        <h1 className="heading-2 text-[rgb(var(--color-foreground))] mb-8">{t('cart.title')}</h1>
+        <ul className="divide-y divide-[rgb(var(--color-border))]">
+          {items.map((item) => (
+            <li key={item.key} className="py-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+              <div className="min-w-0">
+                <p className="font-semibold text-[rgb(var(--color-foreground))]">{item.title}</p>
+                <p className="text-sm text-[rgb(var(--color-muted))]">${item.price} × {item.quantity}</p>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <input
+                  type="number"
+                  min={1}
+                  className="input-base w-20 text-center"
+                  value={item.quantity}
+                  onChange={(e) => updateQuantity(item.key, parseInt(e.target.value, 10) || 1)}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeItem(item.key)}
+                  className="text-sm font-medium text-red-600 hover:underline"
+                >
+                  {t('cart.remove')}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-8 pt-8 border-t border-[rgb(var(--color-border))] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <p className="text-lg font-semibold text-[rgb(var(--color-foreground))]">
+            {t('cart.total')}: ${total.toFixed(2)}
+          </p>
+          <Link href="/checkout" className="btn-primary w-full sm:w-auto">
+            {t('cart.checkout')}
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }
