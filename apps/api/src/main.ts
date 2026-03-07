@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+
+config(); // loads .env from cwd (apps/api when run via npm run api)
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 

@@ -8,13 +8,15 @@
   "scripts": {
     "build": "npm run build -w @bagandshop/shared && npm run build -w @bagandshop/api",
     "build:shared": "npm run build -w @bagandshop/shared",
-    "api": "npm run dev -w @bagandshop/api",
+    "dev": "concurrently -n api,admin,storefront -c blue,magenta,green \"npm run api\" \"npm run admin\" \"npm run storefront\"",
+    "api": "npm run dev --prefix apps/api",
     "admin": "npm run dev -w @bagandshop/admin",
     "storefront": "npm run dev -w @bagandshop/storefront",
     "db:migrate": "npm run migrate -w @bagandshop/api",
     "db:seed": "npm run seed -w @bagandshop/api"
   },
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "typescript": "^5.3.0"
   }
 }

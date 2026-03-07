@@ -59,6 +59,8 @@ Set `NEXT_PUBLIC_API_URL=http://localhost:3001` for admin/storefront if the API 
 
 ## Deployment
 
+**See [docs/WHERE-AND-DEPLOY.md](docs/WHERE-AND-DEPLOY.md)** for: where each app runs locally (URLs), what to deploy where, and step-by-step deployment (API, Admin, Storefront).
+
 - **API**: Set `NODE_ENV=production` and ensure PostgreSQL is available. Disable TypeORM `synchronize` in production and use migrations if needed.
 - **Admin / Storefront**: Build with `npm run build -w @bagandshop/admin` and `npm run build -w @bagandshop/storefront`. Set env for API URL and storefront URL. Serve with `next start` or your host’s Node runtime.
 
