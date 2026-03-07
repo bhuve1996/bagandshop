@@ -1,0 +1,20 @@
+{
+  "name": "bagandshop",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @bagandshop/shared && npm run build -w @bagandshop/api",
+    "build:shared": "npm run build -w @bagandshop/shared",
+    "api": "npm run dev -w @bagandshop/api",
+    "admin": "npm run dev -w @bagandshop/admin",
+    "storefront": "npm run dev -w @bagandshop/storefront",
+    "db:migrate": "npm run migrate -w @bagandshop/api",
+    "db:seed": "npm run seed -w @bagandshop/api"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}
