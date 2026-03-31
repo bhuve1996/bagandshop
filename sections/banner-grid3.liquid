@@ -1,0 +1,197 @@
+<div class="banner-grid banner-grid-3" style="margin:{{section.settings.margin_section}};">
+  <div class="row" style="margin:0;">
+    <div class="col-sm-6" style="padding:0;">
+      {% if section.settings.collection_banner_image_left != blank %}
+      {% assign image_url = section.settings.collection_banner_image_left | img_url: 'master' %}
+      {% else %}
+      {% assign image_url = 'img950x800.png' | asset_url %}
+      {% endif;%}
+      <a href="{{ section.settings.link_banner_left }}">
+      <div class="" style="{% if section.settings.use_background_left == 'image' %}background: url({{ image_url }}) center center / cover no-repeat{% else %}background-color:{{ section.settings.banner_left_background_color }};{% endif %}; width: 100%; height:{{ section.settings.height_banner }};">
+        <img src="{{ image_url }}" alt="" style="width:100%;visibility:hidden;" />
+      </div>
+      </a>
+      <div class="collection-banner-ct">
+        <div class="banner-ct-area">
+          <span class="text"> 
+            {% if settings.language_enable %}
+            <div class="lang1">{{ section.settings.collection_banner_content | split: '|' | first }}</div>
+            <div class="lang2">{{ section.settings.collection_banner_content | split: '|' | last }}</div>
+            {% else %}
+            {{ section.settings.collection_banner_content | split: '|' | first }}
+            {% endif %}
+            {% if section.settings.button_text_1 %}
+            <span class="action">
+              <a href="{{section.settings.link_banner_left}}" class="btn-button bordered smaller">
+                {% if settings.language_enable %}
+                <span class="lang1">{{ section.settings.button_text_1 | split: '|' | first }}</span>
+                <span class="lang2">{{ section.settings.button_text_1 | split: '|' | last }}</span>
+                {% else %}
+                <span>{{ section.settings.button_text_1 | split: '|' | first }}</span>
+                {% endif %}
+                <i class="icon-long-arrow-right"></i>
+              </a>
+            </span>
+            {% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6" style="padding:0;">
+      {% if section.settings.collection_banner_image_right != blank %}
+      {% assign image_url = section.settings.collection_banner_image_right | img_url: 'master' %}
+      {% else %}
+      {% assign image_url = 'img950x800.png' | asset_url %}
+      {% endif;%}
+      <a href="{{ section.settings.link_banner_right }}">
+      <div class="half-image" style="{% if section.settings.use_background_right == 'image' %}background: url({{ image_url }}) center center / cover no-repeat{% else %}background-color:{{ section.settings.banner_right_background_color }};{% endif %}; width: 100%;height:{{ section.settings.height_banner }};">
+        <img src="{{ image_url }}" alt="" style="width:100%;visibility:hidden;" />
+      </div>
+      </a>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  jQuery(function($){
+    $("#shopify-section-{{ section.id }} .half-image").css("min-height",$("#shopify-section-{{ section.id }} .half-content").outerHeight()+"px"); 
+    setTimeout(function(){
+      $("#shopify-section-{{ section.id }} .half-image").css("min-height",$("#shopify-section-{{ section.id }} .half-content").outerHeight()+"px"); 
+    }, 5000);
+    $(window).resize(function(){
+      setTimeout(function(){
+        $("#shopify-section-{{ section.id }} .half-image").css("min-height",$("#shopify-section-{{ section.id }} .half-content").outerHeight()+"px");
+      }, 500);
+    });
+  });
+</script>
+{% schema %}
+{
+"name": "Banner Grid 3",
+"settings": [
+    {
+      "type": "header",
+      "content": "Config"
+    },
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+	{
+	   "type": "text",
+	   "id": "height_banner",
+	   "label": "Banner Height",
+	   "default": "695px"
+	},
+	{
+	   "type": "header",
+	   "content": "Banner Left"
+	},
+	{
+		"type": "select",
+		"id": "use_background_left",
+		"label": "Use Background",
+		"options":[
+			{
+				"value": "image",
+				"label": "Background Image"
+			},
+			{
+				"value": "color",
+				"label": "Background Color"
+			}
+		],
+		"default": "color"
+	},
+    {
+      "type": "image_picker",
+      "id": "collection_banner_image_left",
+      "label": "Background Image"
+    },
+	{
+		"type": "color",
+		"id": "banner_left_background_color",
+		"label": "Background Color",
+		"default": "#CEDFE9"
+	},
+    {
+      "type": "textarea",
+      "id": "collection_banner_content",
+      "label": "Content Banner",
+      "default": "<h3 style='color:#fff;font-size:110px;text-transform: uppercase;font-weight: 500;margin-bottom:0;'><span style='font-weight:300;'>Be</span> Active</h3>"
+    },
+	{
+       "type": "text",
+       "id": "button_text_1",
+       "label": "Button text",
+	   "default": "Buy Now"
+    },
+	{
+	   "type": "url",
+	   "id": "link_banner_left",
+	   "label": "Link Banner"
+	},
+	{
+	   "type": "header",
+	   "content": "Banner Right"
+	},
+	{
+		"type": "select",
+		"id": "use_background_right",
+		"label": "Use Background",
+		"options":[
+			{
+				"value": "image",
+				"label": "Background Image"
+			},
+			{
+				"value": "color",
+				"label": "Background Color"
+			}
+		],
+		"default": "image"
+	},
+    {
+      "type": "image_picker",
+      "id": "collection_banner_image_right",
+      "label": "Background Image"
+    },
+	{
+		"type": "color",
+		"id": "banner_right_background_color",
+		"label": "Background Color",
+		"default": "#CEDFE9"
+	},
+    {
+      "type": "textarea",
+      "id": "collection_banner_content_right",
+      "label": "Content Banner"
+    },
+	{
+       "type": "text",
+       "id": "button_text_2",
+       "label": "Button text",
+	   "default": "Buy Now"
+    },
+	{
+	   "type": "url",
+	   "id": "link_banner_right",
+	   "label": "Link Banner"
+	}
+],
+"presets": [
+{
+"name": "Banner Grid 3",
+"category": "Banner"
+}
+]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

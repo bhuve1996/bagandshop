@@ -1,0 +1,578 @@
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section" data-slideshow-type="banner-right">   
+  {% if section.blocks.size > 0 %}
+  <div class="slideshow-section banner-right" style="margin:{{section.settings.margin_section}};">
+    <div class="container">
+      <div class="row" style="margin:0 -10px;">
+      <div class="main-slideshow" style="width:{{section.settings.slide_width}};">
+        <div class="data-slideshow"  
+             data-auto="{{ section.settings.auto_speed }}"
+             data-paging="{{ section.settings.show_paging }}"
+             data-nav="{{ section.settings.show_nav }}"
+             data-transition="{{ section.settings.slide_transition }}"
+             data-prev='{{ section.settings.nav_prev }}' 
+             data-next='{{ section.settings.nav_next }}' style="display: none;"></div>
+        <div id="slideshow-section-{{ section.id }}" class="slideshow owl-carousel">
+          {% for block in section.blocks %}
+          {% if block.settings.background_image != blank %}
+          {% assign background_image = block.settings.background_image | img_url: 'master' %}
+          {% else %}
+          {% assign background_image = '1126x532.png' | asset_url %}
+          {% endif;%}
+          {% if block.settings.banner_link_slide != blank %}
+          <a href="{{ block.settings.banner_link_slide }}" class="banner-link-slide">
+          {% endif %}
+          <div class="item" style="{% if block.settings.background_image_use == '1' %}background: url({{ background_image }}) {{block.settings.background_image_position}} center no-repeat;background-size: cover;height:{{section.settings.slide_height}};{%endif%}{% if block.settings.banner_link_slide != blank %}cursor: pointer;{% endif %}">
+            <div style="position:relative;height:100%;"> 
+              {% if block.settings.image != blank %}
+              {% if block.settings.image_use == '1' %}
+              {% assign image_url = block.settings.image | img_url: 'master' %}
+              {%else%}
+              {% assign image_url = '1126x532.png' | asset_url %}
+              {%endif%} 
+              {% else %}
+              {% assign image_url = '1126x532.png' | asset_url %}
+              {% endif;%}
+              {% if block.settings.image_use == '1' %}
+              <img src="{{ image_url }}"/>  
+              {% endif;%}
+              <div class="content-slide" style="{{block.settings.content_position}}:{{block.settings.offset_content}};">
+                {% if block.settings.title_slide !='' %}
+                <h2 class="title">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.title_slide | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.title_slide | split: '|' | last }}</span>
+                  {% else %}
+                  {{ block.settings.title_slide | split: '|' | first }}
+                  {% endif %}
+                </h2>
+                {% endif %}
+                {% if block.settings.content_slide !='' %}
+                <p class="content">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.content_slide | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.content_slide | split: '|' | last }}</span>
+                  {% else %}
+                  {{ block.settings.content_slide | split: '|' | first }}
+                  {% endif %}
+                </p>
+                {% endif %}
+                {% if block.settings.button_text_slide !='' %}
+                <a class="btn btn-button bordered icon" href="{{block.settings.button_link_slide}}">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.button_text_slide | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.button_text_slide | split: '|' | last }}</span>
+                  {% else %}
+                  {{ block.settings.button_text_slide | split: '|' | first }}
+                  {% endif %}
+                </a>
+                {% endif %}
+                {% if block.settings.content_bottom_slide !='' %}
+                <p class="content-bottom">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.content_bottom_slide | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.content_bottom_slide | split: '|' | last }}</span>
+                  {% else %}
+                  {{ block.settings.content_bottom_slide | split: '|' | first }}
+                  {% endif %}
+                </p>
+                {% endif %}
+              </div>
+              <div style="clear:both;"></div>
+            </div>
+          </div>
+          {% if block.settings.banner_link_slide != blank %}
+          </a>
+          {% endif %}
+          {% endfor %}
+        </div> 
+      </div>
+      <div class="banner-right" style="width:{{section.settings.banner_width}};">
+        <div class="banner-items">
+          <div class="row" style="margin:0 -10px;">
+            {% assign col1 = 0 %}
+            {% for i in (1..3) %}
+            {% capture checkcol1 %}col1_banner_right{{ i }}_enable{% endcapture %} 
+            {% if section.settings[checkcol1] != blank %}
+            {% assign col1 = i %}
+            {% endif %}
+            {% endfor %}
+            {% assign col2 = 0 %}
+            {% for i in (1..3) %}
+            {% capture checkcol2 %}col2_banner_right{{ i }}_enable{% endcapture %} 
+            {% if section.settings[checkcol2] != blank %}
+            {% assign col2 = i %}
+            {% endif %}
+            {% endfor %}
+          {% if col1 > 0 %}  
+          <div class="group {% if col2 > 0 %}col-sm-6{% else %}col-sm-12{% endif %}">
+            {% for i in (1..3) %}
+            {% capture enable %}col1_banner_right{{ i }}_enable{% endcapture %} 
+            {% capture banner_height %}col1_banner_height{{ i }}{% endcapture %} 
+            {% capture image %}col1_banner_righ{{ i }}{% endcapture %} 
+            {% capture content %}col1_banner_right{{ i }}_content{% endcapture %} 
+            {% if section.settings[image] != blank %}
+            {% assign banner_image = section.settings[image] | img_url: 'master' %}
+            {% else %}
+            {% assign banner_image = '300x204.png' | asset_url %}
+            {% endif;%}
+            {% if section.settings[enable] != blank %}
+            <div class="item">
+              <div class="banner-area" style="background:url({{banner_image}}) center center no-repeat;background-size:cover;height:{{section.settings[banner_height]}};">
+                <div class="content">
+                  {% if settings.language_enable %}
+                  <div class="lang1">{{ section.settings[content] | split: '[lang2]' | first }}</div>
+                  <div class="lang2">{{ section.settings[content] | split: '[lang2]' | last }}</div>
+                  {% else %}
+                  {{ section.settings[content] | split: '[lang2]' | first }}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if col2 > 0 %}
+          <div class="group {% if col1 > 0 %}col-sm-6{% else %}col-sm-12{% endif %}">
+            {% for i in (1..3) %}
+            {% capture enable %}col2_banner_right{{ i }}_enable{% endcapture %} 
+            {% capture banner_height %}col2_banner_height{{ i }}{% endcapture %} 
+            {% capture image %}col2_banner_righ{{ i }}{% endcapture %} 
+            {% capture content %}col2_banner_right{{ i }}_content{% endcapture %} 
+            {% if section.settings[image] != blank %}
+            {% assign banner_image = section.settings[image] | img_url: 'master' %}
+            {% else %}
+            {% assign banner_image = '300x204.png' | asset_url %}
+            {% endif;%}
+            {% if section.settings[enable] != blank %}
+            <div class="item">
+              <div class="banner-area" style="background:url({{banner_image}}) center center no-repeat;background-size:cover;height:{{section.settings[banner_height]}};">
+                <div class="content">
+                  {% if settings.language_enable %}
+                  <div class="lang1">{{ section.settings[content] | split: '[lang2]' | first }}</div>
+                  <div class="lang2">{{ section.settings[content] | split: '[lang2]' | last }}</div>
+                  {% else %}
+                  {{ section.settings[content] | split: '[lang2]' | first }}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+      </div>
+    </div> 
+  </div>
+  {% endif %} 
+</div>
+{% schema %}
+{
+  "name": "Slideshow & Banner Right", 
+  "settings": [  
+    {
+      "type": "header",
+      "content": "Config Slide"
+    },    
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "28px 0 0 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+    {
+      "type": "text",
+      "id": "slide_width",
+      "label": "Slide Width",
+	  "default": "60%"
+    }, 
+    {
+      "type": "text",
+      "id": "slide_height",
+      "label": "Slide Height",
+	  "default": "532px"
+    }, 
+    {
+      "type": "select",
+      "id": "slide_transition",
+      "label": "Transition",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Slide"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "text",
+      "id": "auto_speed",
+      "label": "Autoplay",
+      "info": "If you would like the slider to auto-rotate, then set the autoplay rotate time in ms here. I.e. you would enter '5000' for the slider to rotate every 5 seconds.",
+      "default": "5000"
+    }, 
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    }, 
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "nav_prev",
+      "label": "Prev Navigation",
+      "default": "<i class=\"icon-arrow-left-products-header\"></i>"
+    },
+    {
+      "type": "text",
+      "id": "nav_next",
+      "label": "Next Navigation",
+      "default": "<i class=\"icon-arrow-right-products-header\"></i>"
+    }, 
+    {
+      "type": "header",
+      "content": "Banner Right Config"
+    },  
+    {
+      "type": "text",
+      "id": "banner_width",
+      "label": "Banner Width",
+	  "default": "40%"
+    }, 
+    {
+      "type": "header",
+      "content": "Banner Right Col 1"
+    },  
+    {
+      "type": "checkbox",
+      "id": "col1_banner_right1_enable",
+      "label": "Banner Right 1 Use?",
+      "default": true
+    },  
+    {
+      "type": "text",
+      "id": "col1_banner_height1",
+      "label": "Banner Height 1",
+      "default": "165px"
+    }, 
+    {
+      "type": "image_picker",
+      "id": "col1_banner_righ1",
+      "label": "Banner Image 1"
+    },  
+    {
+      "type": "html",
+      "id": "col1_banner_right1_content",
+      "label": "Banner Content Right 1",
+	  "default": "<h3><b>20% Off Tech</b><br>at Ultrabooks,<br>Laptops, Tablets<br>Notebooks &<br>More</h3>"
+    }, 
+    {
+      "type": "checkbox",
+      "id": "col1_banner_right2_enable",
+      "label": "Banner Right 2 Use?",
+      "default": true
+    },  
+    {
+      "type": "text",
+      "id": "col1_banner_height2",
+      "label": "Banner Height 2",
+      "default": "166px"
+    }, 
+    {
+      "type": "image_picker",
+      "id": "col1_banner_righ2",
+      "label": "Banner Image 2"
+    },  
+    {
+      "type": "html",
+      "id": "col1_banner_right2_content",
+      "label": "Banner Content Right 2",
+	  "default": "<h4>Best Gift Idea</h4><h3>Mini Two Wheel<br><b>Self Balancing</b><br>Scooter</h3><p><span class=\"price\">$339.99 <span class=\"compare_price\">$689</span></span></p>"
+    },  
+    {
+      "type": "checkbox",
+      "id": "col1_banner_right3_enable",
+      "label": "Banner Right 3 Use?",
+      "default": true
+    },  
+    {
+      "type": "text",
+      "id": "col1_banner_height3",
+      "label": "Banner Height 3",
+      "default": "161px"
+    }, 
+    {
+      "type": "image_picker",
+      "id": "col1_banner_righ3",
+      "label": "Banner Image 3"
+    },  
+    {
+      "type": "html",
+      "id": "col1_banner_right3_content",
+      "label": "Banner Content Right 1",
+	  "default": "<h3>New Arrivals<br>in <b>Accesories</b><br>at Best prices</h3><p>from <span class=\"price\">$13.79</span></p>"
+    }, 
+    {
+      "type": "header",
+      "content": "Banner Right Col 2"
+    },  
+    {
+      "type": "checkbox",
+      "id": "col2_banner_right1_enable",
+      "label": "Banner Right 1 Use?",
+      "default": true
+    },  
+    {
+      "type": "text",
+      "id": "col2_banner_height1",
+      "label": "Banner Height 1",
+      "default": "165px"
+    }, 
+    {
+      "type": "image_picker",
+      "id": "col2_banner_righ1",
+      "label": "Banner Image 1"
+    },  
+    {
+      "type": "html",
+      "id": "col2_banner_right1_content",
+      "label": "Banner Content Right 1",
+	  "default": "<h4>Feat Category</h4><h3>Catch Best<br><b>Deals</b> on the<br>Curved TVs<br>Entertainmet</h3>"
+    }, 
+    {
+      "type": "checkbox",
+      "id": "col2_banner_right2_enable",
+      "label": "Banner Right 2 Use?",
+      "default": true
+    }, 
+    {
+      "type": "text",
+      "id": "col2_banner_height2",
+      "label": "Banner Height 1",
+      "default": "166px"
+    }, 
+    {
+      "type": "image_picker",
+      "id": "col2_banner_righ2",
+      "label": "Banner Image 2"
+    },  
+    {
+      "type": "html",
+      "id": "col2_banner_right2_content",
+      "label": "Banner Content Right 2",
+	  "default": "<h3><b>Fresh S7 Edge</b><br>32GB Unlocked<br>Quad Core</h3><p><span class=\"price\">$279.99</span></p>"
+    },  
+    {
+      "type": "checkbox",
+      "id": "col2_banner_right3_enable",
+      "label": "Banner Right 3 Use?",
+      "default": true
+    }, 
+    {
+      "type": "text",
+      "id": "col2_banner_height3",
+      "label": "Banner Height 3",
+      "default": "161px"
+    }, 
+    {
+      "type": "image_picker",
+      "id": "col2_banner_righ3",
+      "label": "Banner Image 3"
+    },  
+    {
+      "type": "html",
+      "id": "col2_banner_right3_content",
+      "label": "Banner Content Right 1",
+	  "default": "<h3>Brilliant New<br><b>Earphones for</b><br>Bluetooth devices</h3><p>from <span class=\"price\">$5.99</span></p>"
+    } 
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image slide",
+      "settings": [ 
+        {
+          "type": "select",
+          "id": "background_image_use",
+          "label": "Background Image Use?",
+          "info": "Choose if you would like to display background image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },  
+        {
+          "type": "radio",
+          "id": "background_image_position",
+          "label": "Background Image Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            }, 
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        }, 
+        {
+          "type": "select",
+          "id": "image_use",
+          "label": "Image Use?",
+          "info": "Choose if you would like to display image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "0"
+        },  
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }, 
+        {
+          "type": "radio",
+          "id": "content_position",
+          "label": "Content Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            }, 
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        }, 
+        {
+          "type": "text",
+          "id": "offset_content",
+          "label": "Left and Rigth Offset, integer",
+          "default": "20%"
+        }, 
+        {
+          "type": "text",
+          "id": "title_slide",
+          "label": "Title Slide",
+          "default": "Turn. Click. Expand.<br>Smart modular design<br>simplifies adding storage<br>for growing media."
+        }, 
+        {
+          "type": "text",
+          "id": "content_slide",
+          "label": "Content Slide",
+          "default": "Powerful Six Core processor, vibrant 4KUHD display output<br>and fast SSD elegantly cased in a soft alloy design."
+        }, 
+        {
+          "type": "text",
+          "id": "button_text_slide",
+          "label": "Button Text Slide",
+          "default": "Get Yours now"
+        }, 
+        {
+          "type": "url",
+          "id": "button_link_slide",
+          "label": "Button Link Slide"
+        },
+        {
+          "type": "url",
+          "id": "banner_link_slide",
+          "label": "Banner Link (makes entire slide clickable)"
+        }, 
+        {
+          "type": "text",
+          "id": "content_bottom_slide",
+          "label": "Content Bottom Slide",
+          "default": "Free shipping on US Terority"
+        }
+      ]
+    } 
+  ],
+  "presets": [{
+    "name": "Slideshow With Banner Right",
+    "category": "Slideshow",
+    "settings": {  
+      "auto_speed": "5000"
+    },
+    "blocks": [
+      {
+        "type": "image",
+		"settings": {
+		  "background_image_use": "1",
+		  "image_use": "1",
+          "title_slide": "Turn. Click. Expand.<br>Smart modular design<br>simplifies adding storage<br>for growing media.",
+		  "content_slide": "Powerful Six Core processor, vibrant 4KUHD display output<br>and fast SSD elegantly cased in a soft alloy design.",
+		  "button_text_slide": "Get Yours now",
+		  "content_bottom_slide": "Free shipping on US Terority"
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+		  "background_image_use": "1",
+		  "image_use": "1",
+          "title_slide": "Turn. Click. Expand.<br>Smart modular design<br>simplifies adding storage<br>for growing media.",
+		  "content_slide": "Powerful Six Core processor, vibrant 4KUHD display output<br>and fast SSD elegantly cased in a soft alloy design.",
+		  "button_text_slide": "Get Yours now",
+		  "content_bottom_slide": "Free shipping on US Terority"
+        } 
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+.banner-link-slide {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.banner-link-slide:hover {
+  text-decoration: none;
+  color: inherit;
+}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

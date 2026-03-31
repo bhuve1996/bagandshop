@@ -1,0 +1,169 @@
+{% if section.blocks.size > 0 %}
+{% assign col = 12 | divided_by: section.blocks.size %}
+{% else %}
+{% assign col = 4 %}
+{% endif %}
+<div data-section-id="{{ section.id }}" data-section-type="banner-section">
+  <div class="banner-content" style="margin: {{section.settings.margin_section}};">
+    <div class="container">
+      <div class="row" style="margin-left:0;margin-right:0;">
+        {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+        {% if block.settings.banner_image != blank %}
+        {% assign banner_image = block.settings.banner_image | img_url: 'master' %}
+        {% else %}
+        {% assign banner_image = '870x484.png' | asset_url %}
+        {% endif;%}
+        <div class="col-sm-{{ col }}" style="padding-left:0;padding-right:0;padding-bottom:15px;">
+          {% if block.settings.banner_link != blank %}
+          <a href="{{ block.settings.banner_link }}" class="banner-link">
+          {% endif %}
+          <div class="banner-inner" style="{% if block.settings.banner_link != blank %}cursor: pointer;{% endif %}">
+            <img src="{{ banner_image }}" alt=""/>
+            <div class="content content{{forloop.index}}" style="{{block.settings.content_position}}:{{block.settings.offset_content}};"> 
+              {% if settings.language_enable %}
+              <span class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</span>
+              <span class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</span>
+              {% else %}
+              <span>{{ block.settings.content | split: '[lang2]' | first }}</span>
+              {% endif %}
+              <span class="action">
+                <a href="{{block.settings.button_link}}" class="btn-button bordered smaller">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.button_text | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.button_text | split: '|' | last }}</span>
+                  {% else %}
+                  <span>{{ block.settings.button_text | split: '|' | first }}</span>
+                  {% endif %}
+                </a>
+              </span> 
+            </div>
+          </div>
+          {% if block.settings.banner_link != blank %}
+          </a>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div> 
+    </div> 
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Content", 
+  "max_blocks": 4,
+  "settings": [ 
+	{
+      "type": "header",
+      "content": "Config"
+    }, 
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Banner Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Home Banner Image"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Banner content"
+        }, 
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            }, 
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+		  "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "offset_content",
+          "label": "Left and Rigth Offset, integer",
+          "default": "10%"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+		  "default": "Buy Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link" 
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "Banner link (makes entire banner clickable)" 
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Banner Content",
+    "category": "Banner",
+    "settings": { 
+
+    },
+    "blocks": [ 
+      {
+        "type": "image",
+		"settings": {
+		  "content": "<h3>Your Home<br>on every screen<br>imaginable</h3>",
+		  "content_position": "right",
+		  "offset_content": "10%",
+		  "button_text": "Check More" 
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+		  "content": "<h3>No worry anymore<br>with Fast Charge</h3><p>Discover up to 6000mAh in one device.</p>",
+		  "content_position": "left",
+		  "offset_content": "10%",
+		  "button_text": "Buy Now" 
+        }  
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+.banner-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.banner-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

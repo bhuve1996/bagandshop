@@ -1,0 +1,233 @@
+<div data-section-id="{{ section.id }}" data-section-type="banner-section">
+  <div class="banner-grid" style="margin: {{section.settings.margin_section}};">
+    <div class="container">
+      <div class="row" style="margin-left:-10px;margin-right:-10px;">
+        {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+        {% if block.settings.banner_image != blank %}
+        {% assign banner_image = block.settings.banner_image | img_url: 'master' %}
+        {% else %}
+        {% assign banner_image = '350x259.png' | asset_url %}
+        {% endif;%}
+        <div class="col-md-{{ block.settings.banner_col }}" style="padding-left:10px;padding-right:10px;padding-bottom:15px;">
+          {% if block.settings.banner_link != blank %}
+          <a href="{{ block.settings.banner_link }}" class="banner-link">
+          {% endif %}
+          <div class="banner-inner" style="background:url({{ banner_image }}) center center no-repeat; background-size:cover;height:259px;{% if block.settings.banner_link != blank %}cursor: pointer;{% endif %}"> 
+            <div class="content content{{forloop.index}}" style="{{block.settings.content_position}}:{{block.settings.offset_content}};"> 
+              {% if settings.language_enable %}
+              <span class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</span>
+              <span class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</span>
+              {% else %}
+              <span>{{ block.settings.content | split: '[lang2]' | first }}</span>
+              {% endif %}
+              {% if block.settings.button_text != '' %}
+              <span class="action">
+                <a href="{{block.settings.button_link}}" class="btn-button bordered smaller">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.button_text | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.button_text | split: '|' | last }}</span>
+                  {% else %}
+                  <span>{{ block.settings.button_text | split: '|' | first }}</span>
+                  {% endif %}
+                </a>
+              </span>
+              {% endif %}
+            </div>
+          </div>
+          {% if block.settings.banner_link != blank %}
+          </a>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div> 
+    </div> 
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Grid", 
+  "settings": [ 
+	{
+      "type": "header",
+      "content": "Config"
+    }, 
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Banner Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Home Banner Image"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Banner content",
+		  "default": "<b style=\"font-weight:500;\">1000 mAh</b><br><span style=\"font-size:21px;\">Power Bank Pro</span><span style=\"color:#0063d1;display:block;font-size:22px;letter-spacing: -0.035em;\">$34.99</span>"
+        }, 
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            }, 
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+		  "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "offset_content",
+          "label": "Left and Rigth Offset, integer",
+          "default": "10%"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+		  "default": "Buy Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link" 
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "Banner link (makes entire banner clickable)" 
+        },
+        {
+          "type": "select",
+          "id": "banner_col",
+          "label": "Column",
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            },
+            {
+              "value": "6",
+              "label": "6"
+            },
+            {
+              "value": "7",
+              "label": "7"
+            },
+            {
+              "value": "8",
+              "label": "8"
+            },
+            {
+              "value": "9",
+              "label": "9"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            },
+            {
+              "value": "12",
+              "label": "12"
+            }
+          ],
+		  "default": "3"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Banner Grid",
+    "category": "Banner",
+    "settings": { 
+
+    },
+    "blocks": [ 
+      {
+        "type": "image",
+		"settings": {
+		  "content": "<span style=\"font-weight:500;\">1000 mAh</span><br><span style=\"font-size:21px;\">Power Bank Pro</span><span style=\"color:#0063d1;display:block;font-size:22px;letter-spacing: -0.035em;\">$34.99</span>",
+		  "content_position": "left",
+		  "offset_content": "10%",
+		  "button_text": "Browse",
+		  "banner_col": "4"
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+		  "content": "<span style=\"font-weight:500;\">1000 mAh</span><br><span style=\"font-size:21px;\">Power Bank Pro</span><span style=\"color:#0063d1;display:block;font-size:22px;letter-spacing: -0.035em;\">$34.99</span>",
+		  "content_position": "left",
+		  "offset_content": "10%",
+		  "button_text": "Buy Now",
+		  "banner_col": "4"
+        }  
+      },
+      {
+        "type": "image",
+		"settings": {
+		  "content": "<span style=\"font-weight:500;\">1000 mAh</span><br><span style=\"font-size:21px;\">Power Bank Pro</span><span style=\"color:#0063d1;display:block;font-size:22px;letter-spacing: -0.035em;\">$34.99</span>",
+		  "content_position": "left",
+		  "offset_content": "10%",
+		  "button_text": "Buy Now",
+		  "banner_col": "4"
+        }  
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+.banner-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.banner-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

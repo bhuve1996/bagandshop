@@ -1,0 +1,346 @@
+<div data-section-id="{{ section.id }}" data-section-type="filter-products-masonry-section">
+  <!-- style custom --> 
+  <style>
+    #filter-products-masonry-{{ section.id }}.filter-products-masonry, #filter-products-masonry-{{ section.id }}.filter-products-masonry .infinite-scrolling .btn-button {
+      background-color: {{ section.settings.bg_section_color }};
+    }
+    #filter-products-masonry-{{ section.id }} .products-masonry-grid .section-content{
+      color: {{ section.settings.content_color }};
+    }
+  </style>
+  {% assign product_limitation = 0 %}
+  {% if section.settings.show_loadmore %}
+  {%- assign product_limitation = section.settings.product_show | plus: 0 -%}
+  {% endif %} 
+  <!-- end style custom -->
+  <div id="filter-products-masonry-{{ section.id }}" class="filter-products-masonry product-size-{{section.settings.product_size}}" style="margin:{{section.settings.margin_section}};">
+    <div class="container">
+      <div class="products-collection"> 
+        <div class="category-products {% if section.settings.hide_action == '1'%}hide-action{% endif %}">  
+          <ul class="products-grid products-masonry-grid">
+            <li class="grid-sizer"></li>
+            <li class="grid-item section-content w1">
+              <div class="item-area">
+                {% if section.settings.collection_content != '' %}
+                <div class="content"> 
+                  {% if settings.language_enable %}
+                  <div class="lang1">{{ section.settings.collection_content | split: '|' | first }}</div>
+                  <div class="lang2">{{ section.settings.collection_content | split: '|' | last }}</div>
+                  {% else %}
+                  {{ section.settings.collection_content | split: '|' | first }}
+                  {% endif %}
+                </div> 
+                {% endif %} 
+                {% if section.settings.show_deal != blank %}
+                <div class="product-date" data-date="{{section.settings.collection_datetime}}"></div>
+                {% endif %}
+                {% if section.settings.button_text != '' %}
+                <a href="{{section.settings.collection_url}}" class="btn-button smaller">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ section.settings.button_text | split: '|' | first }}</span>
+                  <span class="lang2">{{ section.settings.button_text | split: '|' | last }}</span>
+                  {% else %}
+                  {{ section.settings.button_text | split: '|' | first }}
+                  {% endif %}
+                </a>
+                {% endif %}
+              </div>
+            </li>
+            {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %} 
+            <li class="grid-item item product {% if block.settings.product_type == 'w2'%}product-double{%endif%} {{block.settings.product_type}}" {% if section.settings.show_loadmore and forloop.index > product_limitation %} style="display:none;opacity:0;" {% endif %}> 
+              {%- assign product = all_products[block.settings.collection_product] -%}
+              {% if block.settings.product_type == 'w2'%}
+              {% include 'lazyload-product-grid-item', sale_extend:true, img_width:630, img_height:553, show_rating:section.settings.show_rating %}
+              {% else %}
+              {% include 'lazyload-product-grid-item', show_rating:section.settings.show_rating %}
+              {% endif %}
+            </li> 
+            {% endfor %} 
+            {% endif %}
+          </ul>  
+        </div>
+        {%- assign products_to_show = section.settings.product_show | plus:0 -%}  
+        {% if section.settings.show_loadmore and section.blocks.size > products_to_show %} 
+        <div class="infinite-scrolling" data-show="{{ products_to_show }}">
+          <a class="btn-button bordered" href="javascript:void(0)" {% if settings.language_enable %}data-translate="products.general.show_more"{% endif %}><i class="icon-free-return"></i>{{ 'products.general.show_more' | t }}</a>
+        </div>   
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Products Masonry", 
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "bg_section_color",
+      "label": "Background Section Color",
+      "default": "#f6f7f7"
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Collection Content Color",
+      "default": "#090909"
+    },
+    {
+      "type": "header",
+      "content": "Config"
+    },
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+    {
+      "type": "html",
+      "id": "collection_content",
+      "label": "Collection Content",
+	  "default": "<h4>Featured</h4><h3><b>Weekly Deals!</b><br>Get our best prices.</h3><p>Hurry up! Offers end in:</p>"
+    },  
+    {
+      "type": "checkbox",
+      "id": "show_deal",
+      "label": "Show Collection Deal?",
+	  "default": true
+    },
+    {
+      "type": "text",
+      "id": "collection_datetime",
+      "label": "Date Time",
+	  "info": "Example: 2018/08/10 10:30:00, Y/M/D H:M:I",
+      "default": "2018/08/10 10:30:00"
+    },  
+    {
+      "type": "url",
+      "id": "collection_url",
+      "label": "Collection url"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text", 
+      "default": "Browe More"
+    },  
+    {
+      "type": "radio",
+      "id": "product_size",
+      "label": "Product Size",
+      "options": [
+        {
+          "value": "larger",
+          "label": "Lagger"
+        },
+        {
+          "value": "smaller",
+          "label": "Smaller"
+        }
+      ],
+      "default": "larger"
+    },
+    {
+      "type": "radio",
+      "id": "hide_action",
+      "label": "Hide Action",
+      "options": [
+        {
+          "value": "1",
+          "label": "Yes"
+        },
+        {
+          "value": "0",
+          "label": "No"
+        }
+      ],
+      "default": "0"
+    },  
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating?", 
+	  "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_loadmore",
+      "label": "Show Load More?", 
+	  "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_show",
+      "label": "Number of products to show",
+      "default": "13"
+    } 
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Collection Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "collection_product",
+          "label": "Product"
+        }, 
+        {
+          "type": "select",
+          "id": "product_type",
+          "label": "Product width",
+          "options": [
+            {
+              "value": "w1",
+              "label": "width 1"
+            }, 
+            {
+              "value": "w2",
+              "label": "width 2"
+            }, 
+            {
+              "value": "w3",
+              "label": "width 3"
+            }, 
+            {
+              "value": "w4",
+              "label": "width 4"
+            }
+          ],
+		  "default": "w1"
+        } 
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products Masonry",
+      "category": "Products",
+      "blocks": [ 
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w2"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          }   
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w3"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w4"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w4"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w2"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w3"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          } 
+        },
+        {
+          "type": "product",
+          "settings": {
+            "product_type": "w1"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,361 @@
+<div data-section-id="{{ section.id }}" data-section-type="banner-section">
+  <div class="banner-grid banner-grid-2" style="margin: {{section.settings.margin_section}};">
+    <div class="container">
+      <div class="row" style="margin-left:-10px;margin-right:-10px;">
+        <div class="col-md-{{ section.settings.banner_col_1 }} col-sm-{{ section.settings.banner_col_1 }}" style="padding-left:10px;padding-right:10px;padding-bottom:15px;">
+          {% if section.settings.image_banner_col_1 != blank  %}
+          {% assign img_banner_col_1 = section.settings.image_banner_col_1 | img_url: "master" %}
+          {% else %}
+          {% assign img_banner_col_1 = 'img566x566.png' | asset_url %}
+          {% endif %}
+          <a href="{{ section.settings.banner_link_1 }}">
+          <div class="banner-inner" style="background:url({{ img_banner_col_1 }}) center center no-repeat; background-size:cover;height: 566px;">
+            <div class="content-banner"> 
+              {% if settings.language_enable %}
+              <span class="lang1">{{ section.settings.content_banner_1 | split: '[lang2]' | first }}</span>
+              <span class="lang2">{{ section.settings.content_banner_1 | split: '[lang2]' | last }}</span>
+              {% else %}
+              <span>{{ section.settings.content_banner_1 | split: '[lang2]' | first }}</span>
+              {% endif %}
+            </div>
+          </div>
+          </a>
+        </div>
+        <div class="col-md-{{section.settings.banner_col_2}} col-sm-{{section.settings.banner_col_2}}" style="padding-left:10px;padding-right:10px;padding-bottom:15px;">
+          <div class="banner_item" style="padding-bottom:20px;width:100%;">
+            {% if section.settings.image_banner_col_2_1 != blank  %}
+            {% assign img_banner_col_2_1 = section.settings.image_banner_col_2_1 | img_url: "master" %}
+            {% else %}
+            {% assign img_banner_col_2_1 = 'img566x273.png' | asset_url %}
+            {% endif %}
+            <a href="{{ section.settings.banner_link_2_1 }}">
+            <div class="banner-inner" style="background:url({{ img_banner_col_2_1 }}) center center no-repeat; background-size:cover;height: 273px;">
+              <div class="content-banner"> 
+                {% if settings.language_enable %}
+                <span class="lang1">{{ section.settings.content_banner_2_1 | split: '[lang2]' | first }}</span>
+                <span class="lang2">{{ section.settings.content_banner_2_1 | split: '[lang2]' | last }}</span>
+                {% else %}
+                <span>{{ section.settings.content_banner_2_1 | split: '[lang2]' | first }}</span>
+                {% endif %}
+              </div>
+            </div>
+            </a>
+          </div>
+          <div class="banner_item" style="padding-bottom:20px;width:100%;">
+          	{% if section.settings.image_banner_col_2_2 != blank  %}
+            {% assign img_banner_col_2_2 = section.settings.image_banner_col_2_2 | img_url: "master" %}
+            {% else %}
+            {% assign img_banner_col_2_2 = 'img566x273.png' | asset_url %}
+            {% endif %}
+            <a href="{{ section.settings.banner_link_2_2 }}">
+            <div class="banner-inner" style="background:url({{ img_banner_col_2_2 }}) center center no-repeat; background-size:cover;height: 273px;">
+              <div class="content-banner"> 
+                {% if settings.language_enable %}
+                <span class="lang1">{{ section.settings.content_banner_2_2 | split: '[lang2]' | first }}</span>
+                <span class="lang2">{{ section.settings.content_banner_2_2 | split: '[lang2]' | last }}</span>
+                {% else %}
+                <span>{{ section.settings.content_banner_2_2 | split: '[lang2]' | first }}</span>
+                {% endif %}
+              </div>
+            </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-{{ section.settings.banner_col_3 }} col-sm-{{ section.settings.banner_col_3 }}" style="padding-left:10px;padding-right:10px;padding-bottom:15px;">
+          {% if section.settings.image_banner_col_1 != blank  %}
+          {% assign img_banner_col_3 = section.settings.image_banner_col_3 | img_url: "master" %}
+          {% else %}
+          {% assign img_banner_col_3 = 'img566x566.png' | asset_url %}
+          {% endif %}
+          <a href="{{ section.settings.banner_link_3 }}">
+          <div class="banner-inner" style="background:url({{ img_banner_col_3 }}) center center no-repeat; background-size:cover;height: 566px;">
+            <div class="content-banner"> 
+              {% if settings.language_enable %}
+              <span class="lang1">{{ section.settings.content_banner_3 | split: '[lang2]' | first }}</span>
+              <span class="lang2">{{ section.settings.content_banner_3 | split: '[lang2]' | last }}</span>
+              {% else %}
+              <span>{{ section.settings.content_banner_3 | split: '[lang2]' | first }}</span>
+              {% endif %}
+            </div>
+          </div>
+          </a>
+        </div>
+      </div> 
+    </div> 
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Grid 2", 
+  "settings": [ 
+	{
+      "type": "header",
+      "content": "Config"
+    }, 
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+	{
+		"type": "header",
+		"content": "Banner Col 1"
+	},
+	{
+		"type": "image_picker",
+		"id": "image_banner_col_1",
+		"label": "Image Banner"
+	},
+	{
+		"type": "textarea",
+		"id": "content_banner_1",
+		"label": "Content Banner",
+		"default": "<h3>Women</h3><h4>New Collection</h4>"
+	},
+	{
+		"type": "url",
+		"id": "banner_link_1",
+		"label": "Banner Link"
+	},
+    {
+        "type": "select",
+        "id": "banner_col_1",
+        "label": "Column",
+        "options": [
+        {
+        "value": "1",
+        "label": "1"
+        },
+        {
+        "value": "2",
+        "label": "2"
+        },
+        {
+        "value": "3",
+        "label": "3"
+        },
+        {
+        "value": "4",
+        "label": "4"
+        },
+        {
+        "value": "5",
+        "label": "5"
+        },
+        {
+        "value": "6",
+        "label": "6"
+        },
+        {
+        "value": "7",
+        "label": "7"
+        },
+        {
+        "value": "8",
+        "label": "8"
+        },
+        {
+        "value": "9",
+        "label": "9"
+        },
+        {
+        "value": "10",
+        "label": "10"
+        },
+        {
+        "value": "11",
+        "label": "11"
+        },
+        {
+        "value": "12",
+        "label": "12"
+        }
+        ],
+        "default": "4"
+    },
+	{
+		"type": "header",
+		"content": "Banner Col 2"
+	},
+	{
+		"type": "image_picker",
+		"id": "image_banner_col_2_1",
+		"label": "Image Banner 1"
+	},
+	{
+		"type": "textarea",
+		"id": "content_banner_2_1",
+		"label": "Content Banner 1",
+		"default": "<h3>Babys</h3><h4>New Collection</h4>"
+	},
+	{
+		"type": "url",
+		"id": "banner_link_2_1",
+		"label": "Banner Link"
+	},
+	{
+		"type": "image_picker",
+		"id": "image_banner_col_2_2",
+		"label": "Image Banner 2"
+	},
+	{
+		"type": "textarea",
+		"id": "content_banner_2_2",
+		"label": "Content Banner 2",
+		"default": "<h3>Kids &amp; Young</h3><h4>New Collection</h4>"
+	},
+	{
+		"type": "url",
+		"id": "banner_link_2_2",
+		"label": "Banner Link"
+	},
+	{
+        "type": "select",
+        "id": "banner_col_2",
+        "label": "Column",
+        "options": [
+        {
+        "value": "1",
+        "label": "1"
+        },
+        {
+        "value": "2",
+        "label": "2"
+        },
+        {
+        "value": "3",
+        "label": "3"
+        },
+        {
+        "value": "4",
+        "label": "4"
+        },
+        {
+        "value": "5",
+        "label": "5"
+        },
+        {
+        "value": "6",
+        "label": "6"
+        },
+        {
+        "value": "7",
+        "label": "7"
+        },
+        {
+        "value": "8",
+        "label": "8"
+        },
+        {
+        "value": "9",
+        "label": "9"
+        },
+        {
+        "value": "10",
+        "label": "10"
+        },
+        {
+        "value": "11",
+        "label": "11"
+        },
+        {
+        "value": "12",
+        "label": "12"
+        }
+        ],
+        "default": "4"
+    },
+	{
+		"type": "header",
+		"content": "Banner Col 3"
+	},
+	{
+		"type": "image_picker",
+		"id": "image_banner_col_3",
+		"label": "Image Banner"
+	},
+	{
+		"type": "textarea",
+		"id": "content_banner_3",
+		"label": "Content Banner",
+		"default": "<h3>Men</h3><h4>New Collection</h4>"
+	},
+	{
+		"type": "url",
+		"id": "banner_link_3",
+		"label": "Banner Link"
+	},
+    {
+        "type": "select",
+        "id": "banner_col_3",
+        "label": "Column",
+        "options": [
+        {
+        "value": "1",
+        "label": "1"
+        },
+        {
+        "value": "2",
+        "label": "2"
+        },
+        {
+        "value": "3",
+        "label": "3"
+        },
+        {
+        "value": "4",
+        "label": "4"
+        },
+        {
+        "value": "5",
+        "label": "5"
+        },
+        {
+        "value": "6",
+        "label": "6"
+        },
+        {
+        "value": "7",
+        "label": "7"
+        },
+        {
+        "value": "8",
+        "label": "8"
+        },
+        {
+        "value": "9",
+        "label": "9"
+        },
+        {
+        "value": "10",
+        "label": "10"
+        },
+        {
+        "value": "11",
+        "label": "11"
+        },
+        {
+        "value": "12",
+        "label": "12"
+        }
+        ],
+        "default": "4"
+    }
+  ],
+  "presets": [{
+    "name": "Banner Grid 2",
+    "category": "Banner",
+    "settings": { 
+
+    }
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

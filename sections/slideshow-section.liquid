@@ -1,0 +1,382 @@
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section" data-slideshow-type="main">
+  {%- case section.settings.slide_layout -%}
+    {%- when 'fullscreen' -%}
+      {%- assign layout = 'full-screen-slider' -%}
+    {%- when 'fullwidth' -%}
+      {%- assign layout = 'full-width' -%}
+    {%- else -%}
+      {%- assign layout = 'container' -%}
+  {%- endcase -%}
+  {% if section.blocks.size > 0 %}
+    <div class="slideshow-background slideshow-section {{layout}}" style="margin:{{section.settings.margin_section}};">
+      <div
+        class="data-slideshow"
+        data-auto="{{ section.settings.auto_speed }}"
+        data-paging="{{ section.settings.show_paging }}"
+        data-nav="{{ section.settings.show_nav }}"
+        data-transition="{{ section.settings.slide_transition }}"
+        data-prev="{{ section.settings.nav_prev | escape}}"
+        data-next="{{ section.settings.nav_next | escape}}"
+        style="display: none;"
+      ></div>
+      <div id="slideshow-section-{{ section.id }}" class="slideshow owl-carousel">
+        {% for block in section.blocks %}
+          {% if block.settings.background_image != blank %}
+            {% assign background_image = block.settings.background_image | img_url: 'master' %}
+          {% else %}
+            {% assign background_image = '1920x563.png' | asset_url %}
+          {% endif %}
+          {% if block.settings.banner_link_slide != blank %}
+          <a href="{{ block.settings.banner_link_slide }}" class="banner-link-slide">
+          {% endif %}
+          <div
+            class="item"
+            style="{% if block.settings.background_image_use == '1' and section.settings.slide_layout != 'default' %}background: url({{ background_image }}) {{block.settings.background_image_position}} center no-repeat;background-size: cover;{%endif%} {% if section.settings.slide_layout == 'fullwidth' %}height:{{section.settings.fullwidth_height}}{%endif%}{% if block.settings.banner_link_slide != blank %}cursor: pointer;{% endif %}"
+          >
+            <div
+              class="{% if section.settings.slide_layout != 'default' %}container{% endif %}"
+              style="position:relative;height:100%;"
+            >
+              {%- if section.settings.slide_layout != 'fullscreen' -%}
+                {%- if section.settings.slide_layout == 'fullwidth' -%}
+                  {% if block.settings.image != blank %}
+                    {% if block.settings.image_use == '1' %}
+                      {% assign image_url = block.settings.image | img_url: 'master' %}
+                    {% else %}
+                      {% assign image_url = 'bg_transparent.png' | asset_url %}
+                    {% endif %}
+                  {% else %}
+                    {% assign image_url = 'bg_transparent.png' | asset_url %}
+                  {% endif %}
+                {%- else -%}
+                  {% if block.settings.image != blank %}
+                    {% if block.settings.image_use == '1' %}
+                      {% assign image_url = block.settings.image | img_url: 'master' %}
+                    {% else %}
+                      {% assign image_url = '1920x563.png' | asset_url %}
+                    {% endif %}
+                  {% else %}
+                    {% assign image_url = '1920x563.png' | asset_url %}
+                  {% endif %}
+                {%- endif -%}
+                <img src="{{ image_url }}">
+              {%- endif -%}
+              <div class="content-slide" style="{{block.settings.content_position}}:{{block.settings.offset_content}};">
+                {% if block.settings.title_slide != '' %}
+                  <h2 class="title">
+                    {% if settings.language_enable %}
+                      <span class="lang1">{{ block.settings.title_slide | split: '|' | first }}</span>
+                      <span class="lang2">{{ block.settings.title_slide | split: '|' | last }}</span>
+                    {% else %}
+                      {{ block.settings.title_slide | split: '|' | first }}
+                    {% endif %}
+                  </h2>
+                {% endif %}
+                {% if block.settings.content_slide != '' %}
+                  <p class="content">
+                    {% if settings.language_enable %}
+                      <span class="lang1">{{ block.settings.content_slide | split: '|' | first }}</span>
+                      <span class="lang2">{{ block.settings.content_slide | split: '|' | last }}</span>
+                    {% else %}
+                      {{ block.settings.content_slide | split: '|' | first }}
+                    {% endif %}
+                  </p>
+                {% endif %}
+                {% if block.settings.button_text_slide != '' %}
+                  <a class="btn btn-button bordered icon" href="{{block.settings.button_link_slide}}">
+                    {% if settings.language_enable %}
+                      <span class="lang1">{{ block.settings.button_text_slide | split: '|' | first }}</span>
+                      <span class="lang2">{{ block.settings.button_text_slide | split: '|' | last }}</span>
+                    {% else %}
+                      {{ block.settings.button_text_slide | split: '|' | first }}
+                    {% endif %}
+                  </a>
+                {% endif %}
+                {% if block.settings.content_bottom_slide != '' %}
+                  <p class="content-bottom">
+                    {% if settings.language_enable %}
+                      <span class="lang1">{{ block.settings.content_bottom_slide | split: '|' | first }}</span>
+                      <span class="lang2">{{ block.settings.content_bottom_slide | split: '|' | last }}</span>
+                    {% else %}
+                      {{ block.settings.content_bottom_slide | split: '|' | first }}
+                    {% endif %}
+                  </p>
+                {% endif %}
+              </div>
+              <div style="clear:both;"></div>
+            </div>
+          </div>
+          {% if block.settings.banner_link_slide != blank %}
+          </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% schema %}
+{
+  "name": "Slideshow",
+  "settings": [
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "0 0 0 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+    {
+      "type": "select",
+      "id": "slide_layout",
+      "label": "Layout",
+      "info": "slider will be shown as a background image if the site has fullscreen layout.",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "fullscreen",
+          "label": "FullScreen"
+        },
+        {
+          "value": "fullwidth",
+          "label": "Fullwidth"
+        }
+      ],
+      "default": "fullwidth"
+    },
+    {
+      "type": "text",
+      "id": "fullwidth_height",
+      "label": "Layout Full Width Height",
+	  "default": "563px"
+    },
+    {
+      "type": "select",
+      "id": "slide_transition",
+      "label": "Transition",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Slide"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "text",
+      "id": "auto_speed",
+      "label": "Autoplay",
+      "info": "If you would like the slider to auto-rotate, then set the autoplay rotate time in ms here. I.e. you would enter '5000' for the slider to rotate every 5 seconds.",
+      "default": "5000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "nav_prev",
+      "label": "Prev Navigation",
+      "default": "<i class=\"icon-arrow-left-products-header\"></i>"
+    },
+    {
+      "type": "text",
+      "id": "nav_next",
+      "label": "Next Navigation",
+      "default": "<i class=\"icon-arrow-right-products-header\"></i>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image slide",
+      "settings": [
+        {
+          "type": "select",
+          "id": "background_image_use",
+          "label": "Background Image Use?",
+          "info": "Choose if you would like to display background image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "radio",
+          "id": "background_image_position",
+          "label": "Background Image Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "image_use",
+          "label": "Image Use?",
+          "info": "Choose if you would like to display image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "0"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "radio",
+          "id": "content_position",
+          "label": "Content Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "offset_content",
+          "label": "Left and Rigth Offset, integer",
+          "default": "20%"
+        },
+        {
+          "type": "text",
+          "id": "title_slide",
+          "label": "Title Slide",
+          "default": "Turn. Click. Expand.<br>Smart modular design<br>simplifies adding storage<br>for growing media."
+        },
+        {
+          "type": "text",
+          "id": "content_slide",
+          "label": "Content Slide",
+          "default": "Powerful Six Core processor, vibrant 4KUHD display output<br>and fast SSD elegantly cased in a soft alloy design."
+        },
+        {
+          "type": "text",
+          "id": "button_text_slide",
+          "label": "Button Text Slide",
+          "default": "Get Yours now"
+        },
+        {
+          "type": "url",
+          "id": "button_link_slide",
+          "label": "Button Link Slide"
+        },
+        {
+          "type": "url",
+          "id": "banner_link_slide",
+          "label": "Banner Link (makes entire slide clickable)"
+        },
+        {
+          "type": "text",
+          "id": "content_bottom_slide",
+          "label": "Content Bottom Slide",
+          "default": "Free shipping on US Terority"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Slideshow",
+    "category": "Slideshow",
+    "settings": {
+	  "slide_layout": "default",
+      "auto_speed": "5000"
+    },
+    "blocks": [
+      {
+        "type": "image",
+		"settings": {
+		  "background_image_use": "1",
+		  "image_use": "1",
+          "title_slide": "Turn. Click. Expand.<br>Smart modular design<br>simplifies adding storage<br>for growing media.",
+		  "content_slide": "Powerful Six Core processor, vibrant 4KUHD display output<br>and fast SSD elegantly cased in a soft alloy design.",
+		  "button_text_slide": "Get Yours now",
+		  "content_bottom_slide": "Free shipping on US Terority"
+        }
+      },
+      {
+        "type": "image",
+		"settings": {
+		  "background_image_use": "1",
+		  "image_use": "1",
+          "title_slide": "Turn. Click. Expand.<br>Smart modular design<br>simplifies adding storage<br>for growing media.",
+		  "content_slide": "Powerful Six Core processor, vibrant 4KUHD display output<br>and fast SSD elegantly cased in a soft alloy design.",
+		  "button_text_slide": "Get Yours now",
+		  "content_bottom_slide": "Free shipping on US Terority"
+        }
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+.banner-link-slide {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.banner-link-slide:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+  {% stylesheet %}
+     /* Prevent layout shifts in slideshow */
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

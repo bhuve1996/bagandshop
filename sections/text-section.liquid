@@ -1,0 +1,240 @@
+
+<style>
+  .homepage-bar-{{ section.id }} .backgroud_home_bar{
+    background-color: {{ section.settings.bg_content_color }};
+  }
+  .homepage-bar-{{ section.id }}{
+    background-color: {{ section.settings.bg_section_color }};
+  }
+  .homepage-bar-{{ section.id }} .flex-item i{
+    color: #ee2931;
+    font-size: 5.5rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .homepage-bar-{{ section.id }} .flex-item .text-area{
+    text-align: center;
+  }
+  .homepage-bar-{{ section.id }} .flex-item .text-area h3{
+    color: {{ section.settings.text_content_color }};
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    text-align: center;
+  }
+  .homepage-bar-{{ section.id }} .flex-item .text-area p{
+    color: #626060;
+    font-size: 1.5rem;
+    margin: 0;
+    text-align: center;
+  }
+  .homepage-bar-{{ section.id }} .flex-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+  }
+  .homepage-bar-{{ section.id }} .flex-item{
+    border-color: {{ section.settings.border_color_block }};
+    padding: 1.5rem 0.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+  
+  /* Target 1st icon (Free Delivery) - Desktop */
+  .homepage-bar-{{ section.id }} .flex-item:first-child img{
+    width: 6.5rem !important;
+    height: 6.5rem !important;
+    margin: 0 auto 0 auto !important;
+  }
+  @media (max-width: 768px) {
+    .homepage-bar-{{ section.id }} .flex-container{
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 0.5rem;
+      padding: 0 0.5rem;
+    }
+    .homepage-bar-{{ section.id }} .flex-item{
+      min-width: 64px;
+      max-width: 120px;
+      flex-shrink: 0;
+      padding: 1rem 0.1rem;
+    }
+    .homepage-bar-{{ section.id }} .flex-item i{
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .homepage-bar-{{ section.id }} .flex-item img{
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Target 1st icon (Free Delivery) */
+    .homepage-bar-{{ section.id }} .flex-item:first-child img{
+      width: 6.5rem;
+      height: 6.5rem;
+      margin-bottom: 0;
+    }
+    .homepage-bar-{{ section.id }} .flex-item .text-area h3{
+      font-size: 0.8rem;
+      margin-bottom: 0.2rem;
+      line-height: 8px;
+    }
+    .homepage-bar-{{ section.id }} .flex-item .text-area p{
+      font-size: 0.7rem;
+      line-height: 8px;
+    }
+  }
+</style>
+<div class="home_bar_main" data-section-id="{{ section.id }}" data-section-type="home-bar-section"> 
+  <div class="homepage-bar homepage-bar-{{ section.id }}" style="margin:{{section.settings.margin_section}};">
+    <div class="container backgroud_home_bar">
+      <div class="block_content">
+        <div class="flex-container">
+          {% for block in section.blocks %}
+          <div class="flex-item">
+            {% if block.settings.item_icon contains 'icon-' %}
+              <i class="{{ block.settings.item_icon }}"></i>
+            {% else %}
+              <img src="{{ block.settings.item_icon | asset_url }}" alt="{{ block.settings.item_title }}" width="88" height="88" style="width: 5.5rem; height: 5.5rem; display: block; margin: 0 auto 1rem auto;">
+            {% endif %}
+            <div class="text-area">
+              <h3>{{ block.settings.item_title }}</h3>
+              <p>{{ block.settings.item_text }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Text Block",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "bg_content_color",
+      "label": "Background Content Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bg_section_color",
+      "label": "Background Section Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "icon_content_color",
+      "label": "Icon Color"
+    },
+    {
+      "type": "color",
+      "id": "text_content_color",
+      "label": "Text color"
+    },
+    {
+      "type": "color",
+      "id": "border_color_block",
+      "label": "Border Block Color"
+    }, 
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item-block",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "item_title",
+          "label": "Item Tile",
+          "default": "Title"
+        },
+        {
+          "type": "text",
+          "id": "item_icon",
+          "label": "Item Icon",
+          "default": "icon-truck"
+        },
+        {
+          "type": "textarea",
+          "id": "item_text",
+          "label": "Item Text",
+          "default": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Text Block",
+    "category": "Text Section", 
+    "blocks": [
+      {
+        "type": "item-block",
+        "settings": {
+          "item_icon": "fast-delivery-icon.png",
+          "item_title": "Fast Delivery",
+		  "item_text": "No Extra Cost"
+        }
+      },
+      {
+        "type": "item-block",
+        "settings": {
+          "item_icon": "cod-icon.png",
+          "item_title": "Cash On Delivery",
+          "item_text": "Quick & Trusted Payment"
+        }
+      },
+      {
+        "type": "item-block",
+        "settings": {
+          "item_icon": "easy-return-icon.png",
+          "item_title": "Easy Return",
+          "item_text": "Return with Ease"
+        }
+      },
+      {
+        "type": "item-block",
+        "settings": {
+          "item_icon": "secure-payment-icon.png",
+          "item_title": "Secure Payment",
+          "item_text": "Safe & Protected"
+        }
+      },
+      {
+        "type": "item-block",
+        "settings": {
+          "item_icon": "quick-support-icon.png",
+          "item_title": "Quick Support",
+          "item_text": "Whatsapp & Email"
+        }
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,79 @@
+/* ======================================== */
+/* CAROUSEL WRAPPER STYLES - Container for image sliders */
+/* ======================================== */
+
+/* ======================================== */
+/* CAROUSEL CONTAINER WRAPPER - Main wrapper element */
+/* ======================================== */
+.carousel-container-wrapper {
+  overflow: visible; /* Allow navigation elements to be visible */
+  position: relative; /* Establish positioning context for child elements */
+  width: 100%; /* Full width of parent container */
+  
+  /* ======================================== */
+  /* TOUCH EVENT HANDLING - Mobile swipe support */
+  /* ======================================== */
+  /* Allow both horizontal and vertical touch actions - JavaScript handles swipe detection */
+  touch-action: pan-x pan-y; /* Allow both horizontal and vertical touch actions */
+  -webkit-touch-action: pan-x pan-y; /* Webkit browser support */
+  -ms-touch-action: pan-x pan-y; /* IE/Edge support */
+  
+  /* ======================================== */
+  /* PERFORMANCE OPTIMIZATION - Removed hardware acceleration */
+  /* ======================================== */
+  /* Hardware acceleration removed to prevent scroll lagging */
+  
+  /* ======================================== */
+  /* MOBILE SCROLLING - Smooth scrolling on touch devices */
+  /* ======================================== */
+  /* Prevent any unwanted scrolling behavior */
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+  max-width: 100%;
+}
+
+/* ======================================== */
+/* OWL CAROUSEL OVERFLOW - Carousel content visibility */
+/* ======================================== */
+/* Ensure carousel itself doesn't cause overflow issues */
+.owl-carousel {
+  overflow: visible; /* Allow content to be visible outside container */
+  touch-action: pan-x pan-y; /* Allow only horizontal touch actions */
+  -webkit-touch-action: pan-x pan-y; /* Webkit browser support */
+  -ms-touch-action: pan-x pan-y; /* IE/Edge support */
+}
+
+/* ======================================== */
+/* OWL STAGE OUTER - Outer stage container */
+/* ======================================== */
+.owl-carousel .owl-stage-outer {
+  overflow: hidden; /* Hide overflow from stage outer container */
+  touch-action: pan-x pan-y; /* Allow only horizontal touch actions */
+  -webkit-touch-action: pan-x pan-y; /* Webkit browser support */
+  -ms-touch-action: pan-x pan-y; /* IE/Edge support */
+}
+
+/* ======================================== */
+/* OWL STAGE - Inner stage for carousel items */
+/* ======================================== */
+.owl-carousel .owl-stage {
+  overflow: visible; /* Allow stage content to be visible */
+  touch-action: pan-x pan-y; /* Allow only horizontal touch actions */
+  -webkit-touch-action: pan-x pan-y; /* Webkit browser support */
+  -ms-touch-action: pan-x pan-y; /* IE/Edge support */
+}
+
+/* ======================================== */
+/* OWL ITEMS - Individual carousel items */
+/* ======================================== */
+.owl-carousel .owl-item {
+  touch-action: pan-x pan-y; /* Allow only horizontal touch actions */
+  -webkit-touch-action: pan-x pan-y; /* Webkit browser support */
+  -ms-touch-action: pan-x pan-y; /* IE/Edge support */
+}
+
+/* ======================================== */
+/* LAYOUT SHIFT PREVENTION - Prevent jumping during initialization */
+/* ======================================== */
+
+/* */
+

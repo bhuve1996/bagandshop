@@ -1,0 +1,186 @@
+<div data-section-id="{{ section.id }}" data-section-type="filter-products-section"> 
+  <div id="collection-linklist-{{ section.id }}" class="collection-linklist" style="margin:{{section.settings.margin_section}};">
+    <div class="container">
+      <div class="products-collection">
+        {% if section.settings.title != '' %}
+        <h3 class="title-widget">
+          <span class="inner"> 
+            {% if settings.language_enable %}
+            <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+            <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+            {% else %}
+            {{ section.settings.title | split: '|' | first }}
+            {% endif %}
+          </span>
+        </h3>
+        {% endif %} 
+        {% if section.blocks.size > 0 %}
+        <div class="category-products">  
+          <ul class="products-grid columns{{section.settings.collection_column}}"> 
+            {% for block in section.blocks %}
+            <li class="item">
+              <div class="item-area-list">
+                <div class="product-image-area col-sm-5">  
+                  {% if block.settings.collection_image != blank %}
+                  {% assign collection_image = block.settings.collection_image | img_url: '188x166' %}
+                  {% else %}
+                  {% assign collection_image = '188x166.png' | asset_url %}
+                  {% endif %}
+                  <img src="{{collection_image}}" alt="{{block.settings.collection_image.alt}}" />
+                </div>
+                <div class="details-area col-sm-7">
+                  <div class="linklist">
+                    <ul>
+                      {% for link in linklists[block.settings.collection_link].links %} 
+                      <li>
+                        <a href="{{ link.url }}" class="level-top">
+                          {% if settings.language_enable %}
+                          <span class="lang1">{{ link.title | split: '|' | first }}</span>
+                          <span class="lang2">{{ link.title | split: '|' | last }}</span>
+                          {% else %}
+                          {{ link.title | split: '|' | first }}
+                          {% endif %}
+                        </a>
+                      </li>
+                      {% endfor %}
+                      {% if block.settings.link_all_text != '' %}
+                      <li class="linkall">
+                        <a href="{{block.settings.collection_link_all}}">
+                          {% if settings.language_enable %}
+                          <span class="lang1">{{ block.settings.link_all_text | split: '|' | first }}</span>
+                          <span class="lang2">{{ block.settings.link_all_text | split: '|' | last }}</span>
+                          {% else %}
+                          {{ block.settings.link_all_text | split: '|' | first }}
+                          {% endif %}
+                        </a>
+                      </li>
+                      {% endif %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li> 
+            {% endfor %}
+            <div style="clear:both;"></div>
+          </ul> 
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Collection Linklist", 
+  "settings": [ 
+    {
+      "type": "header",
+      "content": "Config"
+    }, 
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "50px 0 50px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Collection Title",
+	  "default": "Top Categories this Week"
+    },  
+    {
+      "type": "text",
+      "id": "collection_column",
+      "label": "Columns",
+      "default": "4"
+    } 
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection Link",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "collection_image",
+          "label": "Collection Image"
+        },
+        {
+          "type": "link_list",
+          "id": "collection_link",
+          "label": "Linklist"
+        }, 
+        {
+          "type": "url",
+          "id": "collection_link_all",
+          "label": "Collection Link All"
+        },
+        {
+          "type": "text",
+          "id": "link_all_text", 
+		  "label": "Link All Text",
+          "default": "View All"
+        }  
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Linklist",
+      "category": "Collection",
+      "blocks": [ 
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          } 
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "link_all_text": "View All"
+          }  
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,110 @@
+<div class="block">
+  <div class="block-content">
+    <div class="banner-sidebar">
+    {% for i in (1..3) %}
+      {%- capture enable %}home_show_banner{{ i }}{% endcapture -%} 
+      {%- capture image %}home-banner-sidebar{{ i }}.png{% endcapture -%}
+      {%- capture content %}home_content_banner{{ i }}{% endcapture -%} 
+      {%if settings[enable] != blank %}
+      <div class="item">
+        <img src="{{ image | asset_url }}" alt=""/>
+        <div class="content"> 
+          {% if settings.language_enable %}
+          <div class="lang1">{{ settings[content] | split: '[lang2]' | first }}</div>
+          <div class="lang2">{{ settings[content] | split: '[lang2]' | last }}</div>
+          {% else %}
+          {{ settings[content] | split: '[lang2]' | first }}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+{% comment %}
+<div class="html_sidebar">
+  {% if settings.language_enable %}
+  <div class="lang1">{{ settings.home_siderbar_html| split: '|' | first }}</div>
+  <div class="lang2">{{ settings.home_siderbar_html | split: '|' | last }}</div>
+  {% else %}
+  {{ settings.home_siderbar_html | split: '|' | first }}
+  {% endif %}
+</div>
+{% endcomment %} 
+{%if settings.home_show_blog != blank %}
+<div class="block blog-post">
+  <div class="block-title">
+    {% if settings.language_enable %}
+    <div class="lang1">{{ settings.home_blog_title| split: '|' | first }}</div>
+    <div class="lang2">{{ settings.home_blog_title | split: '|' | last }}</div>
+    {% else %}
+    {{ settings.home_blog_title | split: '|' | first }}
+    {% endif %}
+  </div>
+  <div class="block-content">
+    {%- assign blog = blogs[settings.home_sidebar_blog] -%}
+    {% unless blog.empty? %}
+    <div class="latest_news">
+      <div class="recent-posts">
+        <div class="data-carousel" data-auto="" data-items="1" data-1200="1" data-992="1" data-768="1" data-640="1" data-480="1" data-320="1" data-nav="true" data-prev='<i class="icon-arrow-left-products-header"></i>' data-next='<i class="icon-arrow-right-products-header"></i>' data-paging="false" data-margin="0" style="display: none;"></div>
+        <div class="carousel-init owl-carousel owl-top-nav"> 
+         {% for article in blog.articles limit:4 %}
+          <div class="item">
+            <div class="post-image">
+              {% if article.image %}
+              <a href="{{ article.url }}" class="article-image">
+                <img src="{{ article | img_url: '260x220',crop: 'center' }}" width="260" />
+              </a>
+              {% endif %}
+            </div>
+            <div class="post-content"> 
+              <div class="post-date">
+                {{ article.published_at | date: '%d %B %Y' }} 
+              </div> 
+              <div class="postTitle">
+                <h3>
+                  <a href="{{ article.url }}">
+                    {% if settings.language_enable %}
+                    <span class="lang1">{{ article.title | split: '|' | first }}</span>
+                    <span class="lang2">{{ article.title | split: '|' | last }}</span>
+                    {% else %}
+                    {{ article.title | split: '|' | first }}
+                    {% endif %}
+                  </a>
+                </h3> 
+              </div>    
+            </div>
+          </div> 
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endunless %}
+  </div>
+</div>
+{% endif %}
+{%if settings.home_show_banner != blank %}
+<div class="block">
+  <div class="block-content">
+    <img src="{{'home-banner-sidebar.png' | asset_url }}" alt=""/>
+  </div>
+</div>
+{%endif%}
+{% if settings.home_show_product_slide != blank %}
+<div class="block">
+  <div class="block-title">
+    {% if settings.language_enable %}
+    <div class="lang1">{{ settings.home_sidebar_product_title| split: '|' | first }}</div>
+    <div class="lang2">{{ settings.home_sidebar_product_title | split: '|' | last }}</div>
+    {% else %}
+    {{ settings.home_sidebar_product_title | split: '|' | first }}
+    {% endif %}
+  </div>
+  <div class="block-content">
+    <div class="home-product-slide">
+      {% include 'products-list-sidebar' %}
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,362 @@
+<!doctype html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<head> 
+  {{ 'style.css' | asset_url | stylesheet_tag }}
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">  
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}" type="image/png" /> 
+  {% if template contains 'index' %}
+  {% if page_title != blank and page_title != 'Welcome' %}
+  <title>{{ page_title }}</title>
+  {% else %}
+  <title>{{ shop.name }}</title>
+  {% endif %}
+  {% elsif template == '404' %}
+  <title>Page Not Found - {{ shop.name }}</title>
+  {% else %}
+  <title>{{ page_title }} - {{ shop.name }}</title>
+  {% endif %}
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Helpers ================================================== -->
+  {% include 'social-meta-tags' %}
+  <link rel="canonical" href="{{ canonical_url }}">  
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=3, user-scalable=yes" /> 
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+  {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+  {% if template contains 'collection' %}
+  {{ 'bootstrap-select.min.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+  <!-- CSS ================================================== -->
+  
+  {{ 'techmarket-icon.css' | asset_url | stylesheet_tag }} 
+  {{ 'font-awesome.min.css' | asset_url | stylesheet_tag }} 
+  {{ 'owl.carousel.min.css' | asset_url | stylesheet_tag }}  
+  {{ 'carousel-wrapper.css' | asset_url | stylesheet_tag }}
+  {{ 'ultramegamenu.css' | asset_url | stylesheet_tag }}
+  {{ 'effect.css' | asset_url | stylesheet_tag }}
+  {{ 'magnific-popup.css' | asset_url | stylesheet_tag }} 
+  {{ 'styles.scss.css' | asset_url | stylesheet_tag }} 
+  
+  {% if template contains 'product' %}
+  {{ 'jquery.fancybox.css' | asset_url | stylesheet_tag }} 
+  {%endif%} 
+  {{ 'animate.css' | asset_url | stylesheet_tag }} 
+  {{ 'color-config.scss.css' | asset_url | stylesheet_tag }}  
+  {{ 'search-overlay.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'deal-products.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'deal-navigation.js' | asset_url | script_tag }}
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }}
+  {% include 'oldIE-js' %}
+ 
+  {{ 'vendor.js' | asset_url | script_tag }}
+  {{ 'bootstrap.min.js' | asset_url | script_tag }} 
+  {% if template contains 'customers' %}
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {% endif %}
+  {% if settings.basic_font == 'google'%}
+  <link href="//fonts.googleapis.com/css?family={{ settings.google_font }}:300italic,400italic,500italic,600italic,700italic,900italic,300,400,500,600,700,900&amp;subset=cyrillic-ext,greek-ext,latin,latin-ext,cyrillic,greek,vietnamese" rel='stylesheet' type='text/css'>
+  {% endif %}
+  {% if settings.heading_font == 'google'%}
+  <link href="//fonts.googleapis.com/css?family={{ settings.heading_google_font }}:300italic,400italic,500italic,600italic,700italic,900italic,300,400,500,600,700,900&amp;subset=cyrillic-ext,greek-ext,latin,latin-ext,cyrillic,greek,vietnamese" rel='stylesheet' type='text/css'>
+  {% endif %}
+  <script type="text/javascript">
+    var productsObj = {}; 
+    var swatch_color_enable = {{ settings.product_color_swatches_enable }};
+    var asset_url = '{{'/' | asset_url}}';
+    var money_format = '<span class="money">{{shop.money_format}}</span>';
+    var multi_language = {{settings.language_enable}};
+  </script> 
+  {% include 'translator' %}
+  <style>
+    {% if settings.product_color_swatches_enable != blank %}
+    .product-view .product-options .selector-wrapper {
+      display: none;
+    }
+    {% endif %} 
+    {% if settings.disable_responsive == 'yes'%}
+    .container{
+    	width:1170px!important;
+    }
+    {% endif %}
+    {{settings.custom_style_1}}
+    {{settings.custom_style_2}}
+  </style>
+  <style>
+@font-face {
+  font-family: 'icomoon';
+  src: url('{{ "icomoon.eot" | asset_url }}');
+  src: url('{{ "icomoon.eot" | asset_url }}?#iefix') format('embedded-opentype'),
+       url('{{ "icomoon.woff" | asset_url }}') format('woff'),
+       url('{{ "icomoon.ttf" | asset_url }}') format('truetype'),
+       url('{{ "icomoon.svg" | asset_url }}#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icon-cod-icon:before {
+  content: "\e900"; /* Replace with correct value from your IcoMoon CSS */
+  font-family: 'icomoon';
+}
+</style>
+
+<!-- Schema.org structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Corporation",
+  "name": "Bagnshop",
+  "alternateName": "Fashion ,Lifestyle and household products",
+  "url": "https://bagnshop.com/",
+  "logo": "https://bagnshop.com/cdn/shop/files/Bagnshop-logo_150x.png?v=1752301407",
+  "sameAs": [
+    "https://www.instagram.com/bagnshop_official?igsh=MTZtbnZrZnc4amlpdw==",
+    "https://bagnshop.com/"
+  ]
+}
+</script>
+
+<!-- Google Search Console verification -->
+<meta name="google-site-verification" content="QeteB-AR6cVjA5oBcU_AB9eeWA0x8rPCknaTsy-9YLU" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17529214427"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17529214427');
+</script>
+
+</head> 
+<body id="{{ page_title | handle }}" class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }} {% if customer %}customer-logged-in {% endif %} {% if template == 'collection' or template contains 'collection.' %}layout-{{settings.collection_list_mode}}{%endif%} {% if settings.home_sidebar_position != 'none' and template contains 'index' %}columns-{{settings.home_sidebar_position}}{% endif %}"> 
+  {% include 'search-overlay' %}
+  <!-- begin site-header -->
+  <div class="wrapper">
+    <div class="page">
+      {% section 'header' %}
+      <!-- //site-header -->  
+      <div class="main-container">
+        <div class="main-wrapper">
+          <div class="main">   
+            {% if settings.home_sidebar_position != 'none' and template contains 'index' %}
+            <div class="home-main">
+              <div class="container">
+                <div class="">
+                  <div class="homepage_content {% if settings.home_sidebar_position == 'left' %}f-right{%endif%} {% if settings.home_sidebar_position == 'right' %}f-left{%endif%}"> 
+                    {{ content_for_layout }} 
+                  </div>
+                  <div class="sidebar {% if settings.home_sidebar_position == 'left' %}f-left{% endif %} {% if settings.home_sidebar_position == 'right' %}f-right{%endif%}">
+                    {% include 'home-sidebar' %}
+                  </div> 
+                </div>
+              </div>
+            </div>
+            {%else%}
+            {{ content_for_layout }} 
+            {%endif%}
+          </div> 
+        </div>
+      </div> 
+      <!-- begin site-footer -->
+      <div class="box_footer">
+      {% section 'footer' %}
+      </div>
+    </div>
+  </div>
+  <!-- //site-footer --> 
+  {% if template contains 'index' and settings.newsletter_enable == '1' %}
+  {% include 'newsletter-popup' %} 
+  {% elsif settings.newsletter_enable == '2' %}
+  {% include 'newsletter-popup' %} 
+  {% endif %}
+  {% include 'box-popup' %} 
+  <script type="text/javascript">
+    var frontendData = {}; 
+    frontendData.enableCurrency = {{ settings.currency_enable }};  
+    if (multi_language && translator.isLang2()) {
+      frontendData.loadMoreText = window.lang2.products.general.no_more_product;
+    }else{
+      frontendData.loadMoreText = '{{ 'products.general.no_more_product' | t}}';
+    }
+    var dataZoom = {}; 
+    {% if template contains 'product' %}
+    dataZoom.lightbox = {{ settings.media_zoom_lightbox_enable }};
+    {% else %}
+    dataZoom.lightbox = false;
+    {% endif %}
+    dataZoom.position = '{{ settings.media_zoom_position }}';
+    var cartData = {};
+    if (multi_language && translator.isLang2()) {
+      cartData.removeItemLabel = window.lang2.cart.header.remove_this_item;
+      cartData.totalLabel = window.lang2.cart.header.total;
+      cartData.totalNumb = window.lang2.cart.header.total_numb;
+      cartData.noItemLabel = window.lang2.cart.header.no_item;
+      cartData.buttonViewCart = window.lang2.cart.header.view_cart;
+      cartData.buttonCheckout = window.lang2.cart.header.checkout;
+      window.inventory_text = {
+        in_stock: window.lang2.products.product.in_stock,
+        many_in_stock: window.lang2.products.product.many_in_stock,
+        out_of_stock: window.lang2.products.product.out_of_stock,
+        add_to_cart: window.lang2.products.product.add_to_cart,
+        sold_out: window.lang2.products.product.sold_out
+      };
+      window.date_text = {
+        year_text: window.lang2.general.date.year_text,
+        month_text: window.lang2.general.date.month_text,
+        week_text: window.lang2.general.date.week_text,
+        day_text: window.lang2.general.date.day_text,
+        year_singular_text: window.lang2.general.date.year_singular_text,
+        month_singular_text: window.lang2.general.date.month_singular_text,
+        week_singular_text: window.lang2.general.date.week_singular_text,
+        day_singular_text: window.lang2.general.date.day_singular_text,
+        hour_text: window.lang2.general.date.hour_text,
+        min_text: window.lang2.general.date.min_text,
+        sec_text: window.lang2.general.date.sec_text,
+        hour_singular_text: window.lang2.general.date.hour_singular_text,
+        min_singular_text: window.lang2.general.date.min_singular_text,
+        sec_singular_text: window.lang2.general.date.sec_singular_text
+      };
+    }else{
+      cartData.removeItemLabel = '{{ 'cart.header.remove_this_item' | t }}';
+      cartData.totalLabel = '{{ 'cart.header.total' | t }}';
+      cartData.totalNumb = '{{ 'cart.header.total_numb' | t }}';
+      cartData.noItemLabel = '{{ 'cart.header.no_item' | t }}';
+      cartData.buttonViewCart = '{{ 'cart.header.view_cart' | t }}';
+      cartData.buttonCheckout = '{{ 'cart.header.checkout' | t }}';
+      window.inventory_text = {
+        in_stock: "{{ 'products.product.in_stock' | t }}",
+        many_in_stock: "{{ 'products.product.many_in_stock' | t }}",
+        out_of_stock: "{{ 'products.product.out_of_stock' | t }}",
+        add_to_cart: "{{ 'products.product.add_to_cart' | t }}",
+        sold_out: "{{ 'products.product.sold_out' | t }}"
+      }; 
+
+      window.date_text = {
+        year_text: "{{ 'general.date.year_text' | t }}",
+        month_text: "{{ 'general.date.month_text' | t }}",
+        week_text: "{{ 'general.date.week_text' | t }}",
+        day_text: "{{ 'general.date.day_text' | t }}",
+        year_singular_text: "{{ 'general.date.year_singular_text' | t }}",
+        month_singular_text: "{{ 'general.date.month_singular_text' | t }}",
+        week_singular_text: "{{ 'general.date.week_singular_text' | t }}",
+        day_singular_text: "{{ 'general.date.day_singular_text' | t }}",
+        hour_text: "{{ 'general.date.hour_text' | t }}",
+        min_text: "{{ 'general.date.min_text' | t }}",
+        sec_text: "{{ 'general.date.sec_text' | t }}",
+        hour_singular_text: "{{ 'general.date.hour_singular_text' | t }}",
+        min_singular_text: "{{ 'general.date.min_singular_text' | t }}",
+        sec_singular_text: "{{ 'general.date.sec_singular_text' | t }}"
+      };
+    } 
+
+  </script> 
+  {% if template == 'collection' or template contains 'collection.' %}
+  {{ 'shopify_common.js' | asset_url | script_tag }} 
+  {{ 'jquery.history.min.js' | asset_url | script_tag }}
+  {{ 'bootstrap-select.js' | asset_url | script_tag }} 
+  {% endif %}
+  {{ 'theme-scripts.js' | asset_url | script_tag }}  
+  {{ "jquery.elevatezoom.min.js" | asset_url | script_tag }}
+  {% if template contains 'product' %}
+  {{ "jquery.fancybox.pack.js" | asset_url | script_tag }}
+  {%endif%} 
+  {{ 'option_selection.js' | asset_url | script_tag }}  
+  {{ 'theme.js' | asset_url | script_tag }}
+  {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+  
+  <!-- Checkout Tax Fix Script -->
+  {{ 'checkout-tax-fix.js' | asset_url | script_tag }}
+  
+  <!-- Yotpo Widget Script -->
+  <script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/7ib5Xjbzb4BRdY8z57UTQlXq4Gh7E1VObzEMwVA3" async></script>
+  
+  {% include 'currency' %}
+  {% include 'linked-options' %} 
+  <script> 
+    {% if newHash %}
+    $(function() {
+      form.updateHash('{{ newHash }}');
+                      });
+      {% endif %}
+      {% if resetPassword %}
+      $(function() {
+        form.resetPasswordSuccess();
+      });
+      {% endif %}
+  </script>    
+  {% include 'search-autocomplete' %}
+  {% if settings.admin_helper_panel != blank %}
+  {{ 'admin-panel.js' | asset_url | script_tag }}
+  {% endif %}
+  
+  <!-- Mobile Bottom Navigation Bar -->
+  <div class="halo-sticky-toolbar-mobile">
+    <div class="bottom-bar">
+      <ul class="bottom-bar--list">
+        <li class="list-item" style="--font-size: 12px; --font-weight: 500; --icon-size: 20px">
+          <a href="/">
+            <span class="icon">
+              <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="home-lg-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-home-lg-alt fa-w-18 fa-3x">
+                <path fill="currentColor" d="M573.48 219.91L310.6 8a35.85 35.85 0 0 0-45.19 0L2.53 219.91a6.71 6.71 0 0 0-1 9.5l14.2 17.5a6.82 6.82 0 0 0 9.6 1L64 216.72V496a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V216.82l38.8 31.29a6.83 6.83 0 0 0 9.6-1l14.19-17.5a7.14 7.14 0 0 0-1.11-9.7zM240 480V320h96v160zm240 0H368V304a16 16 0 0 0-16-16H224a16 16 0 0 0-16 16v176H96V190.92l187.71-151.4a6.63 6.63 0 0 1 8.4 0L480 191z"></path>
+              </svg>
+            </span>
+            <span class="text">Home</span>
+          </a>
+        </li>
+        <li class="list-item" style="--font-size: 12px; --font-weight: 500; --icon-size: 20px">
+          <a href="javascript:void(0);" onclick="openSearchOverlay()" data-search-mobile="">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="icon icon-search">
+                <path d="M 19 3 C 13.488281 3 9 7.488281 9 13 C 9 15.394531 9.839844 17.589844 11.25 19.3125 L 3.28125 27.28125 L 4.71875 28.71875 L 12.6875 20.75 C 14.410156 22.160156 16.605469 23 19 23 C 24.511719 23 29 18.511719 29 13 C 29 7.488281 24.511719 3 19 3 Z M 19 5 C 23.429688 5 27 8.570313 27 13 C 27 17.429688 23.429688 21 19 21 C 14.570313 21 11 17.429688 11 13 C 11 8.570313 14.570313 5 19 5 Z"></path>
+              </svg>
+            </span>
+            <span class="text">Search</span>
+          </a>
+        </li>
+        <li class="list-item" style="--font-size: 12px; --font-weight: 500; --icon-size: 20px">
+          <a href="/collections/all">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384.97 384.97" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                <g>
+                  <g id="Grid">
+                    <path d="M144.364,0H24.061C10.767,0,0,10.767,0,24.061v120.303c0,13.281,10.767,24.061,24.061,24.061h120.303 c13.293,0,24.061-10.779,24.061-24.061V24.061C168.424,10.767,157.657,0,144.364,0z M144.364,144.364H24.061V24.061h120.303 V144.364z"></path>
+                    <path d="M360.909,0H240.606c-13.293,0-24.061,10.767-24.061,24.061v120.303c0,13.281,10.767,24.061,24.061,24.061h120.303 c13.281,0,24.061-10.779,24.061-24.061V24.061C384.97,10.767,374.191,0,360.909,0z M360.909,144.364H240.606V24.061h120.303 V144.364z"></path>
+                    <path d="M360.909,216.545H240.606c-13.293,0-24.061,10.779-24.061,24.061v120.303c0,13.293,10.767,24.061,24.061,24.061h120.303 c13.281,0,24.061-10.767,24.061-24.061V240.606C384.97,227.313,374.191,216.545,360.909,216.545z M360.909,360.909H240.606 V240.606h120.303V360.909z"></path>
+                    <path d="M144.364,216.545H24.061C10.767,216.545,0,227.325,0,240.606v120.303c0,13.293,10.767,24.061,24.061,24.061h120.303 c13.293,0,24.061-10.767,24.061-24.061V240.606C168.424,227.313,157.657,216.545,144.364,216.545z M144.364,360.909H24.061 V240.606h120.303V360.909z"></path>
+                  </g>
+                </g>
+              </svg>
+            </span>
+            <span class="text">Collection</span>
+          </a>
+        </li>
+        <li class="list-item" style="--font-size: 12px; --font-weight: 500; --icon-size: 20px">
+          <a role="link" aria-disabled="true" data-cart-sidebar="">
+            <span class="icon">
+              <svg viewBox="0 0 1024 1024" class="icon icon-cart" xmlns="http://www.w3.org/2000/svg">
+                <path class="path1" d="M409.6 1024c-56.464 0-102.4-45.936-102.4-102.4s45.936-102.4 102.4-102.4S512 865.136 512 921.6 466.064 1024 409.6 1024zm0-153.6c-28.232 0-51.2 22.968-51.2 51.2s22.968 51.2 51.2 51.2 51.2-22.968 51.2-51.2-22.968-51.2-51.2-51.2z"></path>
+                <path class="path2" d="M768 1024c-56.464 0-102.4-45.936-102.4-102.4S711.536 819.2 768 819.2s102.4 45.936 102.4 102.4S824.464 1024 768 1024zm0-153.6c-28.232 0-51.2 22.968-51.2 51.2s22.968 51.2 51.2 51.2 51.2-22.968 51.2-51.2-22.968-51.2-51.2-51.2z"></path>
+                <path class="path3" d="M898.021 228.688C885.162 213.507 865.763 204.8 844.8 204.8H217.954l-5.085-30.506C206.149 133.979 168.871 102.4 128 102.4H76.8c-14.138 0-25.6 11.462-25.6 25.6s11.462 25.6 25.6 25.6H128c15.722 0 31.781 13.603 34.366 29.112l85.566 513.395C254.65 736.421 291.929 768 332.799 768h512c14.139 0 25.6-11.461 25.6-25.6s-11.461-25.6-25.6-25.6h-512c-15.722 0-31.781-13.603-34.366-29.11l-12.63-75.784 510.206-44.366c39.69-3.451 75.907-36.938 82.458-76.234l34.366-206.194c3.448-20.677-1.952-41.243-14.813-56.424zm-35.69 48.006l-34.366 206.194c-2.699 16.186-20.043 32.221-36.39 33.645l-514.214 44.714-50.874-305.246h618.314c5.968 0 10.995 2.054 14.155 5.782 3.157 3.73 4.357 9.024 3.376 14.912z"></path>
+              </svg>
+            </span>
+            <span class="text">Cart</span>
+            <div class="cart-count-bubble" style="--color-bubble: #ffffff; --bg-bubble: #232323">
+              <span class="text" aria-hidden="true" data-cart-count="">{{ cart.item_count }}</span>
+              <span class="visually-hidden">{{ cart.item_count }} item</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

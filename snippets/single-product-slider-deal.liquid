@@ -1,0 +1,193 @@
+<!-- /snippets/product-grid-item.liquid -->  
+{% assign sold_out = true %}
+{% if product.available %}
+{% assign sold_out = false %}
+{% endif %}
+{% assign on_sale = false %}
+{% if product.compare_at_price_min > product.price_min %}
+{% assign on_sale = true %}
+{% endif %}
+{% assign variant_tmp = product.selected_or_first_available_variant  %}
+{% for variant in product.variants %}
+{% if variant.available == true and variant.price < variant_tmp.price %}
+{% assign variant_tmp = variant %}	
+{% endif %}
+{% endfor %}
+<div class="item-area-list"> 
+  <div class="product-image-area col-sm-7"> 
+    {% case settings.collection_aspect_ratio %}
+    {% when '1' %}
+    {%- assign image_width = 456 -%}
+    {%- assign image_height = '' -%} 
+    {% else %}
+    {%- assign image_width = 456 -%}
+    {%- assign image_height = 402 -%}
+    {% endcase %}  
+    {% capture image_size %}{{ image_width }}x{{ image_height }}{% endcapture %}    
+    <a href="{{ product.url | within: collection }}" class="product-image"> 
+      <img data-src="{{ product.featured_image.src | img_url: image_size, crop: 'center' }}" src="{{ 'placeholder.png' | asset_url }}" alt="{{ product.featured_image.alt | escape }}" class="img-responsive {%if carousel != blank%}owl-lazy{%else%}layz{%endif%} main">
+      
+      {% comment %} Video hover functionality {% endcomment %}
+      {% if product.metafields.custom.product_video_url != blank %}
+      <div class="product-video" data-video-url="{{ product.metafields.custom.product_video_url }}">
+        <video preload="none" muted loop>
+          <source src="{{ product.metafields.custom.product_video_url }}" type="video/mp4">
+        </video>
+        <div class="video-play-button">
+          <i class="fa fa-play"></i>
+        </div>
+      </div>
+      {% endif %}
+    </a>  
+    {% if product.images.size >= 1 %}
+    <div class="more-views-verticle"> 
+      <a class="more-views-prev more-views-nav" href="javascript:void(0)" style="display: block;">
+        <i class="icon-angle-up"></i>
+      </a>
+      <div class="media-list {% if product.images.size > 3 %}margin-top{% endif %}">
+        <div class="verticl-carousel product-image-thumbs"> 
+          {% for image in product.images %}
+          <a href="javascript:void(0);" data-image-index="{{ forloop.index }}" data-image="{{ image | product_img_url: image_size, crop: 'center' }}"> 
+            <img class="img-responsive" src="{{ image.src | img_url: '57x' }}" /> 
+          </a>  
+          {% endfor %}
+        </div>
+      </div> 
+      <a class="more-views-next more-views-nav" href="javascript:void(0)" style="display: block;">
+        <i class="icon-angle-down"></i>
+      </a>
+    </div>
+    {% endif %} 
+  </div>
+  <div class="details-area col-sm-5"> 
+    {% if sold_out %}
+    <div class="product-label">
+      <div class="sold-out">{{ 'products.product.sold_out' | t }}</div>
+    </div>
+    {% elsif variant_tmp.compare_at_price > variant_tmp.price %}
+    <div class="product-label">
+      {% if settings.collection_show_discount %}
+      <div class="onsale">
+        <span class="price_percentage"> 
+          {% assign discount_amount = variant_tmp.compare_at_price | minus: variant_tmp.price %}
+          {% assign discount_percentage = discount_amount | times: 100.0 | divided_by: variant_tmp.compare_at_price | round %}
+          -{{ discount_percentage }}%
+        </span>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %} 
+    {% if settings.collection_product_price != blank %}
+    <div class="price"> 
+      {% if on_sale %}
+      {% if product.price_varies %}
+      {% assign sale_price = product.price | money %}
+      <span class="money">
+        {{ 'products.product.on_sale_from_html' | t: price: sale_price }}
+      </span>
+      {% else %} 
+      <div class="special-price">
+        <span class="money">{{ product.price | money }}</span>
+      </div>
+      {% endif %}
+      {% else %}
+      {% if product.price_varies %}
+      {% assign price = product.price | money %}
+      <span class="money">{{ 'products.general.from_text_html' | t: price: price }}</span>
+      {% else %}
+      <span class="money">
+        {{ product.price | money }}
+      </span>
+      {% endif %}
+      {% endif %}  
+      {% if on_sale %} 
+      <div class="compare-price">
+        <span class="money">{{ product.compare_at_price | money }}</span>
+      </div>
+      {% endif %} 
+    </div>   
+    {% endif %}
+    <h2 class="product-name">
+      <a href="{{ product.url | within: collection }}" title="{{ product.title }}"> 
+        {% if settings.language_enable %}
+        <span class="lang1">{{ product.title | split: '|' | first }}</span>
+        <span class="lang2">{{ product.title | split: '|' | last }}</span>
+        {% else %}
+        {{ product.title | split: '|' | first }}
+        {% endif %}
+      </a>
+    </h2>     
+    {%if show_rating != blank %}
+    <div class="ratings">
+      <div class="rating-box">
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span> 
+      </div> 
+    </div> 
+    {% endif %}
+    <div class="deal-progress">
+      <div class="deal-stock">
+        <div class="stock-available">
+          <span {% if settings.language_enable %}data-translate="products.product.availability"{% endif %}>{{ 'products.product.availability' | t }} </span> 
+          {% if product.selected_or_first_available_variant.inventory_management %}
+          {% assign first_inventory = product.selected_or_first_available_variant.inventory_quantity %}
+          {% if first_inventory > 0 %}
+          {{first_inventory}}
+          {% else %}
+          {{ 'products.product.out_of_stock' | t }}
+          {% endif %} 
+          {% endif %}
+        </div>
+        {% if product.selected_or_first_available_variant.inventory_management and product.metafields.stock.qty %}
+        <div class="stock-sold">
+          <span {% if settings.language_enable %}data-translate="products.product.number_sold"{% endif %}>{{ 'products.product.number_sold' | t }} </span> 
+          {%- assign productStartCount = product.metafields.stock.qty | times:1 -%}
+          {%- if productStartCount > 0 -%}
+          {%- assign productInventory = product.variants.first.inventory_quantity -%}
+           {{ productStartCount | minus:productInventory }}
+          {%- endif -%}
+        </div>
+        {% endif %}
+      </div>
+      <div class="progress">
+        {% if product.metafields.stock.qty and product.metafields.stock.qty > product.variants.first.inventory_quantity %}
+        {% assign totalCount = product.metafields.stock.qty | times:1 %}
+        {% assign stockSold = totalCount | minus:productInventory | times: 100 | divided_by: totalCount %}  
+        <span class="progress-bar" style="width:{{stockSold}}%"></span>
+        {% else %}
+        <span class="progress-bar" style="width:0%"></span>
+        {% endif %}
+      </div>
+    </div>
+    {% if settings.collection_actions != blank %}
+    <div class="actions">  
+      {% if settings.collection_show_addtocart != blank %}
+      <div class="action-list addtocart">
+        {% if product.available %}
+        {% if product.variants.size > 1 %}
+        <a href="{{ product.url | within: collection }}" class="btn-cart select-options">  
+          <span {% if settings.language_enable %}data-translate="products.product.add_to_cart"{% endif %}>{{ 'products.product.add_to_cart' | t }}</span>
+        </a>
+        {% else %}
+        <form action="/cart/add" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="quantity" value="1" />
+          <select class="hide" name="id">
+            {% for variant in product.variants %}
+            <option value="{{ variant.id }}">{{ variant.title | escape }} - {{ variant.price | money }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn-cart add-to-cart"> 
+            <span {% if settings.language_enable %}data-translate="products.product.add_to_cart"{% endif %}>{{ 'products.product.add_to_cart' | t }}</span>
+          </button> 
+        </form>
+        {% endif %}
+        {% else %}
+        <a href="{{ product.url | within: collection }}" class="btn-cart"> 
+          <span {% if settings.language_enable %}data-translate="products.product.sold_out"{% endif %}>{{ 'products.product.sold_out' | t }}</span> 
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}   
+    </div> 
+    {% endif %}
+  </div>
+</div> 

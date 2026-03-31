@@ -1,0 +1,73 @@
+<!-- /templates/search.liquid --> 
+{% include 'breadcrumb' %}
+{% paginate search.results by 20 %} 
+<div class="container">
+  <div class="main-search-container">
+    <div class="row">      
+      <div class="{% if settings.collection_sidebar_position != 'none' %} col-sm-9 collection_content{% else %} col-sm-12{% endif %} {% if settings.collection_sidebar_position == 'left' %}f-right{%endif%}">
+        <div class="toolbar top_toolbar">
+          <div class="collection-sorting-row">
+            <div class="row">
+              <div class="col-md-6">
+                {% if search.performed %}
+                {% if search.results_count == 0 %}
+                <h3 class="title-collection" {% if settings.language_enable %}data-translate="general.search.no_results_html|terms:{{search.terms}}"{% endif %}>{{ 'general.search.no_results_html' | t: terms: search.terms }}</h3>
+                {% else %}
+                <h3 class="title-collection" {% if settings.language_enable %}data-translate="general.search.results_for_html|terms:{{search.terms}}"{% endif %}>{{ 'general.search.results_for_html' | t: terms: search.terms }}</h3>
+                {% endif %}
+                {% else %}
+                <h3 class="title-collection" {% if settings.language_enable %}data-translate="general.search.title"{% endif %}>{{ 'general.search.title' | t }}</h3>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                {% if paginate.pages > 1 %} 
+                <div class="pagenav-wrap">
+                  <div class="pagination">
+                    {% include 'pagination-page' %}
+                  </div>
+                </div>
+                {% endif %}
+              </div> 
+            </div>
+          </div>
+        </div>
+        {% if search.performed %}          
+        <div class="category-products">
+          <ul id="products-grid" class="products-grid columns{{settings.collection_columns}}">
+            {% if search.results.size > 0 %}  
+            {% for product in search.results %}
+            <li class="item product product-layout-grid">  
+              {% include 'product-grid-item' %} 
+            </li>  
+            {% endfor %} 
+            {% endif %}
+          </ul>
+        </div>
+        <div class="toolbar-bottom">
+          <div class="toolbar">
+            <div class="collection-sorting-row">
+              <div class="row">
+                <div class="col-md-12">
+                  {% if paginate.pages > 1 %} 
+                  <div class="pagenav-wrap">
+                    <div class="pagination">
+                      {% include 'pagination-page' %}
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div> 
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% if settings.collection_sidebar_position != 'none' %}
+      <div class="col-sm-3 sidebar {% if settings.collection_sidebar_position == 'left' %}f-left{% endif %}">
+        {% include 'collection-sidebar' %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div> 
+{% endpaginate %} 

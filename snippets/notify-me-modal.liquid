@@ -1,0 +1,232 @@
+<!-- Notify Me Modal -->
+<div id="notify-me-modal" class="notify-me-modal" style="display: none;">
+  <div class="notify-me-modal-content">
+    <div class="notify-me-modal-header">
+      <h3>Get Notified When Available</h3>
+      <span class="notify-me-close">&times;</span>
+    </div>
+    <div class="notify-me-modal-body">
+      <p>We'll send you an email when <strong id="notify-product-title"></strong> is back in stock.</p>
+      <form id="notify-me-form" class="notify-me-form">
+        <input type="hidden" id="notify-product-id" name="product_id" value="">
+        <div class="form-group">
+          <label for="notify-email">Email Address:</label>
+          <input type="email" id="notify-email" name="email" placeholder="Enter your email address" required>
+        </div>
+        <div class="form-group">
+          <label for="notify-name">Name (Optional):</label>
+          <input type="text" id="notify-name" name="name" placeholder="Enter your name">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-cart notify-me-submit">Notify Me</button>
+          <button type="button" class="btn-cart notify-me-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.notify-me-modal {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.notify-me-modal-content {
+  background-color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.notify-me-modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notify-me-modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.notify-me-close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.notify-me-close:hover {
+  color: #000;
+}
+
+.notify-me-modal-body {
+  padding: 20px;
+}
+
+.notify-me-form .form-group {
+  margin-bottom: 15px;
+}
+
+.notify-me-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.notify-me-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.notify-me-form input:focus {
+  outline: none;
+  border-color: #007cba;
+  box-shadow: 0 0 0 2px rgba(0,124,186,0.2);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notify-me-submit {
+  background-color: #dc3545;
+  color: white;
+}
+
+.notify-me-submit:hover {
+  background-color: #c82333;
+}
+
+.notify-me-cancel {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.notify-me-cancel:hover {
+  background-color: #e9ecef;
+}
+
+.notify-me-success {
+  color: #28a745;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.notify-me-error {
+  color: #dc3545;
+  font-weight: 500;
+  margin-top: 10px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Open modal when notify me button is clicked
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.notify-me-btn')) {
+      const button = e.target.closest('.notify-me-btn');
+      const productId = button.getAttribute('data-product-id');
+      const productTitle = button.getAttribute('data-product-title');
+      
+      document.getElementById('notify-product-id').value = productId;
+      document.getElementById('notify-product-title').textContent = productTitle;
+      document.getElementById('notify-me-modal').style.display = 'block';
+    }
+  });
+
+  // Close modal when X is clicked
+  document.querySelector('.notify-me-close').addEventListener('click', function() {
+    document.getElementById('notify-me-modal').style.display = 'none';
+  });
+
+  // Close modal when cancel button is clicked
+  document.querySelector('.notify-me-cancel').addEventListener('click', function() {
+    document.getElementById('notify-me-modal').style.display = 'none';
+  });
+
+  // Close modal when clicking outside
+  document.getElementById('notify-me-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
+
+  // Handle form submission
+  document.getElementById('notify-me-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const email = formData.get('email');
+    const name = formData.get('name');
+    const productId = formData.get('product_id');
+    
+    // Show loading state
+    const submitBtn = document.querySelector('.notify-me-submit');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+    
+    // Here you would typically send this data to your backend
+    // For now, we'll just show a success message
+    setTimeout(function() {
+      // Clear any existing messages
+      const existingSuccess = document.querySelector('.notify-me-success');
+      const existingError = document.querySelector('.notify-me-error');
+      if (existingSuccess) existingSuccess.remove();
+      if (existingError) existingError.remove();
+      
+      // Show success message
+      const successMsg = document.createElement('div');
+      successMsg.className = 'notify-me-success';
+      successMsg.textContent = 'Thank you! We\'ll notify you when this product is back in stock.';
+      document.querySelector('.notify-me-form').appendChild(successMsg);
+      
+      // Reset form and button
+      document.getElementById('notify-me-form').reset();
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      
+      // Close modal after 2 seconds
+      setTimeout(function() {
+        document.getElementById('notify-me-modal').style.display = 'none';
+        successMsg.remove();
+      }, 2000);
+      
+    }, 1000);
+  });
+});
+</script>

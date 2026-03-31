@@ -1,0 +1,47 @@
+/* ======================================== */
+/* FONT FACE DEFINITIONS - Custom icon fonts */
+/* ======================================== */
+
+/* ======================================== */
+/* ICOMMOON FONT - Icon font for various UI elements */
+/* ======================================== */
+@font-face {
+  font-family: "icomoon"; /* Font family name for icon font */
+  src: url('{{ "icomoon.eot" | asset_url }}'); /* IE9 Compat Modes */
+  src: url('{{ "icomoon.eot" | asset_url }}?#iefix') format("embedded-opentype"), /* IE6-IE8 */
+    url('{{ "icomoon.woff" | asset_url }}') format("woff"), /* Modern browsers */
+    url('{{ "icomoon.ttf" | asset_url }}') format("truetype"), /* Safari, Android, iOS */
+    url('{{ "icomoon.svg" | asset_url }}#icomoon') format("svg"); /* Legacy iOS */
+  font-weight: normal; /* Regular weight */
+  font-style: normal; /* Normal style (not italic) */
+  font-display: block; /* Optimize for icon fonts */
+}
+
+/* ======================================== */
+/* PRODUCT DELIVERY ESTIMATE STYLES */
+/* ======================================== */
+.product-delivery-estimate {
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  padding: 10px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #495057;
+}
+
+.product-delivery-estimate .delivery-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.product-delivery-estimate .delivery-text {
+  line-height: 1.4;
+}
+
+.product-delivery-estimate .delivery-text strong {
+  color: #28a745;
+  font-weight: 600;
+}

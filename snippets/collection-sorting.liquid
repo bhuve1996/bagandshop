@@ -1,0 +1,93 @@
+<!-- /snippets/collection-sorting.liquid -->
+<div class="collection-sorting-row">  
+  <div class="row">
+  <div class="col-md-4">
+    {% if collection.title %}
+    <h3 class="title-collection">
+      <span class="inner"> 
+        {% if settings.language_enable %}
+        <span class="lang1">{{ collection.title | split: '|' | first }}</span>
+        <span class="lang2">{{ collection.title | split: '|' | last }}</span>
+        {% else %}
+        {{ collection.title | split: '|' | first }}
+        {% endif %}
+      </span>
+    </h3>
+    {% endif %} 
+  </div>
+  <div class="col-md-8">
+    <div class="toolbar-right-area">
+    <div class="view-mode">
+      <span class="layout-opt {% if settings.collection_list_mode == 'grid' %}active{%endif%}" data-layout="grid" title="{{ 'collections.general.grid_view' | t }}">
+        <span class="icon-grid-small"></span>
+      </span>
+      <span class="layout-opt {% if settings.collection_list_mode == 'grid-extended' %}active{%endif%}" data-layout="grid-extended" title="{{ 'collections.general.grid_extended_view' | t }}">
+        <span class="icon-grid-1"></span>
+      </span>
+      <span class="layout-opt {% if settings.collection_list_mode == 'list' %}active{%endif%}" data-layout="list" title="{{ 'collections.general.list_view' | t }}">
+        <span class="icon-listing-large"></span>
+      </span> 
+      <span class="layout-opt {% if settings.collection_list_mode == 'list-small' %}active{%endif%}" data-layout="list-small" title="{{ 'collections.general.list_small_view' | t }}">
+        <span class="icon-listing"></span>
+      </span> 
+      <span class="layout-opt {% if settings.collection_list_mode == 'list-smaller' %}active{%endif%}" data-layout="list-smaller" title="{{ 'collections.general.list_smaller_view' | t }}">
+        <span class="icon-listing-small"></span>
+      </span> 
+    </div>
+    <div class="limited_wrap">
+      <div class="limited-view select-new">
+        <div class="select-inner">
+          <span {% if settings.language_enable %}data-translate="collections.limiter.title"{% endif %}>{{ 'collections.limiter.title' | t }} </span>
+          <select name="limiter" class="field bootstrap-select">
+            <option value="15" {% if template == 'collection' %}selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.limiter.limit_15"{% endif %}>{{ 'collections.limiter.limit_15' | t }}</option>
+            <option value="25" {% if template == 'collection.25' %}selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.limiter.limit_25"{% endif %}>{{ 'collections.limiter.limit_25' | t }}</option>
+            <option value="40" {% if template == 'collection.40' %}selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.limiter.limit_40"{% endif %}>{{ 'collections.limiter.limit_40' | t }}</option>
+            <option value="all" {% if template == 'collection.all' %}selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.limiter.limit_all"{% endif %}>{{ 'collections.limiter.limit_all' | t }}</option> 
+          </select> 
+        </div>
+      </div> 
+    </div>
+    <div class="sorter_wrap">
+      <div class="sort-by">
+        <div class="select-new">
+          <div class="select-inner">
+            <!--span {% if settings.language_enable %}data-translate="collections.sorting.title"{% endif %}>{{ 'collections.sorting.title' | t }}: </span-->
+            {% assign sort_def = collection.sort_by | default: collection.default_sort_by | escape %}
+            <select name="sort-by" class="field bootstrap-select">
+              <option value="manual"{% if sort_def == 'manual' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.featured"{% endif %}>{{ 'collections.sorting.featured' | t }}</option>
+              <option value="best-selling"{% if sort_def == 'best-selling' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.best_selling"{% endif %}>{{ 'collections.sorting.best_selling' | t }}</option>
+              <option value="title-ascending"{% if sort_def == 'title-ascending' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.az"{% endif %}>{{ 'collections.sorting.az' | t }}</option>
+              <option value="title-descending"{% if sort_def == 'title-descending' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.za"{% endif %}>{{ 'collections.sorting.za' | t }}</option>
+              <option value="price-ascending"{% if sort_def == 'price-ascending' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.price_ascending"{% endif %}>{{ 'collections.sorting.price_ascending' | t }}</option>
+              <option value="price-descending"{% if sort_def == 'price-descending' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.price_descending"{% endif %}>{{ 'collections.sorting.price_descending' | t }}</option>
+              <option value="created-descending"{% if sort_def == 'created-descending' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.date_descending"{% endif %}>{{ 'collections.sorting.date_descending' | t }}</option>
+              <option value="created-ascending"{% if sort_def == 'created-ascending' %} selected="selected"{% endif %} {% if settings.language_enable %}data-translate="collections.sorting.date_ascending"{% endif %}>{{ 'collections.sorting.date_ascending' | t }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if paginate.pages > 1 and settings.collection_infinite_scrolling == blank %} 
+    <div class="pagenav-wrap">
+      <div class="pagination">
+        {% include 'pagination-page' %}
+      </div>
+    </div>
+    {% endif %} 
+    {% if settings.collection_toolbar_filter %}
+    <div class="filter-bar">
+      <a href="#" class="btn-button bordered uppercase small">{{ 'collections.general.filter' | t }} +</a> 
+    </div>
+    {% endif %}
+    </div>
+  </div> 
+  </div>
+</div>  
+{% if settings.collection_toolbar_filter %}
+<div class="filter-option-group">
+  <div class="filter-option-inner">
+    {% include 'layer-nav-bar' %}
+    {% if current_tags.size > 0 %}<a href="javascript:;" class="clearall">{{ 'collections.general.clear_all' | t }}</a>{% endif %}
+  </div>
+</div>
+{% endif %}

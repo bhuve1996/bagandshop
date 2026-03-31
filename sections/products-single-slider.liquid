@@ -1,0 +1,121 @@
+<div data-section-id="{{ section.id }}" data-section-type="filter-products-section"> 
+  <!-- end style custom -->
+  <div id="filter-products-{{ section.id }}" class="product-single-slide">
+    <div class="container">
+      <div class="products-collection"> 
+        <div class="category-products {% if section.settings.hide_action == '1'%}hide-action{% endif %}">  
+          {%- assign limit = section.settings.collection_limit -%}   
+          {%- assign name_collection = section.settings.collection -%}
+          {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+          {%- assign collection = collections[name_collection] -%} 
+          <div class="data-carousel"  
+               data-auto="{{ section.settings.collection_autoplay }}"
+               data-items="1"
+               data-1200="1"
+               data-992="1"
+               data-768="1"
+               data-640="1"
+               data-480="1"
+               data-320="1"
+               data-nav="{{ section.settings.collection_product_show_nav }}"
+               data-prev='{{ section.settings.collection_product_nav_prev}}'
+               data-next='{{ section.settings.collection_product_nav_next}}'
+               data-paging="{{ section.settings.collection_show_paging }}"
+               data-margin='0' style="display: none;"></div>
+          {% if collection.products.size == 0 %}
+          <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+          {% else %} 
+          <div class="products-grid owl-carousel"> 
+            {% for product in collection.products limit: limit %}  
+            <div class="item product"> 
+              {% include 'single-product-slide' with pcontent: section.settings.product_text  %} 
+            </div> 
+            {% endfor %}  
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Product Single Slider", 
+  "settings": [ 
+    {
+      "type": "header",
+      "content": "Config"
+    },
+    {
+      "type": "html",
+      "id": "product_text",
+      "label": "Product Content",
+	  "default": "<p>Featured Product</p><h3><b>The features you want,</b><br>all in one place</h3>"
+    },  
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }, 
+    {
+      "type": "radio",
+      "id": "hide_action",
+      "label": "Hide Action",
+      "options": [
+        {
+          "value": "1",
+          "label": "Yes"
+        },
+        {
+          "value": "0",
+          "label": "No"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "text",
+      "id": "collection_limit",
+      "label": "Number of products to show",
+      "default": "4"
+    },  
+    {
+      "type": "text",
+      "id": "collection_autoplay",
+      "label": "Slideshow",
+      "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+	  "default": "5000"
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_show_paging",
+      "label": "Show Paging",
+      "default": true
+    },  
+    {
+      "type": "checkbox",
+      "id": "collection_product_show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },  
+    {
+      "type": "text",
+      "id": "collection_product_nav_prev",
+      "label": "Prev Navigation",
+      "default": "<i class=\"icon-arrow-left-products-header\"><\/i>"
+    },
+    {
+      "type": "text",
+      "id": "collection_product_nav_next",
+      "label": "Next Navigation",
+      "default": "<i class=\"icon-arrow-right-products-header\"><\/i>"
+    } 
+  ],
+  "presets": [
+    {
+      "name": "Product Single Slider",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

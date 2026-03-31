@@ -1,0 +1,91 @@
+<style>
+  .html-block-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+  } 
+  .html-block-{{ section.id }} .block_content {
+    color: {{ section.settings.text_color }};
+    font-size: 20px;
+    line-height: 2.4;
+  }
+
+  .block_content-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .sliding-track {
+    display: inline-block;
+    padding-left: 100%; /* this creates the center start effect */
+    animation: slide-left 25s linear infinite;
+  }
+
+  @keyframes slide-left {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+</style>
+
+<div data-section-id="{{ section.id }}" data-section-type="html-block-section"> 
+  <div class="html-block html-block-{{ section.id }}" style="margin:{{ section.settings.margin_section }};">
+    <div class="block_content-wrapper">
+      <div class="block_content sliding-track">
+        Free Delivery Across India.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+        Top Deals Every Day &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
+        Quality You Can Trust &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+        Free Delivery Across India.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+        Top Deals Every Day &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
+        Quality You Can Trust &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Free Delivery Across India.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+        Top Deals Every Day &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
+        Quality You Can Trust &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+        Free Delivery Across India.
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Html Section", 
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0063d1"
+    },  
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#e6edf5"
+    },
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+      "default": "50px 0 50px 0",
+      "info": "Eg: 0px 30px 40px 50px"
+    }
+  ], 
+  "presets": [{
+    "name": "HTML Section",
+    "category": "Html" 
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

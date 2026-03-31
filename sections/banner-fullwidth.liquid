@@ -1,0 +1,176 @@
+<div data-section-id="{{ section.id }}" data-section-type="banner-section">
+  <div class="banner-grid banner-full-width" style="margin: {{section.settings.margin_section}};">
+    <div class="{% if section.settings.full_width_banner == blank %}container{% endif %}">
+      <div class="row" style="margin-left:-10px;margin-right:-10px;">
+        {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+        {% assign banner_background_color = block.settings.banner_background_color %}
+        {% if block.settings.banner_image != blank %}
+        {% assign banner_image = block.settings.banner_image | img_url: 'master' %}
+        {% else %}
+        {% assign banner_image = '1740x236.png' | asset_url %}
+        {% endif;%}
+        <div style="padding-left:10px;padding-right:10px;{% if section.settings.full_width_banner == blank %}padding-bottom:15px;{% endif %}">
+          {% if block.settings.banner_link != blank %}
+          <a href="{{ block.settings.banner_link }}" class="banner-link">
+          {% endif %}
+          <div class="banner-inner" style="{% if block.settings.use_background == 'image' %}background:url({{ banner_image }}) left center no-repeat;background-size: cover{% else %} background-color: {{ banner_background_color }} {% endif %};height:{{ section.settings.height_banner }};{% if section.settings.full_width_banner != blank %}border-radius:0;{% endif %};{% if block.settings.banner_link != blank %}cursor: pointer;{% endif %}"> 
+            <div class="content {{ block.settings.class_banner_content }}"> 
+              <span class="content-left">
+                {% if settings.language_enable %}
+                <span class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</span>
+                <span class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</span>
+                {% else %}
+                <span>{{ block.settings.content | split: '[lang2]' | first }}</span>
+                {% endif %}
+              </span>
+              {% if block.settings.button_text != blank %}
+              <span class="action">
+                <a href="{{block.settings.button_link}}" class="btn-button bordered smaller">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.button_text | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.button_text | split: '|' | last }}</span>
+                  {% else %}
+                  <span>{{ block.settings.button_text | split: '|' | first }}</span>
+                  {% endif %}
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+              </span>
+              {% endif %}
+            </div>
+          </div>
+          {% if block.settings.banner_link != blank %}
+          </a>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div> 
+    </div> 
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Fullwidth",
+  "max_blocks": 1,
+  "settings": [ 
+	{
+      "type": "header",
+      "content": "Config"
+    }, 
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+	{
+		"type": "checkbox",
+		"id": "full_width_banner",
+		"label": "Full Width Banner",
+		"default": false
+	},
+	{
+		"type": "text",
+		"id": "height_banner",
+		"label": "Banner Height",
+		"default": "236px"
+	}
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Banner Image",
+      "settings": [
+		{
+		  "type": "select",
+		  "id": "use_background",
+		  "label": "Use Background",
+		  "options": [
+		   	  {
+ 				"value": "image",
+				"label": "Background Image"
+			  },
+			  {
+				"value": "color",
+				"label": "Background Color"
+			  }
+		   ],
+		  "default": "image"
+		},
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Banner Background Image"
+        },
+		{
+			"type": "color",
+			"id": "banner_background_color",
+			"label": "Banner Background Color",
+			"default": "#EEEEEE"
+		},
+		{
+			"type": "text",
+			"id": "class_banner_content",
+			"label": "Class Content"
+		},
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Banner content",
+		  "default": "<span style=\"font-weight:500;\">Extremely portable</span>, learn<br>to ride in just 3 minutes<span style=\"display:block;font-size:18px;\">Travel up to 22km in a single charge.</span>"
+        },  
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+		  "default": "Buy Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link" 
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "Banner link (makes entire banner clickable)" 
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Banner Fullwidth",
+    "category": "Banner",
+    "settings": { 
+
+    },
+    "blocks": [ 
+      {
+        "type": "image",
+		"settings": {
+		  "content": "", 
+		  "button_text": "Browse"
+        } 
+      } 
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+.banner-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.banner-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

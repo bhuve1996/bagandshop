@@ -1,0 +1,280 @@
+/* ======================================== */
+/* GLOBAL RESET AND BASE STYLES */
+/* ======================================== */
+
+/* Remove default margins and padding from all elements */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* ======================================== */
+/* BODY STYLES - Main page container */
+/* ======================================== */
+body {
+  font-family: "Montserrat", arial, serif; /* Primary font stack */
+  line-height: 1.55; /* Comfortable reading line height */
+  text-align: left;
+}
+
+/* ======================================== */
+/* IMAGE STYLES - Remove borders and outlines */
+/* ======================================== */
+img {
+  border: 0;
+  outline: none;
+}
+
+/* ======================================== */
+/* LINK STYLES - Remove underlines on hover/active */
+/* ======================================== */
+a:hover,
+a:active {
+  text-decoration: none;
+}
+
+/* ======================================== */
+/* FOCUS STYLES - Remove default focus outlines */
+/* ======================================== */
+:focus {
+  outline: 0;
+}
+
+/* ======================================== */
+/* PAGE LIST STYLES - Remove default list formatting */
+/* ======================================== */
+.page ul,
+.page ol {
+  margin: 0;
+  padding: 0;
+}
+
+/* ======================================== */
+/* LIST STYLES - Remove default list formatting */
+/* ======================================== */
+ul,
+ol {
+  list-style: none outside none;
+}
+ul {
+  padding: 0;
+}
+ul li {
+  list-style: none;
+  padding: 0;
+}
+
+/* ======================================== */
+/* PARAGRAPH STYLES - Consistent line height */
+/* ======================================== */
+p {
+  line-height: 24px;
+}
+
+/* ======================================== */
+/* LINK AND ICON STYLES - Smooth transitions */
+/* ======================================== */
+a,
+i {
+  text-decoration: none;
+  -moz-transition: all 500ms ease; /* Firefox transition */
+  -webkit-transition: all 500ms ease; /* Webkit transition */
+  -o-transition: all 500ms ease; /* Opera transition */
+  transition: all 500ms ease; /* Standard transition */
+}
+
+/* ======================================== */
+/* FOOTER MIDDLE SECTION - 4-column grid layout */
+/* ======================================== */
+.footer-wrapper .footer-middle .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 40px 0;
+}
+
+/* Individual footer column styling */
+.footer-wrapper .footer-middle .footer-item {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Contact information styling */
+.footer-wrapper .footer-middle .footer-contact .contact-info p {
+  margin: 6px 0;
+}
+
+/* Payment section heading */
+.footer-wrapper .footer-middle .payment-heading {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+/* Payment and security logos */
+.footer-wrapper .footer-middle .payment-logos img,
+.footer-wrapper .footer-middle .secure-logos img {
+  max-height: 32px;
+  margin: 0 6px;
+}
+
+/* "Secured by" text styling */
+.footer-wrapper .footer-middle .secured-by {
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+/* Footer block titles */
+.footer-wrapper .footer-middle .block-title {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+/* Footer link lists */
+.footer-wrapper .footer-middle .footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-wrapper .footer-middle .footer-list li {
+  margin-bottom: 6px;
+}
+
+/* ======================================== */
+/* FOOTER BOTTOM SECTION - 2-column flex layout */
+/* ======================================== */
+.footer-wrapper .footer-bottom .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+/* Footer bottom columns */
+.footer-wrapper .footer-bottom .col-md-6 {
+  flex: 1;
+  max-width: 45%;
+  padding: 0;
+}
+
+/* Left column alignment */
+.footer-wrapper .footer-bottom .col-md-6:first-child {
+  text-align: left;
+}
+
+/* Right column alignment */
+.footer-wrapper .footer-bottom .col-md-6:last-child {
+  text-align: right;
+}
+
+/* ======================================== */
+/* RESPONSIVE DESIGN - Mobile and tablet styles */
+/* ======================================== */
+@media (max-width: 767px) {
+  /* Stack footer columns vertically on mobile */
+  .footer-wrapper .footer-middle .row {
+    flex-direction: column;
+  }
+  
+  /* Full width footer items on mobile */
+  .footer-wrapper .footer-middle .footer-item {
+    flex: none !important;
+    max-width: 100% !important;
+  }
+  
+  /* Stack footer bottom columns on mobile */
+  .footer-wrapper .footer-bottom .container {
+    flex-direction: column;
+  }
+  
+  /* Full width and center align on mobile */
+  .footer-wrapper .footer-bottom .col-md-6 {
+    max-width: 100% !important;
+    margin-bottom: 12px;
+    text-align: center !important;
+  }
+}
+
+/* ======================================== */
+/* PAYMENT ICONS - Bottom footer payment methods */
+/* ======================================== */
+.list-payment {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Individual payment icon styling */
+.list-payment__item {
+  display: inline-block;
+  margin-right: 12px;
+}
+
+/* Remove margin from last payment icon */
+.list-payment__item:last-child {
+  margin-right: 0;
+}
+
+/* Payment icon SVG sizing */
+.list-payment__item svg {
+  display: block;
+  width: 38px;
+  height: 24px;
+}
+
+/* ======================================== */
+/* PAYMENT ICONS FLEXBOX LAYOUT - Horizontal row */
+/* ======================================== */
+.list-payment {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;            /* Space between each icon */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list-payment__item {
+  margin: 0;
+}
+
+.list-payment__item svg {
+  display: block;       /* Prevent inline quirks */
+}
+
+/* ======================================== */
+/* FORCE PAYMENT ICONS INTO HORIZONTAL ROW */
+/* ======================================== */
+.footer-wrapper .footer-bottom .custom-text .list-payment {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+/* Space each icon out */
+.footer-wrapper .footer-bottom .custom-text .list-payment__item {
+  margin: 0 16px 0 0 !important; /* 16px gap */
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Remove extra margin on the last one */
+.footer-wrapper .footer-bottom .custom-text .list-payment__item:last-child {
+  margin-right: 0 !important;
+}
+
+/* SVGs sized consistently */
+.footer-wrapper .footer-bottom .custom-text .list-payment__item svg {
+  width: 38px !important;
+  height: 24px !important;
+  display: block !important;
+}
+
+
+
+
+

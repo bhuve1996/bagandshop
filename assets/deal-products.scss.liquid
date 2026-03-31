@@ -1,0 +1,116 @@
+/* ======================================== */
+/* DEAL PRODUCTS STYLES - Special pricing and discount displays */
+/* ======================================== */
+
+/* ======================================== */
+/* TRUE DOWNWARD ARROW DESIGN - Custom discount badge */
+/* ======================================== */
+/* This creates a unique discount badge with a downward-pointing arrow */
+.products-tab-deal .main-deal .category-products .products-grid .item .item-area .product-label {
+  display: inline-block;
+  margin-left: 8px;
+  right: 0;
+  
+  /* ======================================== */
+  /* ONSALE PRICE PERCENTAGE - Main discount badge */
+  /* ======================================== */
+  .onsale .price_percentage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Fixed width for consistency */
+    height: 60px; /* Fixed height for consistency */
+    background: #ee2931; /* Red background for discount */
+    color: white; /* White text for contrast */
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 2; /* Ensure badge appears above other elements */
+    box-shadow: 0 4px 12px rgba(238, 41, 49, 0.3); /* Red shadow for depth */
+    padding: 0;
+    overflow: visible; /* Allow arrow to extend beyond container */
+
+    /* ======================================== */
+    /* ARROW HEAD - Triangle pointing downward */
+    /* ======================================== */
+    /* Creates a downward-pointing triangle using CSS clip-path */
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -20px; /* Position below the main badge */
+      width: 60px; /* Same width as main badge */
+      height: 20px; /* Height of the arrow */
+      background: #ee2931; /* Same red color as main badge */
+      clip-path: polygon(50% 100%, 0 0, 100% 0); /* Triangle shape */
+      z-index: 1; /* Below the main badge content */
+    }
+
+    /* ======================================== */
+    /* BADGE TEXT CONTENT - Percentage and text styling */
+    /* ======================================== */
+    span, b {
+      position: relative;
+      z-index: 2; /* Above the arrow */
+      color: white;
+      font-size: 20px;
+      font-weight: 900; /* Extra bold for emphasis */
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Dark shadow for readability */
+    }
+  }
+}
+
+/* ======================================== */
+/* HIDE PROGRESS BAR - Remove deal progress indicator */
+/* ======================================== */
+/* Hide the deal progress bar to clean up the design */
+.products-tab-deal .main-deal .category-products .products-grid .item .item-area .deal-progress {
+  display: none;
+}
+
+/* ======================================== */
+/* DEAL OF THE WEEK SPECIFIC STYLES - Only for deal of the week section */
+/* ======================================== */
+/* This ensures the 20px font size only applies to the deal of the week section */
+.products-tab-deal .main-deal .onsale .price_percentage {
+  font-size: 20px !important;
+}
+
+/* ======================================== */
+/* OTHER SECTIONS - Reset font size for non-deal sections */
+/* ======================================== */
+/* Reset font size for other sections to maintain consistency */
+.products-filter-tab4 .onsale .price_percentage,
+.products-filter-tab .onsale .price_percentage,
+.products-filter-tab2 .onsale .price_percentage,
+.products-filter-tab3 .onsale .price_percentage,
+.products-filter-tab5 .onsale .price_percentage,
+.products-filter-tab6 .onsale .price_percentage,
+.products-filter-tab7 .onsale .price_percentage,
+.products-filter-tab8 .onsale .price_percentage,
+.collection-products .onsale .price_percentage,
+.products-banner .onsale .price_percentage,
+.products-banner2 .onsale .price_percentage,
+.products-banner3 .onsale .price_percentage {
+  font-size: 14px !important;
+}
+
+/* ======================================== */
+/* HIDE DISCOUNT WHEN SOLD OUT - Ensure only one label shows */
+/* ======================================== */
+/* Hide discount percentage when sold out label is present */
+.item-area .product-label .sold-out ~ .product-label .onsale,
+.item-area .product-label .sold-out + .product-label .onsale {
+  display: none !important;
+}
+
+/* Alternative approach for broader browser support */
+.item-area:has(.sold-out) .product-label .onsale {
+  display: none !important;
+}
+
+
+
+ 

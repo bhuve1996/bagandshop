@@ -1,0 +1,113 @@
+<!-- config style -->
+{% if settings.disable_sidebar_category != blank %}
+<style>
+  .sidebar-cate-toogle{
+  	display:none;
+  }
+</style>
+{% endif %}
+<!-- end config style -->
+{% if settings.show_sidebar_menu_categories != blank %}
+<div class="block block-nav sidebar-cate-toogle">
+  <div class="block-title">
+    <span {% if settings.language_enable %}data-translate="collections.sidebar.categories"{% endif %}>{{ 'collections.sidebar.categories' | t }}</span>
+    <span class="collapse">
+      <i class="icon-up-dir"></i>
+      <i class="icon-down-dir"></i>
+    </span>
+  </div>
+  <div class="sidebar-content block-content">
+    {% include 'menu-category' with menu_name: settings.sidebar_menu_categories %}
+  </div>
+</div>
+{% endif %}
+{% if settings.collection_sidebar_filters == 'groups' or settings.collection_sidebar_filters == 'tags' %}
+<div class="block block-layered-nav"> 
+  <div class="block-title">
+    <span {% if settings.language_enable %}data-translate="collections.sidebar.filters"{% endif %}>{{ 'collections.sidebar.filters' | t }}</span>
+  </div>
+  <div class="block-content">
+    {% include 'layer-nav' %}
+    {% if settings.collection_sidebar_filters == 'tags' %}
+    <dl class="narrow-by-list">
+      <div class="narrow-item">
+        <dt>
+          <span {% if settings.language_enable %}data-translate="collections.general.refine_by"{% endif %}>{{'collections.general.refine_by' | t}}</span>
+          {% if current_tags.size > 0 %}<a href="javascript:;" class="clearall" {% if settings.language_enable %}data-translate="collections.general.clear_all"{% endif %}>{{ 'collections.general.clear_all' | t }}</a>{% endif %}
+        </dt>
+        <dd class="layer-filter">
+          <ol class="swatch-list fields">
+            {% for custom_tag in collection.all_tags %}
+            {% if current_tags contains custom_tag %}
+            <li>
+              <div class="item swatch-checkbox active"> 
+                <div class="input-container"> 
+                  <input type="checkbox" value="{{ custom_tag | handleize }}" class="checkbox smart_input" checked="checked" />
+                  <div class="input-skin">
+                    <i class="visible-unchecked icon-check-empty"></i>
+                    <i class="visible-checked icon-check"></i>    
+                  </div>
+                </div> 
+                <span class="name">{{ custom_tag | remove_first: cat_item | remove: '_' }}</span>
+              </div>
+            </li>
+            {% else %}
+            <li>
+              <div class="item swatch-checkbox"> 
+                <div class="input-container">  
+                  <input type="checkbox" value="{{ custom_tag | handleize }}" class="checkbox smart_input" />
+                  <div class="input-skin">
+                    <i class="visible-unchecked icon-check-empty"></i>
+                    <i class="visible-checked icon-check"></i>    
+                  </div>
+                </div>  
+                <span class="name">{{ custom_tag | remove_first: cat_item | remove: '_' }}</span>
+              </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ol>
+        </dd>
+      </div>
+    </dl>
+    {% endif %}
+  </div>
+</div>
+{% endif %} 
+{% if template contains 'list-collections' or template contains 'search' %}
+<div class="block">
+  <div class="block-content">
+    <div class="banner-sidebar">
+    {% for i in (1..3) %}
+      {% capture enable %}show_banner{{ i }}{% endcapture %} 
+      {% capture image %}banner-sidebar{{ i }}.png{% endcapture %}
+      {% capture content %}content_banner{{ i }}{% endcapture %} 
+      {%if settings[enable] != blank %}
+      <div class="item">
+        <img src="{{ image | asset_url }}" alt=""/>
+        <div class="content"> 
+          {% if settings.language_enable %}
+          <div class="lang1">{{ settings[content] | split: '[lang2]' | first }}</div>
+          <div class="lang2">{{ settings[content] | split: '[lang2]' | last }}</div>
+          {% else %}
+          {{ settings[content] | split: '[lang2]' | first }}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+{% comment %}
+<div class="html_sidebar">
+  {% if settings.language_enable %}
+  <div class="lang1">{{ settings.html_siderbar_collection| split: '|' | first }}</div>
+  <div class="lang2">{{ settings.html_siderbar_collection | split: '|' | last }}</div>
+  {% else %}
+  {{ settings.html_siderbar_collection | split: '|' | first }}
+  {% endif %}
+</div>
+{% endcomment %}
+{% endif %}
+

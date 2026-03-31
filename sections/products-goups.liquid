@@ -1,0 +1,126 @@
+{% if section.blocks.size > 0 %}
+{% assign col = 12 | divided_by: section.blocks.size %}
+{% else %}
+{% assign col = 4 %}
+{% endif %}
+<div data-section-id="{{ section.id }}" data-section-type="filter-products-section">
+  <div id="filter-products-{{ section.id }}" style="margin:{{section.settings.margin_section}};">
+    <div class="group_collection filter-products">
+      <div class="container">
+        <div class="row">
+          {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+          <div class="col-sm-{{ col }} col-xs-6">
+            <h3 class="title-widget">
+              {% if settings.language_enable %}
+              <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+              <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+              {% else %}
+              {{ block.settings.title | split: '|' | first }}
+              {% endif %}
+            </h3>
+            <div class="category-products"> 
+              {%- assign limit = block.settings.limit -%}   
+              {%- assign name_collection = block.settings.collection -%}
+              {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+              {%- assign collection = collections[name_collection] -%} 
+              {% if collection.products.size == 0 %}
+              <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+              {% else %}
+              <ul class="products-grid"> 
+                {% for product in collection.products limit: limit %}  
+                <li class="item product product-layout-grid">
+                {% include 'lazyload-product-mini-list-item' %} 
+                </li>
+                {% endfor %} 
+              </ul>
+              {% endif %}
+            </div>
+          </div>  
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Group Filter Product",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type":"header",
+      "content":"Config"
+    },  
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection Title",
+		  "default": "Collection Title"
+        },
+        {
+          "type":"collection",
+          "id":"collection",
+          "label":"Collection"
+        },
+        {
+          "type": "text",
+          "id": "limit",
+          "label": "Limit",
+		  "default": "4"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Group Filter Product",
+    "category": "Products",
+	"blocks": [ 
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Best Rated Products" 
+          } 
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Virtual Reality Headsets" 
+          } 
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Deal Of The Day" 
+          } 
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Video Cameras" 
+          } 
+        }  
+      ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

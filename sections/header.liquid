@@ -1,0 +1,146 @@
+<div data-section-id="{{ section.id }}" data-section-type="header-section"> 
+  {% if section.settings.type == 'type1' and section.settings.show_toplink != blank %}
+  <div class="notice-toplink">
+    <div class="container" style="position:relative;">
+      <ul>
+        {% for link in linklists[section.settings.header_toplink].links %} 
+        <li>
+          <a href="{{ link.url }}" class="level-top">
+            {% if settings.language_enable %}
+            <span class="lang1">{{ link.title | split: '|' | first }}</span>
+            <span class="lang2">{{ link.title | split: '|' | last }}</span>
+            {% else %}
+            {{ link.title | split: '|' | first }}
+            {% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      <a class="btn-close" href="javascript:void(0);"><i class="icon-close"></i></a>
+    </div>
+  </div>
+  {%endif%} 
+  <header class="main-section-header">
+    <div class="header-container {{section.settings.type}} header-flex-layout">
+      {% if section.settings.type == 'type1' %}
+      {% include 'header_type1' %}
+      {% endif %}
+      {% if section.settings.type == 'type2' %}
+      {% include 'header_type2' %}
+      {% endif %} 
+      {% if section.settings.type == 'type3' %}
+      {% include 'header_type3' %}
+      {% endif %}
+      {% if section.settings.type == 'type4' %}
+      {% include 'header_type4' %}
+      {% endif %}
+      {% if section.settings.type == 'type5' %}
+      {% include 'header_type5' %}
+      {% endif %}
+      {% if section.settings.type == 'type6' %}
+      {% include 'header_type6' %}
+      {% endif %}
+    </div>
+    {% if section.settings.sticky_header_enable == 'enable'%}
+    <script type="text/javascript"> 
+      $(document).ready(function(){ 
+        // Sticky header functionality moved to theme.js to prevent conflicts
+        // Only keeping dropdown functionality here
+        
+        // Dropdown click toggle behavior
+        $('.site-nav__item > a').on('click', function(e) {
+          var $parent = $(this).closest('.site-nav__item');
+          if ($parent.find('.site-nav__dropdown').length) {
+            e.preventDefault();
+            $('.site-nav__item').not($parent).removeClass('open').find('.site-nav__dropdown').slideUp(200);
+            $parent.toggleClass('open');
+            $parent.find('.site-nav__dropdown').stop(true, true).slideToggle(200);
+          }
+        });
+
+        // Close dropdown on outside click
+        $(document).on('click', function(e) {
+          if (!$(e.target).closest('.site-nav__item').length) {
+            $('.site-nav__item').removeClass('open');
+            $('.site-nav__dropdown').slideUp(200);
+          }
+        });
+      }); 
+    </script>
+    {% endif %}
+    <div class="mobile-nav">
+      {% include 'mobile-menu' %} 
+    </div>
+    <div class="mobile-nav-overlay"></div>
+  </header> 
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "select",
+      "id": "type",
+      "label": "Header Type",
+      "info": "choose header type",
+      "options": [
+        { "value": "type1", "label": "Header Type 1" },
+        { "value": "type2", "label": "Header Type 2" },
+        { "value": "type3", "label": "Header Type 3" },
+        { "value": "type4", "label": "Header Type 4" },
+        { "value": "type5", "label": "Header Type 5" },
+        { "value": "type6", "label": "Header Type 6" }
+      ],
+      "default": "type1"
+    },
+    { "type": "checkbox", "id": "show_toplink", "label": "Show Top Link", "default": true },
+    { "type": "link_list", "id": "header_toplink", "label": "Top Link" },
+    { "type": "checkbox", "id": "header_wishlist", "label": "Show Header Wishlist?", "default": true },
+    {
+      "type": "select",
+      "id": "language_flag",
+      "label": "Show Flags in Language Switcher",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "default": "yes"
+    },
+    { "type": "header", "content": "Logo" },
+    { "type": "checkbox", "id": "logo_use_image", "label": "Use Logo" },
+    { "type": "text", "id": "logo_width", "label": "Logo Width" },
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Maximum logo dimensions are 450px wide by 200px high. The uploaded file will be resized to fit within those constraints." },
+    { "type": "header", "content": "Logo Sticky" },
+    { "type": "checkbox", "id": "logo_sticky_use_image", "label": "Use Logo Sticky" },
+    { "type": "text", "id": "logo_sticky_width", "label": "Logo Sticky Width" },
+    { "type": "image_picker", "id": "logo_sticky", "label": "Logo Sticky", "info": "Maximum logo dimensions are 150px wide by 80px high. The uploaded file will be resized to fit within those constraints." },
+    {
+      "type": "select",
+      "id": "sticky_header_enable",
+      "label": "Enable sticky header",
+      "options": [
+        { "value": "enable", "label": "Enable" },
+        { "value": "disable", "label": "Disable" }
+      ],
+      "default": "enable"
+    },
+    {
+      "type": "select",
+      "id": "sticky_header_on_mobile",
+      "label": "Sticky Header on Mobile",
+      "options": [
+        { "value": "enable", "label": "Enable" },
+        { "value": "disable", "label": "Disable" }
+      ],
+      "default": "enable"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

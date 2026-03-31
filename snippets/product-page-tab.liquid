@@ -1,0 +1,146 @@
+{% if settings.disable_tab == blank %}
+<div class="product-tabs">
+  <div class="tab-title">
+    <div class="container">
+      <ul class="level0">
+        {% if product.description contains '[accesories]' %} 
+          <li class="active first level0">
+            <a class="level0" href="#product_tabs_accesories" role="tab" data-toggle="tab" {% if settings.language_enable %}data-translate="products.product.tab_title_accesories"{% endif %}>{{ 'products.product.tab_title_accesories' | t }}</a>
+          </li> 
+          <li class="level0">
+            <a class="level0" href="#product_tabs_description" role="tab" data-toggle="tab" {% if settings.language_enable %}data-translate="products.product.tab_title_description"{% endif %}>{{ 'products.product.tab_title_description' | t }}</a>
+          </li>
+        {% else %}
+          <li class="active first level0">
+            <a class="level0" href="#product_tabs_description" role="tab" data-toggle="tab" {% if settings.language_enable %}data-translate="products.product.tab_title_description"{% endif %}>{{ 'products.product.tab_title_description' | t }}</a>
+          </li>
+        {% endif %}   
+        {% if product.description contains '[specifications]' %} 
+        <li class="first level0">
+          <a class="level0" href="#product_tabs_specifications" role="tab" data-toggle="tab" {% if settings.language_enable %}data-translate="products.product.tab_title_specifications"{% endif %}>{{ 'products.product.tab_title_specifications' | t }}</a>
+        </li>
+        {%endif%}
+        {% if settings.tab_size_chart_enable != blank %}
+        <li class="level0">
+          <a class="level0" href="#product_tabs_size_chart" role="tab" data-toggle="tab"> 
+            {% if settings.language_enable %}
+            <span class="lang1">{{ settings.tab_size_chart_title | split: '|' | first }}</span>
+            <span class="lang2">{{ settings.tab_size_chart_title | split: '|' | last }}</span>
+            {% else %}
+            {{ settings.tab_size_chart_title | split: '|' | first }}
+            {% endif %}
+          </a>
+        </li> 
+        {% endif %}
+
+        {% if settings.disable_tab_review == blank %}
+        <li class="level0">
+          <a class="level0" href="#product_tabs_tabreviews" role="tab" data-toggle="tab" {% if settings.language_enable %}data-translate="products.product.tab_title_review"{% endif %}>{{ 'products.product.tab_title_review' | t }}</a>
+        </li> 
+        {% endif %}
+      </ul>  
+    </div>
+  </div>
+  <div class="container">
+    {% if product.description contains '[accesories]' %} 
+      <div class="tab-content in active first collapse in" id="product_tabs_accesories">
+        <div class="product-tabs-content-inner clearfix"> 
+          <h3 class="tab-inner-title">
+            <span {% if settings.language_enable %}data-translate="products.product.tab_title_accesories"{% endif %}>{{ 'products.product.tab_title_accesories' | t }}</span>
+          </h3> 
+          {%- assign get = product.description | split:'[/accesories]' | first -%}   
+          {%- assign accesories = get | split:'[accesories]' | last -%} 
+          {% if settings.language_enable %}
+          <div class="lang1">{{ accesories | split: '[lang2]' | first | replace: '<p></p>', '' | replace: '<div></div>', '' | replace: '  ', ' ' }}</div>
+          <div class="lang2">{{ accesories | split: '[lang2]' | last | replace: '<p></p>', '' | replace: '<div></div>', '' | replace: '  ', ' ' }}</div>
+          {% else %}
+          {{ accesories | split: '[lang2]' | first | replace: '<p></p>', '' | replace: '<div></div>', '' | replace: '  ', ' ' }}
+          {% endif %}  
+        </div>
+      </div> 
+      <div class="tab-content collapse" id="product_tabs_description">
+        <div class="product-tabs-content-inner clearfix"> 
+          <h3 class="tab-inner-title">
+            <span {% if settings.language_enable %}data-translate="products.product.tab_title_description"{% endif %}>{{ 'products.product.tab_title_description' | t }}</span>
+          </h3>
+          {%- assign description = product.description -%}
+          {%- if description contains '[countdown]' -%}
+          {%- assign description = description | split:'[/countdown]' | last -%}  
+          {%- endif -%}
+          {%- if product.description contains '[shortdesc]' -%}
+          {%- assign description = description | split:'[/shortdesc]' | last -%}  
+          {%- endif -%}
+          {%- if product.description contains '[accesories]' -%}
+          {%- assign description = description | split:'[/accesories]' | last -%}  
+          {%- endif -%}
+          {%- if description contains '[specifications]' -%}
+          {%- assign description = description | split:'[/specifications]' | last -%}  
+          {%- endif -%}
+          {% if settings.language_enable %}
+          <div class="lang1">{{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
+          <div class="lang2">{{ description | split: '[lang2]' | last | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
+          {% else %}
+          {{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}
+          {% endif %}  
+        </div>
+      </div> 
+    {%else%}
+      <div class="tab-content in active first collapse in" id="product_tabs_description">
+        <div class="product-tabs-content-inner clearfix"> 
+          <h3 class="tab-inner-title">
+            <span {% if settings.language_enable %}data-translate="products.product.tab_title_description"{% endif %}>{{ 'products.product.tab_title_description' | t }}</span>
+          </h3>
+          {%- assign description = product.description -%}
+          {%- if description contains '[countdown]' -%}
+           {%- assign description = description | split:'[/countdown]' | last -%}  
+          {%- endif -%} 
+          {%- if product.description contains '[accesories]' -%}
+          {%- assign description = description | split:'[/accesories]' | last -%}  
+          {%- endif -%}
+          {%- if description contains '[specifications]' -%}
+          {%- assign description = description | split:'[/specifications]' | last -%}  
+          {%- endif -%}
+          {% if settings.language_enable %}
+          <div class="lang1">{{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
+          <div class="lang2">{{ description | split: '[lang2]' | last | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
+          {% else %}
+          {{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}
+          {% endif %} 
+        </div>
+      </div> 
+    {%endif%} 
+    {% if product.description contains '[specifications]' %} 
+    <div class="tab-content collapse" id="product_tabs_specifications">
+      <div class="product-tabs-content-inner clearfix"> 
+        <h3 class="tab-inner-title specs-title">
+          <span {% if settings.language_enable %}data-translate="products.product.tab_title_specifications"{% endif %}>{{ 'products.product.tab_title_specifications' | t }}</span>
+        </h3> 
+        {%- assign get = product.description | split:'[/specifications]' | first -%}   
+        {%- assign specifications = get | split:'[specifications]' | last -%} 
+        {% if settings.language_enable %}
+        <div class="lang1">{{ specifications | split: '[lang2]' | first | replace: '<p></p>', '' | replace: '<div></div>', '' | replace: '  ', ' ' }}</div>
+        <div class="lang2">{{ specifications | split: '[lang2]' | last | replace: '<p></p>', '' | replace: '<div></div>', '' | replace: '  ', ' ' }}</div>
+        {% else %}
+        {{ specifications | split: '[lang2]' | first | replace: '<p></p>', '' | replace: '<div></div>', '' | replace: '  ', ' ' }}
+        {% endif %}  
+      </div>
+    </div> 
+    {% endif %}  
+    {% if settings.tab_size_chart_enable != blank %} 
+    <div class="tab-content collapse" id="product_tabs_size_chart"> 
+      <div class="product-tabs-content-inner clearfix"> 
+        <img src="{{ 'tab_size_chart.png' | asset_url }}" class="img-responsive" width="800" height="600" />
+      </div>
+    </div> 
+    {% endif %}
+ 
+    {% if settings.disable_tab_review == blank %}
+    <div class="tab-content collapse" id="product_tabs_tabreviews">
+      <div class="product-tabs-content-inner clearfix"> 
+        <div class="yotpo-widget-instance" data-yotpo-instance-id="1194605" data-yotpo-product-id="{{ product.id }}" data-yotpo-name="{{ product.title | escape }}" data-yotpo-url="{{ shop.url }}{{ product.url }}" data-yotpo-image-url="{{ product.featured_image | product_img_url: 'large' |replace: '?', '%3F' | replace: '&amp;','%26'}}" data-yotpo-description="{{ product.description | escape }}"></div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %} 

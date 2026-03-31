@@ -1,0 +1,454 @@
+<div data-section-id="{{ section.id }}" data-section-type="collection-slider-section">
+  <style>
+    #collection-slider-{{ section.id }} {
+      background-color:{{section.settings.bg_fullwidth_color}};
+      border: 1px solid #f0f0f0;
+    }  
+    #collection-slider-{{ section.id }} h3.title-widget, 
+    #collection-slider-{{ section.id }} .top-content,
+    #collection-slider-{{ section.id }} .bottom-content{
+      color: {{ section.settings.title_section_color }};
+    }
+    #collection-slider-{{ section.id }} .title-collection {
+      color: {{ section.settings.title_collection_color }};
+    }
+          .homepage-featured-categories .container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding-bottom: 30px;
+      }
+      .homepage-featured-categories .items-slide {
+        flex: 1;
+        min-width: 0;
+      }
+      .homepage-featured-categories .owl-carousel {
+        display: block !important;
+        visibility: visible !important;
+      }
+      .homepage-featured-categories .item {
+        {% comment %} min-height: 150px;
+        width: 100%; {% endcomment %}
+        margin-bottom: 35px;
+        position: relative;
+      }
+      .homepage-featured-categories .item .single-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      .homepage-featured-categories .item .single-image img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        object-fit: cover;
+        display: block;
+      }
+      .homepage-featured-categories .item .title-collection {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        right: 0;
+        background: white;
+        color: #333 !important;
+        margin: 0;
+        padding: 8px 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+    .homepage-featured-categories .slide-left {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .homepage-featured-categories .top-content {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .homepage-featured-categories .title-widget {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 0;
+      color: #333;
+      text-transform: uppercase;
+    }
+    .homepage-featured-categories .bottom-content {
+      display: inline-block;
+      background: #007cba;
+      color: white !important;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    .homepage-featured-categories .bottom-content:hover {
+      background: #005a87;
+      text-decoration: none;
+      color: white;
+    }
+    @media (max-width: 767px) {
+      .homepage-featured-categories {
+      }
+      .homepage-featured-categories .container {
+        flex-direction: column;
+      }
+      .homepage-featured-categories .items-slide {
+        width: 100%;
+        {% comment %} margin-top: 20px; {% endcomment %}
+        margin-left: 0;
+        float: left;
+        {% comment %} min-height: 185px; {% endcomment %}
+      }
+      .homepage-featured-categories .owl-carousel {
+        display: block !important;
+        visibility: visible !important;
+      }
+      .homepage-featured-categories .item {
+        {% comment %} aspect-ratio: 1;
+        height: auto !important; {% endcomment %}
+      }
+      .homepage-featured-categories .item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        aspect-ratio: 1;
+      }
+      .homepage-featured-categories .item .title-collection {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+        bottom: -20px !important;
+      }
+      .homepage-featured-categories .owl-dots {
+        bottom: -22px;
+      }
+      .homepage-featured-categories .slide-left {
+       flex-direction: row;
+       margin-top: 10px;
+      }
+      .homepage-featured-categories .slide-left .bottom-content {
+        margin: 0;
+      }
+      .homepage-featured-categories .title-widget{
+        margin: 0;
+      }
+    }
+  </style>
+  <div id="collection-slider-{{ section.id }}" class="collection-slider homepage-featured-categories" style="margin:{{section.settings.margin_section}};">
+    <div class="container"> 
+      {% if section.settings.show_top_title != blank %}
+        {% if section.settings.title != blank %}
+        <h3 class="title-widget show-top"> 
+          <span class="inner">
+            {% if settings.language_enable %}
+            <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+            <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+            {% else %}
+            {{ section.settings.title | split: '|' | first }}
+            {% endif %}
+          </span>
+        </h3> 
+        {% endif %}
+      {%else%}
+        <div class="slide-left">
+          {% if section.settings.top_content != blank and section.settings.title == blank %}
+          <span class="top-content">  
+            {% if settings.language_enable %}
+            <span class="lang1">{{ section.settings.top_content | split: '|' | first }}</span>
+            <span class="lang2">{{ section.settings.top_content | split: '|' | last }}</span>
+            {% else %}
+            {{ section.settings.top_content | split: '|' | first }}
+            {% endif %} 
+          </span>
+          {% endif %}
+          {% if section.settings.title != blank %}
+          <h3 class="title-widget"> 
+            <span class="inner">
+              {% if settings.language_enable %}
+              <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+              <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+              {% else %}
+              {{ section.settings.title | split: '|' | first }}
+              {% endif %}
+            </span>
+          </h3> 
+          {% endif %}
+          {% if section.settings.bottom_content != blank %}
+            <a href="{% if section.settings.bottom_content_link != blank %}{{ section.settings.bottom_content_link }}{% else %}/collections/shop{% endif %}" class="bottom-content">  
+              {% if settings.language_enable %}
+              <span class="lang1">{{ section.settings.bottom_content | split: '|' | first }}</span>
+              <span class="lang2">{{ section.settings.bottom_content | split: '|' | last }}</span>
+              {% else %}
+              {{ section.settings.bottom_content | split: '|' | first }}
+              {% endif %} 
+            </a>
+          {% endif %}
+        </div>
+      {% endif %} 
+      <div class="items-slide {% if section.settings.show_top_title != blank %}show-full{%endif%}">
+        <div class="data-carousel"  
+             data-auto="{{ section.settings.autoplay }}"
+             data-items="{{ section.settings.column }}"
+             data-1600="{{ section.settings.column }}"
+             data-1200="4"
+             data-992="3"
+             data-768="2"
+             data-640="2"
+             data-480="2"
+             data-320="2"
+             data-paging="{{ section.settings.show_paging }}"
+             data-nav="{{ section.settings.show_nav }}"
+             data-margin="{{ section.settings.item_margin }}"
+             data-prev='{{ section.settings.nav_prev }}' 
+             data-next='{{ section.settings.nav_next }}'></div> 
+        <div class="owl-carousel">
+          {% for block in section.blocks %}
+          {%- assign collection = collections[block.settings.collection] -%}
+          {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+          <div class="item">
+            <a href="{{ block.settings.slider_link }}" class="single-image">
+              {% if block.settings.slider_image != blank %}
+              {% assign img_url = block.settings.slider_image | img_url: '400x400' %}
+              {% else %}
+              {% assign img_url = 'placeholder.png' | asset_url  %}
+              {% endif %}
+              <img data-src="{{ img_url }}" class="owl-lazy" width="400" height="400"/>
+              {% if section.settings.use_title != blank %}
+                <h3 class="title-collection">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+                  {% else %}
+                  {{ block.settings.title | split: '|' | first }}
+                  {% endif %}
+                </h3>
+              {% endif %} 
+              {% if section.settings.use_title == blank %} 
+                <h3 class="title-collection">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ collection.title | split: '|' | first }}</span>
+                  <span class="lang2">{{ collection.title | split: '|' | last }}</span>
+                  {% else %}
+                  {{ collection.title | split: '|' | first }}
+                  {% endif %}
+                </h3> 
+              {% endif %}
+            </a> 
+          </div>
+          {% endfor %}
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Collection Slider",
+  "settings": [
+    {
+      "type" : "header",
+      "content": "Config"
+    },  
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+    {
+      "type": "color",
+      "id": "bg_fullwidth_color",
+      "label": "Background Fullwidth Color",
+      "default": "#fff"
+    }, 
+	{
+	  "type": "color",
+      "id": "title_section_color",
+      "label": "Title Section Color",
+      "default": "#090909"
+	}, 
+    {
+      "type": "color",
+      "id": "title_collection_color",
+      "label": "Title Collection Color",
+      "default": "#292929"
+    },
+    {
+      "type":"header",
+      "content":"Collection Slider"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Top categories this week"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_title",
+      "label": "Show Title On Top",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "top_content",
+      "label": "Top Content",
+      "default": "Featured"
+    },
+    {
+      "type": "text",
+      "id": "bottom_content",
+      "label": "Bottom Content",
+      "default": "FULL CATALOG"
+    },
+    {
+      "type": "url",
+      "id": "bottom_content_link",
+      "label": "Bottom Content Link",
+      "info": "Link for the bottom content button"
+    },
+    {
+      "type": "text",
+      "id": "column",
+      "label": "Columns",
+      "default": "5"
+    }, 
+    {
+      "type": "text",
+      "id": "autoplay",
+      "label": "Slideshow",
+      "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+	  "default": true
+    },
+    {
+      "type": "text",
+      "id": "nav_prev",
+      "label": "Prev Navigation",
+      "default": "<i class=\"icon-arrow-left-products-header\"></i>"
+    },
+    {
+      "type": "text",
+      "id": "nav_next",
+      "label": "Next Navigation",
+      "default": "<i class=\"icon-arrow-right-products-header\"></i>"
+    }, 
+    {
+      "type": "text",
+      "id": "item_margin",
+      "label": "Margin",
+      "info": "Margin each item.",
+      "default": "30"
+    },
+	{
+      "type": "checkbox",
+      "id": "use_title",
+      "label": "Use Custom Title Collection?",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Category slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "slider_image",
+          "label": "Slider Image"
+        },
+        {
+          "type": "url",
+          "id": "slider_link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Collection",
+          "default": "Title Collection"
+        },
+		{
+          "type": "collection",
+          "id": "collection",
+          "label": "collection"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Collection Slider",
+    "category": "Collection",
+    "settings": { 
+
+    },
+    "blocks": [ 
+      {
+        "type": "image",
+		"settings": {
+          "title": "Televisions" 
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+          "title": "Home Theater & Audio" 
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+          "title": "Headphones" 
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+          "title": "Digital Cameras" 
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+          "title": "Cosnoles & Games" 
+        } 
+      },
+      {
+        "type": "image",
+		"settings": {
+          "title": "Televisions" 
+        } 
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

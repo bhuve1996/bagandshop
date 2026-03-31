@@ -1,0 +1,153 @@
+{% comment %}
+This page represents the /collections and /products pages.
+It is an optional, but highly recommended, template for your theme.
+
+More info:
+- http://docs.shopify.com/manual/configuration/store-customization/taking-control-of-collections-listing
+{% endcomment %}
+
+{% include 'breadcrumb' %}
+<div class="container">
+  <div class="main-collection list-collection row">
+    {% comment %}
+    Loop through each collection, except 'frontpage'
+    {% endcomment %}
+    <div class="{% if settings.collection_sidebar_position != 'none' %} col-sm-9 collection_content {% if settings.collection_sidebar_position == 'left' %}sidebar-left{%endif%} {% if settings.collection_sidebar_position == 'right' %}sidebar-right{%endif%}{% else %} col-sm-12{% endif %} {% if settings.collection_sidebar_position == 'left' %}f-right{%endif%}">
+      <div class="row">
+        {% if settings.collection_page_title != ''%}
+        <div class="col-sm-12">
+          <h3 class="title-widget">
+            <span class="inner"> 
+              {% if settings.language_enable %}
+              <span class="lang1">{{ settings.collection_page_title | split: '|' | first }}</span>
+              <span class="lang2">{{ settings.collection_page_title | split: '|' | last }}</span>
+              {% else %}
+              {{ settings.collection_page_title | split: '|' | first }}
+              {% endif %}
+            </span>
+          </h3>
+        </div>
+        {% endif %}
+        <div class="category-products">
+          <ul id="products-grid" class="products-grid columns5"> 
+            {% for collection in collections %}
+            {% if collection.handle != 'frontpage' and collection.all_products_count > 0 %}
+            <li class="item product product-layout-grid">
+              {% include 'collection-grid-item' %}
+            </li>
+            {% endif %}
+            {% endfor %} 
+          </ul>
+        </div>
+      </div>
+      {% if settings.show_brand != blank%} 
+      <div class="products-collection collection-brand-list">
+        {% if settings.brand_title != ''%}
+        <h3 class="title-widget">
+          <span class="inner"> 
+            {% if settings.language_enable %}
+            <span class="lang1">{{ settings.brand_title | split: '|' | first }}</span>
+            <span class="lang2">{{ settings.brand_title | split: '|' | last }}</span>
+            {% else %}
+            {{ settings.brand_title | split: '|' | first }}
+            {% endif %}
+          </span>
+        </h3>
+        {% endif %}
+        <div class="category-products" style="margin: 0 -15px;"> 
+          <div class="data-carousel" data-auto="" data-items="5" data-1200="5" data-992="4" data-768="3" data-640="2" data-480="2" data-320="2" data-nav="true" data-prev="<i class=&quot;icon-arrow-left-products-header&quot;></i>" data-next="<i class=&quot;icon-arrow-right-products-header&quot;></i>" data-paging="true" data-margin="0" style="display: none;"></div>
+          <div class="products-grid carousel-init owl-carousel"> 
+            {% for i in (1..10) %}
+            {% capture enable %}show_brand{{ i }}{% endcapture %} 
+            {% capture image %}brand-image{{ i }}.png{% endcapture %}
+            {% capture link %}link_brand{{ i }}{% endcapture %} 
+            {% if settings[enable] != blank %}
+            <div class="item product">
+              <div class="item-area">
+                <a href="{{settings[link]}}">
+                  <img src="{{ image | asset_url}}" alt="" />
+                </a>
+              </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div> 
+      </div>
+      {% endif %} 
+      {% if settings.show_best_offers != blank%} 
+      <div class="products-collection best-offer">
+        {% if settings.best_offers_title != ''%}
+        <h3 class="title-widget">
+          <span class="inner"> 
+            {% if settings.language_enable %}
+            <span class="lang1">{{ settings.best_offers_title | split: '|' | first }}</span>
+            <span class="lang2">{{ settings.best_offers_title | split: '|' | last }}</span>
+            {% else %}
+            {{ settings.best_offers_title | split: '|' | first }}
+            {% endif %}
+          </span>
+        </h3>
+        {% endif %}
+        <div class="category-products" style="margin: 0 -15px;">
+          {%- assign limit = settings.best_offers_limit -%}   
+          {%- assign name_collection = settings.best_offers_collection -%}
+          {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+          {%- assign collection = collections[name_collection] -%} 
+          <div class="data-carousel" data-auto="" data-items="{{settings.best_offers_per_row}}" data-1200="{{settings.best_offers_per_row}}" data-992="4" data-768="3" data-640="2" data-480="2" data-320="2" data-nav="true" data-prev="<i class=&quot;icon-arrow-left-products-header&quot;></i>" data-next="<i class=&quot;icon-arrow-right-products-header&quot;></i>" data-paging="true" data-margin="0" style="display: none;"></div>
+          {% if collection.products.size == 0 %}
+          <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+          {% else %}
+          <div class="products-grid carousel-init owl-carousel">
+            {% for product in collection.products limit: limit %}  
+            <div class="item product"> 
+              {% include 'owl-lazyload-product-grid-item' %} 
+            </div> 
+            {% endfor %}  
+          </div>
+          {%endif%}
+        </div>
+      </div>
+      {% endif %}
+      {% if settings.show_top_selling != blank%} 
+      <div class="products-collection top-selling">
+        {% if settings.top_selling_title != ''%}
+        <h3 class="title-widget">
+          <span class="inner"> 
+            {% if settings.language_enable %}
+            <span class="lang1">{{ settings.top_selling_title | split: '|' | first }}</span>
+            <span class="lang2">{{ settings.best_offers_title | split: '|' | last }}</span>
+            {% else %}
+            {{ settings.top_selling_title | split: '|' | first }}
+            {% endif %}
+          </span>
+        </h3>
+        {% endif %}
+        <div class="category-products" style="margin: 0 -15px;">
+          {%- assign limit = settings.top_selling_limit -%}   
+          {%- assign name_collection = settings.top_selling_collection -%}
+          {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+          {%- assign collection = collections[name_collection] -%} 
+          <div class="data-carousel" data-auto="" data-items="{{settings.top_selling_per_row}}" data-1200="{{settings.top_selling_per_row}}" data-992="4" data-768="3" data-640="2" data-480="2" data-320="2" data-nav="true" data-prev="<i class=&quot;icon-arrow-left-products-header&quot;></i>" data-next="<i class=&quot;icon-arrow-right-products-header&quot;></i>" data-paging="true" data-margin="0" style="display: none;"></div>
+          {% if collection.products.size == 0 %}
+          <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+          {% else %}
+          <div class="products-grid carousel-init owl-carousel">
+            {% for product in collection.products limit: limit %}  
+            <div class="item product"> 
+              {% include 'owl-lazyload-product-grid-item' %} 
+            </div> 
+            {% endfor %}  
+          </div>
+          {%endif%}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% if settings.collection_sidebar_position != 'none' %}
+    <div class="col-sm-3 sidebar {% if settings.collection_sidebar_position == 'left' %}f-left{% endif %}">
+      {% include 'collection-sidebar' %}
+    </div>
+    {% endif %}
+  </div>
+</div>

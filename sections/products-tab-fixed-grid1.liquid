@@ -1,0 +1,184 @@
+<div data-section-id="{{ section.id }}" data-section-type="collection-filter-section"> 
+  {% assign limit = 13 %}   
+  <div id="collection-filter-{{ section.id }}" class="main-tab-products" style="margin:{{section.settings.margin_section}};">  
+    {% if section.blocks.size > 0 %}
+    <div class="tab-product-collection tab-grid-fixed">  
+      <div class="container">
+        <div class="category-list ">
+          <div class="tab-selector">  
+            {% if section.settings.title != '' %}
+            <h3 class="main-tab-title">
+              <span class="inner"> 
+                {% if settings.language_enable %}
+                <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+                <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+                {% else %}
+                {{ section.settings.title | split: '|' | first }}
+                {% endif %}
+              </span>
+            </h3>
+            {% endif %}
+            <ul class="nav nav-tabs" role="tablist"> 
+              {% for block in section.blocks %}
+              <li class="{% if forloop.index == 1%}active first{% endif %}">
+                <a href="#collection-{{ section.id }}{{forloop.index}}" data-toggle="tab"> 
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+                  {% else %}
+                  {{ block.settings.title | split: '|' | first }}
+                  {% endif %}
+                </a>
+              </li> 
+              {% endfor %}  
+            </ul> 
+          </div> 
+        </div>
+        <div class="category-detail">
+          <div class="tab-content">            
+            {% for block in section.blocks %}
+            <div class="tab-pane {% if forloop.index == 1%}active{% endif %}" id="collection-{{ section.id }}{{forloop.index}}"> 
+              <div class="category-products {% if section.settings.hide_action == '1' %}hide-action{% endif %}">  
+                {%- assign name_collection = block.settings.collection -%}
+                {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+                {%- assign collection = collections[name_collection] -%} 
+                {% if collection.products.size == 0 %}
+                <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+                {% else %} 
+                <ul class="products-grid">
+                  {% for product in collection.products limit: limit %}  
+                  {% if forloop.index <= 6 %}
+                  {% assign row  = forloop.index | modulo:2 %}
+                  {% if row == 1 %}
+                  <div class="group">
+                    {% endif %}
+                    <li class="item product product-layout-grid"> 
+                      {% include 'lazyload-product-grid-item' %} 
+                    </li> 
+                    {% if row == 0 or forloop.last %}
+                  </div> 
+                  {% endif %}
+                  {% endif %}
+                  {% if forloop.index == 7 %}
+                  <div class="group double">
+                    <li class="item product single-product-deal"> 
+                      {% include 'single-product-deal' %}
+                    </li>
+                  </div> 
+                  {% endif %} 
+                  {% if forloop.index > 7 %}
+                  {% assign row  = forloop.index | modulo:2 %}
+                  {% if row == 0 %}
+                  <div class="group">
+                    {% endif %}
+                    <li class="item product product-layout-grid"> 
+                      {% include 'lazyload-product-grid-item' %} 
+                    </li> 
+                    {% if row == 1 or forloop.last %}
+                  </div> 
+                  {% endif %}
+                  {% endif %}
+                  {% endfor %} 
+                </ul>  
+                {% endif %}
+              </div> 
+            </div>
+            {% endfor %} 
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Products Tab Fixed Grid 1",
+  "settings": [ 
+    {
+      "type": "header",
+      "content": "Config"
+    },  
+    {
+      "type": "text",
+      "id": "margin_section",
+      "label": "Margin Section",
+	  "default": "30px 0 30px 0",
+      "info": "Eg: 0px 10px 20px 30px"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Tab Title",
+	  "default": "<b>Daily Deals!</b> Get our best prices."
+    },    
+    {
+      "type": "radio",
+      "id": "hide_action",
+      "label": "Hide Action",
+      "options": [
+        {
+          "value": "1",
+          "label": "Yes"
+        },
+        {
+          "value": "0",
+          "label": "No"
+        }
+      ],
+      "default": "0"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection Title",
+		  "default": "Collection Title"
+        },
+        {
+          "type":"collection",
+          "id":"collection",
+          "label":"Collection"
+        } 
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products Tab Fixed Grid 1",
+      "category": "Products",
+      "blocks": [ 
+        {
+          "type": "collection",
+          "settings": {
+            "title": "-30%" 
+          } 
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "-50%" 
+          } 
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "-70%" 
+          } 
+        } 
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

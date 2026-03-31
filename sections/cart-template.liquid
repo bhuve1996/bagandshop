@@ -1,0 +1,307 @@
+<div class="page-width" data-section-id="{{ section.id }}" data-section-type="filter-products-section"> 
+  <div class="container">
+    <div class="row">
+      {% if cart.item_count > 0 %}
+      <div class="checkout-cart">  
+        <div class="cart-inner"> 
+          <form action="/cart" method="post" novalidate class="cart table-wrap">
+            <div class="col-sm-12 col-md-8 col-lg-9">
+              <div class="cart-table-wrap">
+                <table class="data-table full cart-table">
+                  <thead> 
+                    <th rowspan="1" class="text-left" style="width:110px;" {% if settings.language_enable %}data-translate="cart.label.product"{% endif %}>{{ 'cart.label.product' | t }}</th>
+                    <th rowspan="1" class="hidden-xs"></th>
+                    <th rowspan="1" class="text-center" style="text-align:center;" {% if settings.language_enable %}data-translate="cart.label.price"{% endif %}>{{ 'cart.label.price' | t }}</th> 
+                    <th rowspan="1" class="text-center" style="text-align:center;" {% if settings.language_enable %}data-translate="cart.label.quantity"{% endif %}>{{ 'cart.label.quantity' | t }}</th> 
+                  </thead>               
+                  <tbody>
+                    {% for item in cart.items %}
+                    <tr>
+                      <td class="text-left pr-img-td hidden-xs" data-label="{{ 'customer.order.product' | t }}" style="width:110px;">
+                        <a href="{{ item.url | within: collections.all }}">
+                          <img class="cart__image" src="{{ item | img_url: '107', scale: 1 }}" alt="{{ item.title | escape }}">
+                        </a>
+                      </td>
+                      <td class="text-left product-name-td">
+                        <a href="{{ item.url | within: collections.all }}" class="visible-xs">
+                          <img class="cart__image" src="{{ item | img_url: '107', scale: 1 }}" alt="{{ item.title | escape }}">
+                        </a>
+                        <h5 class="product-name"> 
+                          <a href="{{ item.url }}"> 
+                            {% if settings.language_enable %}
+                            <div class="lang1">{{ item.product.title | split: '|' | first }}</div>
+                            <div class="lang2">{{ item.product.title | split: '|' | last }}</div>
+                            {% else %}
+                            {{ item.product.title | split: '|' | first }}
+                            {% endif %} 
+                          </a>
+                          {% unless item.variant.title contains 'Default' %}
+                          <div class="cart__meta-text">
+                            {% for option in item.product.options %}
+                            {{ option }}: {{ item.variant.options[forloop.index0] }}<br/>
+                            {% endfor %}
+                          </div>
+                          {% endunless %} 
+                        </h5>       
+                        {% comment %}
+                        Optional, loop through custom product line items if available
+
+                        Line item properties come in as having two parts. The first part will be passed with the default form,
+                        but p.last is the actual custom property and may be blank. If it is, don't show it.
+
+                        For more info on line item properties, visit:
+                        - http://docs.shopify.com/support/your-store/products/how-do-I-collect-additional-information-on-the-product-page-Like-for-a-monogram-engraving-or-customization
+                        {% endcomment %}
+                        {%- assign property_size = item.properties | size -%}
+                        {% if property_size > 0 %}
+                        <div class="cart__meta-text">
+                          {% for p in item.properties %}
+                          {% unless p.last == blank %}
+                          {{ p.first }}:
+
+                          {% comment %}
+                          Check if there was an uploaded file associated
+                          {% endcomment %}
+                          {% if p.last contains '/uploads/' %}
+                          <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                          {% else %}
+                          {{ p.last }}
+                          {% endif %}
+                          {% endunless %}
+                          {% endfor %}
+                        </div>
+                        {% endif %}
+                      </td>
+                      <td data-label="{{ 'cart.label.price' | t }}" style="text-align:center;">
+                        <span class="cart-price">
+                          <span class="money">{{ item.price | money }}</span>
+                        </span>
+                        {% for discount in item.discounts %}
+                        <div class="cart-item__discount medium-up--hide">{{ discount.title }}</div>
+                        {% endfor %}
+                      </td>
+                      <td class="a-center product-qty last" style="text-align:center;" data-label="{{ 'cart.label.quantity' | t }}">
+                        <div class="input-box">
+                          <input type="text" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0"> 
+                          <div class="plus-minus">
+                            <div class="increase items" onclick="var result = document.getElementById('updates_{{ item.id }}'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;">+</div>
+                            <div class="reduced items" onclick="var result = document.getElementById('updates_{{ item.id }}'); var qty = result.value; if( !isNaN( qty ) &amp;&amp; qty > 1 ) result.value--;return false;">-</div>
+                          </div>
+                        </div> 
+                      </td> 
+                      <td class="action-td" style="text-align:right;"><a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="remove-item"><i class="icon-close"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="10">
+                        <div class="cart-buttons-container">
+                          <a href="/" type="submit" class="btn-button bordered"><span {% if settings.language_enable %}data-translate="cart.general.continue"{% endif %}>{{ 'cart.general.continue' | t }}</span></a>
+                          <button type="submit" class="btn-button bordered btn-update tiny"><span {% if settings.language_enable %}data-translate="cart.general.update"{% endif %}>{{ 'cart.general.update' | t }}</span></button>                   
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              {% if section.settings.cart_notes_enable %}
+              <div class="grid__item medium-up--one-half">
+                <label for="CartSpecialInstructions">{{ 'cart.general.note' | t }}</label>
+                <textarea name="note" id="CartSpecialInstructions" class="cart__note">{{ cart.note }}</textarea>
+              </div>
+              {% endif %}
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-3">
+              <div class="checkout-info">
+                <div class="shipping">
+                  <h2 class="closed"><a href="#collapse-shipping" class="collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-shipping" {% if settings.language_enable %}data-translate="cart.shipping.title"{% endif %}>{{'cart.shipping.title' | t}}</a></h2>
+                  <div id="collapse-shipping" class="shipping-form collapse">
+                    {% include 'shipping-calculator' %}
+                  </div>
+                </div>
+              </div>
+              <div class="totals">  
+                <h2><span {% if settings.language_enable %}data-translate="cart.general.carttotals"{% endif %}>{{ 'cart.general.carttotals' | t }}</span></h2>
+                <div class="totals-content">
+                  <table id="shopping-cart-totals-table"> 
+                    <tfoot> 
+                      <tr>
+                        <td class="a-right" colspan="1">
+                          <strong {% if settings.language_enable %}data-translate="cart.general.grandtotal"{% endif %}>{{ 'cart.general.grandtotal' | t }}</strong>
+                        </td>
+                        <td class="a-right">
+                          <strong><span class="price"><span class="money">{{ cart.total_price | money }}</span></span></strong>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    <tbody>
+                      <tr>
+                        <td class="a-right" colspan="1" {% if settings.language_enable %}data-translate="cart.general.subtotal"{% endif %}>{{ 'cart.general.subtotal' | t }}</td>
+                        <td class="a-right">
+                          <span class="price"><span class="money">{{ cart.total_price | money }}</span></span>    
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="text-align: center; font-style: italic; margin: 10px 0;">
+                    <span {% if settings.language_enable %}data-translate="cart.general.tax_inclusive"{% endif %}>Inclusive of all taxes</span>
+                  </div>
+                  <ul class="checkout-types">
+                    <li>
+                      <input type="submit" name="checkout" class="btn-button" {% if settings.language_enable %}data-translate="cart.general.checkout"{% endif %} value="{{ 'cart.general.checkout' | t }}">
+                    </li>
+                  </ul> 
+                </div>
+                {%if sections.settings.custom_html != '' %}
+                <div class="custom-html"> 
+                  {% if settings.language_enable %}
+                  <div class="lang1">{{ section.settings.custom_html | split: '|' | first }}</div>
+                  <div class="lang2">{{ section.settings.custom_html | split: '|' | last }}</div>
+                  {% else %}
+                  {{ section.settings.custom_html | split: '|' | first }}
+                  {% endif %}
+                </div>
+                {% endif %}
+              </div>  
+            </div> 
+          </form>
+        </div> 
+      </div>
+      {% else %} 
+      <div class="checkout-cart col-sm-12">
+        <h2 {% if settings.language_enable %}data-translate="cart.general.title"{% endif %}>{{ 'cart.general.title' | t }}</h2>
+        <p {% if settings.language_enable %}data-translate="cart.general.empty"{% endif %}>{{ 'cart.general.empty' | t }}</p>
+        <p {% if settings.language_enable %}data-translate="cart.general.continue_browsing_html"{% endif %}>{{ 'cart.general.continue_browsing_html' | t }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% if section.settings.product_slide != blank %}
+    <div id="filter-products-{{ section.id }}" style="margin-top:30px;">
+      <div class="products-collection">
+        {% if section.settings.title != '' %}
+        <h3 class="title-widget">
+          <span class="inner"> 
+            {% if settings.language_enable %}
+            <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+            <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+            {% else %}
+            {{ section.settings.title | split: '|' | first }}
+            {% endif %}
+          </span>
+        </h3>
+        {% endif %} 
+        <div class="category-products">  
+          {%- assign limit = section.settings.limit -%}   
+          {%- assign name_collection = section.settings.collection -%}
+          {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+          {%- assign collection = collections[name_collection] -%} 
+          <div class="data-carousel carousel-init"  
+               data-auto="{{ section.settings.autoplay }}"
+               data-items="{{ section.settings.column }}"
+               data-1200="{{ section.settings.column }}"
+               data-992="4"
+               data-768="3"
+               data-640="2"
+               data-480="2"
+               data-320="2"
+               data-nav="{{ section.settings.show_nav }}"
+               data-prev='{{ section.settings.nav_prev}}'
+               data-next='{{ section.settings.nav_next}}'
+               data-paging="{{ section.settings.show_paging }}"
+               data-margin='0' style="display: none;"></div>
+          {% if collection.products.size == 0 %}
+          <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+          {% else %} 
+          <div class="products-grid owl-carousel"> 
+            {% for product in collection.products limit: limit %}  
+            <div class="item product"> 
+              {% include 'owl-lazyload-product-grid-item' %} 
+            </div> 
+            {% endfor %}  
+          </div> 
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif%}
+  </div>  
+</div> 
+{% schema %}
+  {
+    "name": "Cart page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "cart_notes_enable",
+        "label": "Enable cart notes",
+        "default": true
+      }, 
+	  {
+        "type": "html",
+        "id": "custom_html",
+        "label": "Custom html order summary"
+      },
+	  {
+        "type": "checkbox",
+        "id": "product_slide",
+        "label": "Show product intersted",
+        "default": true
+      },
+	  {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "You May Be Interested also in"
+      },  
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "text",
+        "id": "limit",
+        "label": "Number of products to show",
+        "default": "8"
+      },  
+      {
+        "type": "text",
+        "id": "column",
+        "label": "Products per row",
+        "default": "7"
+      }, 
+      {
+        "type": "text",
+        "id": "autoplay",
+        "label": "Slideshow",
+        "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+        "default": "5000"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_paging",
+        "label": "Show Paging",
+        "default": true
+      },  
+      {
+        "type": "checkbox",
+        "id": "show_nav",
+        "label": "Show Navigation",
+        "default": true
+      },  
+      {
+        "type": "text",
+        "id": "nav_prev",
+        "label": "Prev Navigation",
+        "default": "<i class=\"icon-arrow-left-products-header\"><\/i>"
+      },
+      {
+        "type": "text",
+        "id": "nav_next",
+        "label": "Next Navigation",
+        "default": "<i class=\"icon-arrow-right-products-header\"><\/i>"
+      }
+    ]
+  }
+{% endschema %}
