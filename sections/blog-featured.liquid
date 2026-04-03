@@ -4,8 +4,16 @@
 {% endif %}
 
 {% assign blog_featured_ready = false %}
-{% if blog_handle != blank and featured_blog != blank and featured_blog.empty? == false and featured_blog.articles_count > 0 %}
+{% if blog_handle != blank and featured_blog != blank and featured_blog.empty? == false %}
   {% assign blog_featured_ready = true %}
+{% endif %}
+
+{% assign bf_page_size = section.settings.post_limit | default: 4 | plus: 0 %}
+{% if bf_page_size < 1 %}
+  {% assign bf_page_size = 1 %}
+{% endif %}
+{% if bf_page_size > 50 %}
+  {% assign bf_page_size = 50 %}
 {% endif %}
 
 <style>
@@ -21,8 +29,8 @@
 </style>
 
 {% if blog_featured_ready %}
-  {% assign limit = section.settings.post_limit | default: 4 %}
-  {% assign limit = limit | at_most: 12 | at_least: 1 %}
+  {% paginate featured_blog.articles by bf_page_size %}
+    {% if paginate.items != empty %}
   {% capture grid_cols %}
     {% case section.settings.columns_desktop %}
       {% when '2' %}repeat(2, minmax(0, 1fr))
@@ -209,7 +217,7 @@
           {% endif %}
           {% if section.settings.heading != blank %}
             <h2 class="blog-featured__title">
-              {% if settings.language_enable %}
+              {% if settings.language_enable and section.settings.heading contains '|' %}
                 <span class="lang1">{{ section.settings.heading | split: '|' | first }}</span>
                 <span class="lang2">{{ section.settings.heading | split: '|' | last }}</span>
               {% else %}
@@ -224,7 +232,7 @@
       {% endif %}
 
       <div class="blog-featured__grid">
-        {% for article in featured_blog.articles limit: limit %}
+        {% for article in featured_blog.articles %}
           <article class="blog-featured__card">
             {% if section.settings.show_image %}
               <a href="{{ article.url }}" class="blog-featured__media" aria-hidden="true" tabindex="-1">
@@ -249,11 +257,11 @@
               {% endif %}
               <h3 class="blog-featured__card-title">
                 <a href="{{ article.url }}">
-                  {% if settings.language_enable %}
+                  {% if settings.language_enable and article.title contains '|' %}
                     <span class="lang1">{{ article.title | split: '|' | first }}</span>
                     <span class="lang2">{{ article.title | split: '|' | last }}</span>
                   {% else %}
-                    {{ article.title | split: '|' | first }}
+                    {{ article.title }}
                   {% endif %}
                 </a>
               </h3>
@@ -288,6 +296,18 @@
       {% endif %}
     </div>
   </div>
+    {% elsif request.design_mode %}
+      <div
+        class="blog-featured blog-featured--editor-hint"
+        style="margin: 1rem 0; padding: 1.75rem 1.25rem; text-align: center; background: #fff7ed; border: 1px dashed #fdba74; border-radius: 12px; color: #9a3412;"
+      >
+        <p style="margin: 0 0 0.5rem; font-weight: 700;">Featured blog posts</p>
+        <p style="margin: 0; font-size: 0.9375rem;">
+          This blog has no articles on the first page yet, or they are not published. Use <strong>Online Store → Blog posts</strong> and set visibility to visible.
+        </p>
+      </div>
+    {% endif %}
+  {% endpaginate %}
 {% elsif request.design_mode %}
   <div
     class="blog-featured blog-featured--editor-hint"
