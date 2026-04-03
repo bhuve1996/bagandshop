@@ -3,7 +3,24 @@
   {% assign featured_blog = blogs[blog_handle] %}
 {% endif %}
 
+{% assign blog_featured_ready = false %}
 {% if blog_handle != blank and featured_blog != blank and featured_blog.empty? == false and featured_blog.articles_count > 0 %}
+  {% assign blog_featured_ready = true %}
+{% endif %}
+
+<style>
+  /* Keep this section in normal document flow (theme floats can collapse empty/neighbor blocks). */
+  #shopify-section-{{ section.id }} {
+    display: block;
+    width: 100%;
+    clear: both;
+    float: none;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+{% if blog_featured_ready %}
   {% assign limit = section.settings.post_limit | default: 4 %}
   {% assign limit = limit | at_most: 12 | at_least: 1 %}
   {% capture grid_cols %}
@@ -271,6 +288,24 @@
       {% endif %}
     </div>
   </div>
+{% elsif request.design_mode %}
+  <div
+    class="blog-featured blog-featured--editor-hint"
+    style="margin: 1rem 0; padding: 1.75rem 1.25rem; text-align: center; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 12px; color: #334155;"
+  >
+    <p style="margin: 0 0 0.5rem; font-weight: 700; font-size: 1rem;">Blog featured</p>
+    <p style="margin: 0; font-size: 0.9375rem; line-height: 1.5;">
+      This block only appears on the storefront when the selected blog has published articles.
+      Add posts under <strong>Online Store → Blog posts</strong>, then confirm the correct blog is selected in the section settings.
+    </p>
+    {% if blog_handle == blank %}
+      <p style="margin: 0.75rem 0 0; font-size: 0.875rem;">Status: no blog selected.</p>
+    {% elsif featured_blog == blank or featured_blog.empty? %}
+      <p style="margin: 0.75rem 0 0; font-size: 0.875rem;">Status: blog handle “{{ blog_handle }}” was not found.</p>
+    {% elsif featured_blog.articles_count == 0 %}
+      <p style="margin: 0.75rem 0 0; font-size: 0.875rem;">Status: this blog has no published articles yet.</p>
+    {% endif %}
+  </div>
 {% endif %}
 
 {% schema %}
@@ -281,7 +316,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Create posts in Online Store → Blog posts. Pick the blog below. If the blog is empty, this section stays hidden."
+      "content": "Create posts in Online Store → Blog posts and pick the blog below. If the blog is empty, this section outputs nothing on the live site (not a CSS hide). In the theme editor you will see a setup note instead."
     },
     {
       "type": "text",
