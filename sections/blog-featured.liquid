@@ -293,7 +293,7 @@
     class="blog-featured blog-featured--editor-hint"
     style="margin: 1rem 0; padding: 1.75rem 1.25rem; text-align: center; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 12px; color: #334155;"
   >
-    <p style="margin: 0 0 0.5rem; font-weight: 700; font-size: 1rem;">Blog featured</p>
+    <p style="margin: 0 0 0.5rem; font-weight: 700; font-size: 1rem;">Featured blog posts</p>
     <p style="margin: 0; font-size: 0.9375rem; line-height: 1.5;">
       This block only appears on the storefront when the selected blog has published articles.
       Add posts under <strong>Online Store → Blog posts</strong>, then confirm the correct blog is selected in the section settings.
@@ -310,7 +310,7 @@
 
 {% schema %}
 {
-  "name": "Blog featured",
+  "name": "Featured blog posts",
   "tag": "section",
   "class": "section-blog-featured",
   "settings": [
@@ -467,8 +467,20 @@
   ],
   "presets": [
     {
-      "name": "Blog featured",
-      "category": "Storytelling"
+      "name": "Featured blog posts",
+      "category": "Custom",
+      "settings": {
+        "heading": "Stories & guides",
+        "blog": "news"
+      }
+    },
+    {
+      "name": "Blog — latest articles",
+      "category": "Text",
+      "settings": {
+        "heading": "From our blog",
+        "blog": "news"
+      }
     }
   ]
 }
