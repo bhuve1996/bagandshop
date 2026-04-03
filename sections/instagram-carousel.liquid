@@ -1,0 +1,823 @@
+<section
+  id="instagram-carousel-{{ section.id }}"
+  class="instagram-reels instagram-reels--{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-endpoint="{{ section.settings.feed_endpoint | escape }}"
+  data-limit="{{ section.settings.reels_limit }}"
+  data-autoplay="{{ section.settings.autoplay_videos }}"
+  data-show-captions="{{ section.settings.show_captions }}"
+  data-show-duration="{{ section.settings.show_duration }}"
+  data-show-handle="{{ section.settings.show_handle }}"
+  data-show-nav="{{ section.settings.show_navigation }}"
+  data-show-dots="{{ section.settings.show_dots }}"
+  data-loop="{{ section.settings.infinite_loop }}"
+  {% if section.settings.section_title != blank %}
+    data-title="{{ section.settings.section_title | escape }}"
+  {% endif %}
+>
+  <style>
+    .instagram-reels--{{ section.id }} {
+      --ig-bg: #ffffff;
+      --ig-text: #161616;
+      --ig-muted: #6b7280;
+      --ig-border: rgba(17, 24, 39, 0.08);
+      --ig-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+      --ig-shadow-active: 0 26px 42px rgba(15, 23, 42, 0.2);
+      --ig-radius: 14px;
+      --ig-gap: 16px;
+      --ig-side-scale: 0.88;
+      --ig-side-opacity: 0.62;
+      margin: {{ section.settings.section_margin }};
+      padding: {{ section.settings.section_padding }};
+      background: var(--ig-bg);
+    }
+
+    .instagram-reels__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .instagram-reels__title {
+      margin: 0;
+      color: var(--ig-text);
+      font-size: clamp(20px, 2.2vw, 30px);
+      line-height: 1.2;
+    }
+
+    .instagram-reels__status {
+      display: none;
+      margin: 0;
+      color: var(--ig-muted);
+      font-size: 13px;
+    }
+
+    .instagram-reels__viewport {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .instagram-reels__track {
+      display: flex;
+      align-items: stretch;
+      gap: var(--ig-gap);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 50%;
+      scroll-padding-right: 50%;
+      padding: 8px 10vw 8px;
+      margin: 0 -10vw;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .instagram-reels__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .instagram-reel {
+      flex: 0 0 clamp(220px, 26vw, 330px);
+      width: clamp(220px, 26vw, 330px);
+      scroll-snap-align: center;
+      transform: scale(var(--ig-side-scale));
+      opacity: var(--ig-side-opacity);
+      transition: transform 280ms ease, opacity 280ms ease, box-shadow 280ms ease;
+    }
+
+    .instagram-reel.is-visible {
+      opacity: 0.9;
+      transform: scale(0.94);
+    }
+
+    .instagram-reel.is-center {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .instagram-reel__inner {
+      border-radius: var(--ig-radius);
+      overflow: hidden;
+      box-shadow: var(--ig-shadow);
+      position: relative;
+      background: #111827;
+      border: 1px solid var(--ig-border);
+      height: 100%;
+    }
+
+    .instagram-reel.is-center .instagram-reel__inner {
+      box-shadow: var(--ig-shadow-active);
+    }
+
+    .instagram-reel__media {
+      position: relative;
+      aspect-ratio: 9 / 16;
+      width: 100%;
+      background: #0f172a;
+    }
+
+    .instagram-reel__poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .instagram-reel__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .instagram-reel__video.is-ready {
+      opacity: 1;
+    }
+
+    .instagram-reel__overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 12px;
+      color: #fff;
+      background: linear-gradient(180deg, rgba(2, 6, 23, 0) 0%, rgba(2, 6, 23, 0.84) 75%);
+      pointer-events: none;
+    }
+
+    .instagram-reel__meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+
+    .instagram-reel__handle {
+      display: inline-block;
+      max-width: 70%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .instagram-reel__duration {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .instagram-reel__caption {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .instagram-reel__mute {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 2;
+      border: none;
+      border-radius: 999px;
+      width: 36px;
+      height: 36px;
+      background: rgba(2, 6, 23, 0.6);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 200ms ease;
+    }
+
+    .instagram-reel__mute:hover {
+      background: rgba(2, 6, 23, 0.8);
+    }
+
+    .instagram-reels__nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .instagram-reels__arrow {
+      border: 1px solid var(--ig-border);
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #fff;
+      color: #111827;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .instagram-reels__dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instagram-reels__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #c4cbd6;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .instagram-reels__dot.is-active {
+      background: #111827;
+      transform: scale(1.2);
+    }
+
+    .instagram-reels__skeleton {
+      flex: 0 0 clamp(220px, 26vw, 330px);
+      width: clamp(220px, 26vw, 330px);
+      border-radius: var(--ig-radius);
+      aspect-ratio: 9 / 16;
+      background: linear-gradient(90deg, #edf0f3 0%, #f8fafc 45%, #edf0f3 100%);
+      background-size: 220% 100%;
+      animation: igShimmer 1.25s infinite linear;
+      border: 1px solid #e5e7eb;
+    }
+
+    @keyframes igShimmer {
+      from { background-position: 100% 0; }
+      to { background-position: -120% 0; }
+    }
+
+    @media (max-width: 1199px) {
+      .instagram-reel,
+      .instagram-reels__skeleton {
+        flex-basis: clamp(210px, 40vw, 300px);
+        width: clamp(210px, 40vw, 300px);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .instagram-reels--{{ section.id }} {
+        --ig-gap: 12px;
+        --ig-side-scale: 0.86;
+      }
+
+      .instagram-reel,
+      .instagram-reels__skeleton {
+        flex-basis: 82vw;
+        width: 82vw;
+      }
+
+      .instagram-reels__track {
+        padding-left: 6vw;
+        padding-right: 6vw;
+        margin: 0 -6vw;
+      }
+    }
+  </style>
+
+  {% assign enabled_handles = '' %}
+  {% for block in section.blocks %}
+    {% assign handle_clean = block.settings.instagram_handle | strip | replace: '@', '' %}
+    {% if handle_clean != blank %}
+      {% if enabled_handles != blank %}
+        {% assign enabled_handles = enabled_handles | append: ',' %}
+      {% endif %}
+      {% assign enabled_handles = enabled_handles | append: handle_clean %}
+    {% endif %}
+  {% endfor %}
+
+  {% if section.settings.section_title != blank %}
+    <div class="instagram-reels__head">
+      <h2 class="instagram-reels__title">{{ section.settings.section_title }}</h2>
+      <p class="instagram-reels__status" data-status></p>
+    </div>
+  {% endif %}
+
+  <div class="instagram-reels__viewport">
+    <div class="instagram-reels__track" data-track>
+      {% for i in (1..4) %}
+        <div class="instagram-reels__skeleton" aria-hidden="true"></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="instagram-reels__nav" {% unless section.settings.show_navigation or section.settings.show_dots %}style="display:none;"{% endunless %}>
+    {% if section.settings.show_navigation %}
+      <button class="instagram-reels__arrow" type="button" data-nav="prev" aria-label="Previous reel">&#8249;</button>
+    {% endif %}
+    {% if section.settings.show_dots %}
+      <div class="instagram-reels__dots" data-dots></div>
+    {% endif %}
+    {% if section.settings.show_navigation %}
+      <button class="instagram-reels__arrow" type="button" data-nav="next" aria-label="Next reel">&#8250;</button>
+    {% endif %}
+  </div>
+
+  <div hidden data-handles="{{ enabled_handles }}"></div>
+
+  <script>
+    (function () {
+      var root = document.getElementById('instagram-carousel-{{ section.id }}');
+      if (!root || root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+
+      var track = root.querySelector('[data-track]');
+      var statusNode = root.querySelector('[data-status]');
+      var dotsNode = root.querySelector('[data-dots]');
+      var handlesNode = root.querySelector('[data-handles]');
+      var handles = [];
+      if (handlesNode && handlesNode.dataset.handles) {
+        handles = handlesNode.dataset.handles.split(',').map(function (item) {
+          return item.trim();
+        }).filter(Boolean);
+      }
+
+      var endpoint = root.dataset.endpoint || '';
+      var limit = parseInt(root.dataset.limit || '10', 10);
+      var autoplayEnabled = root.dataset.autoplay === 'true';
+      var showCaptions = root.dataset.showCaptions === 'true';
+      var showDuration = root.dataset.showDuration === 'true';
+      var showHandle = root.dataset.showHandle === 'true';
+      var enableLoop = root.dataset.loop === 'true';
+      var isDestroyed = false;
+
+      function setStatus(message, show) {
+        if (!statusNode) return;
+        statusNode.textContent = message || '';
+        statusNode.style.display = show ? 'block' : 'none';
+      }
+
+      function safeText(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function formatDuration(seconds) {
+        if (!seconds && seconds !== 0) return '';
+        var total = Math.max(0, parseInt(seconds, 10) || 0);
+        var mins = Math.floor(total / 60);
+        var secs = total % 60;
+        return mins + ':' + String(secs).padStart(2, '0');
+      }
+
+      function normalizeReel(item) {
+        var handle = item.handle || item.username || item.owner || item.account || '';
+        var caption = item.caption || item.title || item.text || '';
+        return {
+          id: item.id || item.media_id || item.shortcode || (handle + '-' + (item.timestamp || Math.random())),
+          handle: String(handle).replace('@', ''),
+          caption: caption,
+          duration: item.duration || item.video_duration || 0,
+          thumbnail: item.thumbnail_url || item.thumbnail || item.poster || item.cover_url || '',
+          video: item.video_url || item.video || item.media_url || '',
+          permalink: item.permalink || item.url || '#',
+          timestamp: item.timestamp || ''
+        };
+      }
+
+      function sortAndTrim(reels, maxReels) {
+        return reels
+          .filter(function (item) { return item && item.video; })
+          .sort(function (a, b) {
+            var tA = Date.parse(a.timestamp || '') || 0;
+            var tB = Date.parse(b.timestamp || '') || 0;
+            return tB - tA;
+          })
+          .slice(0, maxReels);
+      }
+
+      function buildReelMarkup(reel, index) {
+        var captionHtml = showCaptions && reel.caption
+          ? '<p class="instagram-reel__caption">' + safeText(reel.caption) + '</p>'
+          : '';
+        var handleHtml = showHandle && reel.handle
+          ? '<span class="instagram-reel__handle">@' + safeText(reel.handle) + '</span>'
+          : '';
+        var durationHtml = showDuration && reel.duration
+          ? '<span class="instagram-reel__duration">' + safeText(formatDuration(reel.duration)) + '</span>'
+          : '';
+        var overlayHtml = (captionHtml || handleHtml || durationHtml)
+          ? '<div class="instagram-reel__overlay"><div class="instagram-reel__meta">' + handleHtml + durationHtml + '</div>' + captionHtml + '</div>'
+          : '';
+        return (
+          '<article class="instagram-reel" data-reel-index="' + index + '" data-reel-id="' + safeText(reel.id) + '">' +
+            '<div class="instagram-reel__inner">' +
+              '<div class="instagram-reel__media">' +
+                (reel.thumbnail ? '<img class="instagram-reel__poster" loading="lazy" src="' + safeText(reel.thumbnail) + '" alt="Instagram Reel">' : '') +
+                '<video class="instagram-reel__video" playsinline muted preload="none" data-src="' + safeText(reel.video) + '" loop></video>' +
+                '<button class="instagram-reel__mute" type="button" aria-label="Toggle sound" data-mute-btn>&#128264;</button>' +
+                overlayHtml +
+              '</div>' +
+            '</div>' +
+          '</article>'
+        );
+      }
+
+      function renderDots(total) {
+        if (!dotsNode) return;
+        dotsNode.innerHTML = '';
+        var count = Math.min(total, 12);
+        for (var i = 0; i < count; i += 1) {
+          var dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'instagram-reels__dot';
+          dot.setAttribute('aria-label', 'Go to reel ' + (i + 1));
+          dot.dataset.dotIndex = String(i);
+          dotsNode.appendChild(dot);
+        }
+      }
+
+      function updateActiveDot(centerIndex) {
+        if (!dotsNode) return;
+        var dots = dotsNode.querySelectorAll('.instagram-reels__dot');
+        dots.forEach(function (dot, index) {
+          if (index === centerIndex % dots.length) dot.classList.add('is-active');
+          else dot.classList.remove('is-active');
+        });
+      }
+
+      function ensureVideoLoaded(video) {
+        if (!video || video.dataset.loaded === 'true') return;
+        var src = video.dataset.src;
+        if (!src) return;
+        video.src = src;
+        video.load();
+        video.dataset.loaded = 'true';
+      }
+
+      function pauseVideo(video) {
+        if (!video) return;
+        try { video.pause(); } catch (err) {}
+      }
+
+      function playVideo(video) {
+        if (!video || !autoplayEnabled) return;
+        ensureVideoLoaded(video);
+        var promise = video.play();
+        if (promise && typeof promise.catch === 'function') promise.catch(function () {});
+      }
+
+      function markCenterSlide() {
+        var slides = track.querySelectorAll('.instagram-reel');
+        if (!slides.length) return;
+        var trackRect = track.getBoundingClientRect();
+        var centerX = trackRect.left + (trackRect.width / 2);
+        var bestIndex = 0;
+        var minDelta = Infinity;
+
+        slides.forEach(function (slide, idx) {
+          var rect = slide.getBoundingClientRect();
+          var slideCenter = rect.left + (rect.width / 2);
+          var delta = Math.abs(slideCenter - centerX);
+          if (delta < minDelta) {
+            minDelta = delta;
+            bestIndex = idx;
+          }
+          slide.classList.remove('is-center');
+        });
+        slides[bestIndex].classList.add('is-center');
+        updateActiveDot(bestIndex);
+      }
+
+      function setupPlaybackObservers() {
+        var slides = Array.prototype.slice.call(track.querySelectorAll('.instagram-reel'));
+        if (!slides.length) return function () {};
+
+        var nearObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              var v = entry.target.querySelector('.instagram-reel__video');
+              ensureVideoLoaded(v);
+            }
+          });
+        }, { root: track, threshold: 0.15 });
+
+        var playObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var slide = entry.target;
+            var video = slide.querySelector('.instagram-reel__video');
+            if (entry.isIntersecting) {
+              slide.classList.add('is-visible');
+              playVideo(video);
+            } else {
+              slide.classList.remove('is-visible');
+              pauseVideo(video);
+            }
+          });
+        }, { root: track, threshold: 0.6 });
+
+        slides.forEach(function (slide) {
+          nearObserver.observe(slide);
+          playObserver.observe(slide);
+        });
+
+        var sectionObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) {
+              slides.forEach(function (slide) {
+                pauseVideo(slide.querySelector('.instagram-reel__video'));
+              });
+            }
+          });
+        }, { threshold: 0.05 });
+        sectionObserver.observe(root);
+
+        return function cleanup() {
+          nearObserver.disconnect();
+          playObserver.disconnect();
+          sectionObserver.disconnect();
+        };
+      }
+
+      function setupEvents() {
+        var raf;
+        var onScroll = function () {
+          if (raf) return;
+          raf = window.requestAnimationFrame(function () {
+            markCenterSlide();
+            raf = null;
+          });
+        };
+
+        track.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+
+        root.addEventListener('click', function (event) {
+          var navButton = event.target.closest('[data-nav]');
+          if (navButton) {
+            var direction = navButton.dataset.nav === 'next' ? 1 : -1;
+            var slide = track.querySelector('.instagram-reel');
+            if (slide) {
+              var amount = (slide.getBoundingClientRect().width + 16) * direction;
+              track.scrollBy({ left: amount, behavior: 'smooth' });
+            }
+            return;
+          }
+
+          var dot = event.target.closest('.instagram-reels__dot');
+          if (dot) {
+            var index = parseInt(dot.dataset.dotIndex || '0', 10);
+            var slideForDot = track.querySelector('.instagram-reel[data-reel-index="' + index + '"]');
+            if (slideForDot) {
+              slideForDot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+            return;
+          }
+
+          var muteButton = event.target.closest('[data-mute-btn]');
+          if (muteButton) {
+            var reel = muteButton.closest('.instagram-reel');
+            if (!reel) return;
+            var video = reel.querySelector('.instagram-reel__video');
+            if (!video) return;
+            ensureVideoLoaded(video);
+            video.muted = !video.muted;
+            muteButton.innerHTML = video.muted ? '&#128264;' : '&#128266;';
+            if (video.paused) playVideo(video);
+          }
+        });
+
+        return function cleanup() {
+          track.removeEventListener('scroll', onScroll);
+          window.removeEventListener('resize', onScroll);
+        };
+      }
+
+      function buildLoopedFeed(reels) {
+        if (!enableLoop || reels.length < 3) return reels;
+        return reels.concat(reels).concat(reels);
+      }
+
+      function maybeResetLoopPosition() {
+        if (!enableLoop) return;
+        var items = track.querySelectorAll('.instagram-reel');
+        if (!items.length) return;
+        var oneThird = Math.floor(items.length / 3);
+        if (!oneThird) return;
+
+        var first = items[0].getBoundingClientRect().width + 16;
+        var lowerBound = first * (oneThird - 1);
+        var upperBound = first * (oneThird * 2 + 1);
+
+        if (track.scrollLeft < lowerBound) {
+          track.scrollLeft += first * oneThird;
+        } else if (track.scrollLeft > upperBound) {
+          track.scrollLeft -= first * oneThird;
+        }
+      }
+
+      function hydrate(reels) {
+        var reelsForRender = buildLoopedFeed(reels);
+        track.innerHTML = reelsForRender.map(buildReelMarkup).join('');
+        renderDots(reels.length);
+
+        var cleanupPlayback = setupPlaybackObservers();
+        var cleanupEvents = setupEvents();
+
+        if (enableLoop && reelsForRender.length > reels.length) {
+          var firstSlide = track.querySelector('.instagram-reel');
+          if (firstSlide) {
+            var offset = Math.floor(reelsForRender.length / 3) * (firstSlide.getBoundingClientRect().width + 16);
+            track.scrollLeft = offset;
+          }
+          track.addEventListener('scroll', maybeResetLoopPosition, { passive: true });
+        }
+
+        markCenterSlide();
+
+        root.__igCleanup = function () {
+          if (isDestroyed) return;
+          isDestroyed = true;
+          cleanupPlayback();
+          cleanupEvents();
+          track.removeEventListener('scroll', maybeResetLoopPosition);
+        };
+      }
+
+      function parseResponse(payload) {
+        if (!payload) return [];
+        if (Array.isArray(payload)) return payload.map(normalizeReel);
+        if (Array.isArray(payload.reels)) return payload.reels.map(normalizeReel);
+        if (Array.isArray(payload.data)) return payload.data.map(normalizeReel);
+        return [];
+      }
+
+      function endpointUrl(base, list, maxItems) {
+        var url = new URL(base, window.location.origin);
+        if (list.length) url.searchParams.set('handles', list.join(','));
+        if (maxItems) url.searchParams.set('limit', String(maxItems));
+        return url.toString();
+      }
+
+      function hideSection() {
+        root.style.display = 'none';
+      }
+
+      function showErrorState(message) {
+        setStatus(message || 'Unable to load reels right now.', true);
+        track.innerHTML = '';
+      }
+
+      async function init() {
+        if (!handles.length || !endpoint) {
+          hideSection();
+          return;
+        }
+
+        try {
+          setStatus('Loading reels...', true);
+          var response = await fetch(endpointUrl(endpoint, handles, limit), { credentials: 'same-origin' });
+          if (!response.ok) throw new Error('Feed request failed');
+          var payload = await response.json();
+          var merged = sortAndTrim(parseResponse(payload), limit);
+
+          if (!merged.length) {
+            hideSection();
+            return;
+          }
+
+          hydrate(merged);
+          setStatus('', false);
+        } catch (error) {
+          showErrorState('Reels are temporarily unavailable.');
+        }
+      }
+
+      init();
+
+      document.addEventListener('shopify:section:unload', function (event) {
+        if (event.detail && event.detail.sectionId === '{{ section.id }}' && root.__igCleanup) {
+          root.__igCleanup();
+        }
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Instagram Reels Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Shop Our Reels"
+    },
+    {
+      "type": "url",
+      "id": "feed_endpoint",
+      "label": "Feed endpoint (App proxy/service URL)",
+      "info": "Example: /apps/instagram-reels"
+    },
+    {
+      "type": "range",
+      "id": "reels_limit",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "label": "Number of reels",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_videos",
+      "label": "Autoplay visible videos",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_captions",
+      "label": "Show captions",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_duration",
+      "label": "Show duration",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_handle",
+      "label": "Show Instagram handle",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show arrow navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "infinite_loop",
+      "label": "Enable loop mode",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_margin",
+      "label": "Section margin",
+      "default": "20px 0 30px 0"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "default": "0 0 0 0"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "instagram_account",
+      "name": "Instagram handle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "instagram_handle",
+          "label": "Instagram handle",
+          "info": "Enter without URL, e.g. bagandshop",
+          "default": "instagram"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Reels Carousel",
+      "category": "Social",
+      "blocks": [
+        {
+          "type": "instagram_account",
+          "settings": {
+            "instagram_handle": "instagram"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

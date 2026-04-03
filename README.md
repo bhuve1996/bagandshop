@@ -77,3 +77,68 @@ Default pages (homepage, 404) use the same copy; the homepage is created by seed
 
 - **Admin**: **Pages** (section builder), **Categories**, **Products** (with variants), **Combos**, **Vendors** (CRUD, product mapping, vendor inventory, Sync). Preview links to storefront.
 - **Storefront**: Homepage and slug-based pages from section config. **/collections** and **/collections/[slug]** for categories and products; **/products/[handle]** for product detail; **/combos** and **/combos/[handle]** for bundles (combo inventory = min across items). Use `?preview=1` for unpublished pages.
+
+## Shopify Instagram Reels API (Vercel)
+
+This repo now includes a Vercel serverless function at `api/instagram-reels.js` for the Shopify section `sections/instagram-carousel.liquid`.
+
+### Endpoint
+
+- Public route (recommended in Theme Editor): `/apps/instagram-reels`
+- Direct function route: `/api/instagram-reels`
+
+### Query params
+
+- `handles` (required): comma-separated handles, e.g. `instagram,natgeo`
+- `limit` (optional): max reels to return (`1..24`, default `10`)
+
+Example:
+
+```bash
+https://<your-vercel-domain>/apps/instagram-reels?handles=instagram&limit=10
+```
+
+### Required Vercel environment variables
+
+- `IG_ACCESS_TOKEN` - long-lived Instagram Graph API token
+- `IG_BUSINESS_USER_ID` - Instagram business account user id used for `business_discovery`
+- `IG_GRAPH_VERSION` (optional) - defaults to `v21.0`
+- `ALLOWED_ORIGIN` (optional) - CORS allow origin (default `*`)
+
+### Vercel deployment (same repo)
+
+1. Import this repository in Vercel.
+2. Keep project root as repo root.
+3. Add required env vars in Vercel project settings.
+4. Deploy.
+5. In Shopify Theme Editor -> `Instagram Reels Carousel`:
+   - Set `Feed endpoint` to `https://<your-vercel-domain>/apps/instagram-reels`
+   - Add Instagram handle blocks
+   - Save
+
+### Response shape
+
+Returns:
+
+```json
+{
+  "reels": [
+    {
+      "id": "1789...",
+      "handle": "instagram",
+      "caption": "...",
+      "duration": 12,
+      "thumbnail_url": "https://...",
+      "video_url": "https://...",
+      "permalink": "https://...",
+      "timestamp": "2026-03-31T00:00:00+0000"
+    }
+  ],
+  "meta": {
+    "handles": ["instagram"],
+    "limit": 10,
+    "fetched_handles": 1,
+    "warnings": []
+  }
+}
+```
