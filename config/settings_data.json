@@ -1777,6 +1777,31 @@
           "divider_width": "full",
           "custom_css": ""
         }
+      },
+      "blog_featured_journal": {
+        "type": "blog-featured",
+        "settings": {
+          "kicker": "Journal",
+          "heading": "Stories & guides",
+          "subheading": "Tips, drops, and behind-the-scenes from the shop.",
+          "blog": "news",
+          "post_limit": 4,
+          "columns_desktop": "3",
+          "show_image": true,
+          "show_date": true,
+          "show_excerpt": true,
+          "excerpt_words": 22,
+          "read_more_label": "Read more",
+          "show_view_all": true,
+          "view_all_label": "View all posts",
+          "padding_top": 56,
+          "padding_bottom": 56,
+          "card_radius": 14,
+          "background_color": "#f8fafc",
+          "text_color": "#0f172a",
+          "muted_color": "#64748b",
+          "accent_color": "#2563eb"
+        }
       }
     },
     "content_for_index": [
@@ -1786,6 +1811,7 @@
       "1498213231634",
       "1498279064221",
       "testimonials_bANPep",
+      "blog_featured_journal",
       "1498558851900",
       "1498329245023",
       "1498585458515",
