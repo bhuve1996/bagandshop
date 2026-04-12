@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DEFAULT_SITE_COPY } from '@bagandshop/shared';
 import { fetchProductByHandle, fetchSiteConfig } from '@/lib/api';
-import { AddToCartProduct } from '@/components/AddToCartButton';
+import { AddToCartProduct, BuyNowProduct } from '@/components/AddToCartButton';
 import { ProductReviews } from '@/components/ProductReviews';
 
 export const revalidate = 60;
@@ -10,6 +10,20 @@ export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ handle: string }>;
+}
+
+function htmlToPlainText(html: string): string {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Strip trailing "…"/"..." so a single CSS line-clamp ellipsis is not doubled. */
+function stripTrailingEllipsis(text: string): string {
+  return text.replace(/\s*(\.{3,}|…+)\s*$/u, '').trim();
 }
 
 function ProductJsonLd({ product }: { product: { handle: string; title: string; description: string | null; media?: Array<{ url: string }>; variants?: Array<{ price: string }> } }) {
@@ -49,6 +63,11 @@ export default async function ProductPage({ params }: Props) {
 
   const defaultVariant = product.variants?.[0];
   const copy = (key: string) => config[key] ?? DEFAULT_SITE_COPY[key] ?? key;
+  const miniDescPlain = product.description
+    ? stripTrailingEllipsis(htmlToPlainText(product.description))
+    : '';
+  const pdpCtaClass =
+    'btn inline-flex w-full flex-1 items-center justify-center rounded-lg border border-black bg-black px-6 py-3 text-center text-base font-medium text-white transition-colors hover:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto';
 
   return (
     <main className="section-pad">
@@ -85,11 +104,20 @@ export default async function ProductPage({ params }: Props) {
                 )}
               </p>
             )}
-            {product.description && (
-              <div className="mt-6 prose-custom">
-                <p>{product.description}</p>
-              </div>
+            {defaultVariant && defaultVariant.inventory_quantity > 0 && (
+              <p className="mt-6 text-sm leading-relaxed text-[rgb(var(--color-muted))]">
+                {copy('product.orderToday')}
+              </p>
             )}
+            {miniDescPlain ? (
+              <p
+                className={`text-sm leading-relaxed text-[rgb(var(--color-muted))] line-clamp-3 ${
+                  defaultVariant && defaultVariant.inventory_quantity > 0 ? 'mt-5' : 'mt-6'
+                }`}
+              >
+                {miniDescPlain}
+              </p>
+            ) : null}
             {product.variants && product.variants.length > 1 && (
               <div className="mt-6 p-4 rounded-lg bg-[rgb(var(--color-card))]">
                 <p className="text-sm font-semibold text-[rgb(var(--color-foreground))] mb-2">{copy('product.variants')}</p>
@@ -104,12 +132,20 @@ export default async function ProductPage({ params }: Props) {
               </div>
             )}
             {defaultVariant && defaultVariant.inventory_quantity > 0 && (
-              <div className="mt-8">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <AddToCartProduct
                   productId={product.id}
                   variantId={defaultVariant.id}
                   price={defaultVariant.price}
                   title={product.title}
+                  className={pdpCtaClass}
+                />
+                <BuyNowProduct
+                  productId={product.id}
+                  variantId={defaultVariant.id}
+                  price={defaultVariant.price}
+                  title={product.title}
+                  className={pdpCtaClass}
                 />
               </div>
             )}

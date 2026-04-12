@@ -116,6 +116,25 @@ https://<your-vercel-domain>/apps/instagram-reels?handles=instagram&limit=10
    - Add Instagram handle blocks
    - Save
 
+### Shopify CLI: 502 “Failed to render storefront” / Response body disturbed or locked
+
+If `shopify theme dev` (or another command that **proxies your headless storefront**) fails with **502 Bad Gateway** and a stack trace mentioning **`patchProxiedResponseHeaders`**, **`extractBody`**, or **`Response body object should not be disturbed or locked`**, that usually comes from **Node.js 22+** and **stricter `fetch` / `Response` handling** in Node’s undici while the CLI patches the proxied HTTP response—not from this repo’s Next.js theme code.
+
+**What to do:**
+
+1. **Run Shopify CLI on Node 20 LTS** (recommended for `shopify` until CLI fully supports Node 22 for this path), for example:
+   ```bash
+   nvm install 20
+   nvm use 20
+   npm i -g @shopify/cli@latest
+   shopify version
+   ```
+   Then retry `shopify theme dev` (or your storefront preview command).
+
+2. **Upgrade the global CLI** so you pick up proxy fixes (e.g. skipping unsafe response patching for certain status codes): `npm i -g @shopify/cli@latest`.
+
+3. If it still fails, run the **Next.js storefront** directly (`npm run storefront` → http://localhost:3000) to confirm the app is fine; the failure is between **CLI proxy ↔ Node**.
+
 ### Response shape
 
 Returns:

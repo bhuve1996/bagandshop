@@ -93,10 +93,8 @@
                       <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
                     </div>  
                     {% comment %}{% include 'addthis' %}{% endcomment %}
-                    {% if settings.product_short_desc %}
+                    {% if settings.product_short_desc == '1' or settings.product_short_desc == '2' %}
                     <div class="short-description-detail">
-                      {% if settings.product_short_desc %}
-                      <div class="short-description-detail">
                         <div class="short-description">
                           {%- assign description = product.description -%} 
                           {%- if description contains '[countdown]' -%}
@@ -118,8 +116,29 @@
                             {%- if settings.product_short_desc == '1' -%}  
                             {%- assign description = description | strip_html | truncatewords: 30 -%}
                             {%- endif -%}
-                          {%- endif -%} 
-                          
+                          {%- endif -%}
+                          {%- assign description = description | strip -%}
+                          {%- assign _dlen = description | size -%}
+                          {%- if _dlen > 0 -%}
+                            {%- assign _i1 = _dlen | minus: 1 -%}
+                            {%- if _i1 >= 0 -%}
+                              {%- assign _c1 = description | slice: _i1, 1 -%}
+                              {%- if _c1 == '…' -%}
+                                {%- assign description = description | slice: 0, _i1 | strip -%}
+                                {%- assign _dlen = description | size -%}
+                              {%- endif -%}
+                            {%- endif -%}
+                          {%- endif -%}
+                          {%- for _n in (1..2) -%}
+                            {%- assign _dlen = description | size -%}
+                            {%- if _dlen >= 3 -%}
+                              {%- assign _st = _dlen | minus: 3 -%}
+                              {%- assign _t3 = description | slice: _st, 3 -%}
+                              {%- if _t3 == '...' -%}
+                                {%- assign description = description | slice: 0, _st | strip -%}
+                              {%- endif -%}
+                            {%- endif -%}
+                          {%- endfor -%}
                           {% if settings.language_enable %}
                           <div class="lang1">{{ description | split: '[lang2]' | first }}</div>
                           <div class="lang2">{{ description | split: '[lang2]' | last }}</div>
@@ -127,8 +146,6 @@
                           {{ description | split: '[lang2]' | first }}
                           {% endif %}  
                         </div>
-                      </div> 
-                      {% endif %}
                     </div> 
                     {% endif %}  
                     <div class="middle-product-detail">

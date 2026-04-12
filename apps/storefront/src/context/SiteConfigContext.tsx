@@ -14,10 +14,13 @@ export function SiteConfigProvider({
   children: React.ReactNode;
   initialCopy: Record<string, string>;
 }) {
-  const value = useMemo(
-    () => ({ copy: { ...DEFAULT_SITE_COPY, ...initialCopy } }),
-    [initialCopy],
-  );
+  const value = useMemo(() => {
+    const merged: Record<string, string> = { ...DEFAULT_SITE_COPY };
+    for (const [key, val] of Object.entries(initialCopy)) {
+      if (val != null && String(val).trim() !== '') merged[key] = val;
+    }
+    return { copy: merged };
+  }, [initialCopy]);
   return (
     <SiteConfigContext.Provider value={value}>
       {children}

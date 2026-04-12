@@ -17,6 +17,16 @@ export const DEFAULT_SITE_COPY: Record<string, string> = {
   'nav.logout': 'Logout',
   'nav.login': 'Login',
   'nav.register': 'Register',
+  'nav.trackOrder': 'Track order',
+
+  // Track order (guest lookup)
+  'trackOrder.title': 'Track your order',
+  'trackOrder.description':
+    'Enter your order number and the email you used at checkout to see status and details.',
+  'trackOrder.orderNumber': 'Order number',
+  'trackOrder.email': 'Email',
+  'trackOrder.submit': 'View order',
+  'trackOrder.missingFields': 'Please enter both order number and email.',
 
   // Cart
   'cart.title': 'Cart',
@@ -45,6 +55,8 @@ export const DEFAULT_SITE_COPY: Record<string, string> = {
 
   // Product / PDP
   'product.addToCart': 'Add to cart',
+  'product.buyNow': 'Buy now',
+  'product.orderToday': 'Order today — ships within 1–2 business days.',
   'product.addComboToCart': 'Add combo to cart',
   'product.variants': 'Variants',
   'product.inStock': 'in stock',

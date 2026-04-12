@@ -178,9 +178,9 @@
         <div class="review-product-details">
           <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
         </div>
-        {% if settings.product_short_desc %}
+        {% if settings.product_short_desc == '1' or settings.product_short_desc == '2' %}
         <div class="short-description-detail" style="margin-top:-20px;">
-          {% if settings.product_short_desc %}
+          {% if settings.product_short_desc == '1' or settings.product_short_desc == '2' %}
           <div class="short-description-detail">
             <div class="short-description"> 
               {%- assign description = product.description -%} 

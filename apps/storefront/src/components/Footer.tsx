@@ -24,6 +24,7 @@ export function Footer() {
               <li><Link href="/collections" className="text-sm text-[rgb(var(--color-muted))] hover:text-[rgb(var(--color-foreground))] transition-colors">{t('nav.collections')}</Link></li>
               <li><Link href="/combos" className="text-sm text-[rgb(var(--color-muted))] hover:text-[rgb(var(--color-foreground))] transition-colors">{t('nav.combos')}</Link></li>
               <li><Link href="/cart" className="text-sm text-[rgb(var(--color-muted))] hover:text-[rgb(var(--color-foreground))] transition-colors">{t('nav.cart')}</Link></li>
+              <li><Link href="/track-order" className="text-sm text-[rgb(var(--color-muted))] hover:text-[rgb(var(--color-foreground))] transition-colors">{t('nav.trackOrder')}</Link></li>
             </ul>
           </div>
           <div>

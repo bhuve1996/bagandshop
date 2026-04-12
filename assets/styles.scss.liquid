@@ -1092,7 +1092,8 @@ div.limited_wrap {
   position: fixed;
   top: 0;
   left: -250px;
-  z-index: 999;
+  /* Above sticky .header-wrapper, .bs-navbar-collapse (1000), and SCSS cart layers (~1e6); below cart JS inline max only when cart is open */
+  z-index: 2147483646;
   width: 250px;
   height: 100%;
   overflow-y: scroll;
@@ -1175,12 +1176,28 @@ div.limited_wrap {
   width: 100%;
   height: 100%;
   background-color: #000;
-  z-index: 998;
+  z-index: 2147483645;
   opacity: 0;
   filter: alpha(opacity=0);
   visibility: hidden;
   transition: all 0.3s;
 }
+
+/* Drawer above sticky + desktop header bars (mini-cart SCSS uses z up to 1e6; theme.js cart hover uses 2^31-1) */
+body.mobile-nav-shown [data-section-type="header-section"] {
+  position: relative;
+  z-index: 2147483640 !important;
+  overflow: visible !important;
+}
+body.mobile-nav-shown .main-section-header {
+  overflow: visible !important;
+}
+
+/* Background scroll is blocked via wheel/touchmove in theme.js (no body fixed — avoids scroll jump). */
+body.mobile-nav-shown {
+  overscroll-behavior: none;
+}
+
 body:not(.template-index) {
   .header-container{
     &.type1 {
@@ -10383,8 +10400,11 @@ body > .cart-wrapper .cart-checkout .actions .btn-button.checkout-cart:hover {
         }
       }
     }
+    .short-description-detail {
+      margin-top: 4px;
+    }
     .short-description {
-      padding: 23px 0 20px; 
+      padding: 18px 0 18px; 
       font-size: 16px;
       font-weight: 400;
       line-height:25px;
@@ -10812,11 +10832,12 @@ body > .cart-wrapper .cart-checkout .actions .btn-button.checkout-cart:hover {
       }
       .button-wrapper {  
         position:relative;
-        .btn-cart { 
-          background-color: transparent;
-          border: #0063d1 solid 2px;
-          color: #0063d1;
-          font-weight: 400;
+        .btn-cart.add-to-cart,
+        .btn-cart.buy-now-btn { 
+          background-color: #000000;
+          border: 2px solid #000000;
+          color: #ffffff;
+          font-weight: 500;
           display: inline-block;
           border-radius: 30px; 
           padding: 14px 101px; 
@@ -10827,25 +10848,55 @@ body > .cart-wrapper .cart-checkout .actions .btn-button.checkout-cart:hover {
           height:55px; 
           margin-right: 10px;
           transition: all 0.3s ease;
+          span,
+          span span {
+            color: #ffffff;
+          }
           &:hover {
-            background-color: #0063d1;
-            color: #fff;
+            background-color: #1a1a1a;
+            border-color: #1a1a1a;
+            color: #ffffff;
+            span,
+            span span {
+              color: #ffffff;
+            }
           }
         }
-        .buy-now-btn {
-          background-color: #28a745;
-          border: #28a745 solid 2px;
-          color: #fff;
+        .btn-cart.notify-me-btn {
+          background-color: transparent;
+          border: #0063d1 solid 2px;
+          color: #0063d1;
+          font-weight: 400;
+          display: inline-block;
+          border-radius: 30px;
+          padding: 14px 101px;
+          font-size: 15px;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 18px;
+          height: 55px;
+          margin-right: 10px;
+          transition: all 0.3s ease;
+          span,
+          span span {
+            color: #0063d1;
+          }
           &:hover {
-            background-color: #218838;
-            border-color: #218838;
-            color: #fff;
+            background-color: #0063d1;
+            border-color: #0063d1;
+            color: #ffffff;
+            span,
+            span span {
+              color: #ffffff;
+            }
           }
         }
         
         // Responsive design for mobile devices
         @media (max-width: 767px) {
-          .btn-cart, .buy-now-btn {
+          .btn-cart.add-to-cart,
+          .btn-cart.buy-now-btn,
+          .btn-cart.notify-me-btn {
             display: block;
             width: 100%;
             margin-right: 0;
@@ -13924,26 +13975,6 @@ body .container {
         
         &:hover {
           background: #166fe5;
-        }
-      }
-      
-      // Twitter styling
-      &.twitter-share {
-        background: #1da1f2;
-        color: white;
-        
-        &:hover {
-          background: #0d8bd9;
-        }
-      }
-      
-      // Pinterest styling
-      &.pinterest-share {
-        background: #bd081c;
-        color: white;
-        
-        &:hover {
-          background: #a50719;
         }
       }
       

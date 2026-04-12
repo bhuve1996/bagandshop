@@ -44,13 +44,23 @@ export default async function RootLayout({
         <SiteConfigProvider initialCopy={siteCopy}>
           <CartProvider>
             <AuthProvider>
-              <Header />
-              <div className="min-h-[calc(100vh-4rem)] flex flex-col">
-                {children}
+              <div id="app-stack" className="relative z-0 flex min-h-screen flex-col">
+                <Header />
+                {/* Portal target inside app-stack so menu z-index competes with Header (body portals sit under Next.js root) */}
+                <div
+                  id="mobile-menu-portal"
+                  className="relative z-[99990] h-0 w-full shrink-0 overflow-visible"
+                />
+                <div
+                  id="storefront-scroll"
+                  className="min-h-[calc(100vh-4rem)] flex flex-col"
+                >
+                  {children}
+                </div>
+                <Footer />
+                <SocialWidget />
+                <ChatbotWidget />
               </div>
-              <Footer />
-              <SocialWidget />
-              <ChatbotWidget />
             </AuthProvider>
           </CartProvider>
         </SiteConfigProvider>

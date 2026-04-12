@@ -116,7 +116,7 @@ theme.Sections.prototype = _.assignIn({}, theme.Sections.prototype, {
 
 window.theme = window.theme || {};
 theme.Header = (function() { 
-  var cache = {}; 
+  var cache = {};
   function init() {
     $('.notice-toplink .btn-close').on('click', function(){ 
       createCookie('noticetoplink', 'true', 1);  
@@ -485,21 +485,43 @@ theme.Header = (function() {
         });
       }
     });  
+    /* Block background scroll without moving body (no position:fixed = no jump to top on open/close). */
+    var mobileNavScrollListenersOn = false;
+    function mobileNavPreventScrollBehind(e) {
+      if (!$('body').hasClass('mobile-nav-shown')) return;
+      if ($(e.target).closest('.mobile-nav').length) return;
+      e.preventDefault();
+    }
+    function setMobileNavScrollLock(on) {
+      if (on) {
+        if (mobileNavScrollListenersOn) return;
+        mobileNavScrollListenersOn = true;
+        document.addEventListener('wheel', mobileNavPreventScrollBehind, { passive: false, capture: true });
+        document.addEventListener('touchmove', mobileNavPreventScrollBehind, { passive: false, capture: true });
+      } else {
+        if (!mobileNavScrollListenersOn) return;
+        mobileNavScrollListenersOn = false;
+        document.removeEventListener('wheel', mobileNavPreventScrollBehind, { capture: true });
+        document.removeEventListener('touchmove', mobileNavPreventScrollBehind, { capture: true });
+      }
+    }
     $('.menu-icon, .mobile-nav-overlay').click(function(event) {
       if(!$('body').hasClass('md-mobile-menu'))
         $('body').addClass('md-mobile-menu');
       if(!$('body').hasClass('mobile-nav-shown')) {
-        $('body').addClass('mobile-nav-shown', function() { 
-          setTimeout(function(){
-            $(document).one("click",function(e) {
-              var target = e.target;
-              if (!$(target).is('.mobile-nav') && !$(target).parents().is('.mobile-nav')) {
-                $('body').removeClass('mobile-nav-shown');
-              }
-            });  
-          }, 111);
-        });
+        $('body').addClass('mobile-nav-shown');
+        setMobileNavScrollLock(true);
+        setTimeout(function(){
+          $(document).one("click",function(e) {
+            var target = e.target;
+            if (!$(target).is('.mobile-nav') && !$(target).parents().is('.mobile-nav')) {
+              setMobileNavScrollLock(false);
+              $('body').removeClass('mobile-nav-shown');
+            }
+          });  
+        }, 111);
       } else{
+        setMobileNavScrollLock(false);
         $('body').removeClass('mobile-nav-shown');
         $(".mobile-nav").removeClass("show");
       }
@@ -513,21 +535,24 @@ theme.Header = (function() {
       if($(window).width()<=991){
         if ($(".mobile-nav").hasClass("show")) {
           $(".mobile-nav").removeClass("show");
-          $(".mobile-nav").slideUp();
-          $('body').removeClass('mobile-nav-shown'); 
+          $(".mobile-nav").slideUp(250, function () {
+            setMobileNavScrollLock(false);
+            $('body').removeClass('mobile-nav-shown');
+          });
         } else {
           $(".mobile-nav").addClass("show");
           $(".mobile-nav").slideDown();
-          $('body').addClass('mobile-nav-shown', function() { 
-            setTimeout(function(){
-              $(document).one("click",function(e) {
-                var target = e.target;
-                if (!$(target).is('.mobile-nav') && !$(target).parents().is('.mobile-nav')) {
-                  $('body').removeClass('mobile-nav-shown');
-                }
-              });  
-            }, 111);
-          });
+          $('body').addClass('mobile-nav-shown');
+          setMobileNavScrollLock(true);
+          setTimeout(function(){
+            $(document).one("click",function(e) {
+              var target = e.target;
+              if (!$(target).is('.mobile-nav') && !$(target).parents().is('.mobile-nav')) {
+                setMobileNavScrollLock(false);
+                $('body').removeClass('mobile-nav-shown');
+              }
+            });  
+          }, 111);
         }
       }
     });

@@ -316,7 +316,26 @@ a:hover {
     }
   }
 }   
-.product-view .product-options-bottom .add-to-cart-box .button-wrapper .btn-cart {
+.product-view .product-options-bottom .add-to-cart-box .button-wrapper .btn-cart.add-to-cart,
+.product-view .product-options-bottom .add-to-cart-box .button-wrapper .btn-cart.buy-now-btn {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
+  span,
+  span span {
+    color: #ffffff;
+  }
+  &:hover {
+    border-color: #1a1a1a;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    span,
+    span span {
+      color: #ffffff;
+    }
+  }
+}
+.product-view .product-options-bottom .add-to-cart-box .button-wrapper .btn-cart.notify-me-btn {
   background-color:$AddToCartBackgroundColor;
   border-color: $AddToCartBorderColor;
   color: $AddToCartTextColor;

@@ -40,6 +40,13 @@
     scroll-behavior: smooth;
   }
 
+  /* Mobile nav drawer: overflow lock (used with Header inline styles + wheel/touch listeners) */
+  html.drawer-scroll-lock,
+  html.drawer-scroll-lock body {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+
   body {
     font-family: var(--font-body);
     color: rgb(var(--color-foreground));

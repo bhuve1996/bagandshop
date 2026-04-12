@@ -620,7 +620,7 @@
     "product_sku": false,
     "product_type": true,
     "product_vendor": false,
-    "product_short_desc": "1",
+    "product_short_desc": "0",
     "product_color_swatches_enable": true,
     "product_tags": true,
     "product_aspect_ratio": "0",

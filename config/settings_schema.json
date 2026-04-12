@@ -7943,6 +7943,7 @@
         "type": "radio",
         "id": "product_short_desc",
         "label": "Short description",
+        "info": "Theme editor or config/settings_data.json: set product_short_desc to \"0\" to hide, \"1\" for truncated excerpt, \"2\" for full short-description block.",
         "options": [
           {
             "value": "0",
