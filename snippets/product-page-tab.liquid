@@ -38,13 +38,15 @@
               {%- assign description = description | split:'[/accesories]' | last -%}
             {%- endif -%}
             {%- if description contains '[specifications]' -%}
-              {%- assign description = description | split:'[/specifications]' | last -%}
+              {%- assign description_before_specs = description | split: '[specifications]' | first -%}
+              {%- assign description_after_specs = description | split: '[/specifications]' | last -%}
+              {%- assign description = description_before_specs | append: description_after_specs -%}
             {%- endif -%}
             {% if settings.language_enable %}
-              <div class="lang1">{{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
-              <div class="lang2">{{ description | split: '[lang2]' | last | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
+              <div class="lang1 rte product-desc-rte">{{ description | split: '[lang2]' | first }}</div>
+              <div class="lang2 rte product-desc-rte">{{ description | split: '[lang2]' | last }}</div>
             {% else %}
-              {{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}
+              <div class="rte product-desc-rte">{{ description | split: '[lang2]' | first }}</div>
             {% endif %}
           </div>
         </div>
@@ -61,17 +63,22 @@
             {%- if description contains '[countdown]' -%}
               {%- assign description = description | split:'[/countdown]' | last -%}
             {%- endif -%}
+            {%- if product.description contains '[shortdesc]' -%}
+              {%- assign description = description | split:'[/shortdesc]' | last -%}
+            {%- endif -%}
             {%- if product.description contains '[accesories]' -%}
               {%- assign description = description | split:'[/accesories]' | last -%}
             {%- endif -%}
             {%- if description contains '[specifications]' -%}
-              {%- assign description = description | split:'[/specifications]' | last -%}
+              {%- assign description_before_specs = description | split: '[specifications]' | first -%}
+              {%- assign description_after_specs = description | split: '[/specifications]' | last -%}
+              {%- assign description = description_before_specs | append: description_after_specs -%}
             {%- endif -%}
             {% if settings.language_enable %}
-              <div class="lang1">{{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
-              <div class="lang2">{{ description | split: '[lang2]' | last | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}</div>
+              <div class="lang1 rte product-desc-rte">{{ description | split: '[lang2]' | first }}</div>
+              <div class="lang2 rte product-desc-rte">{{ description | split: '[lang2]' | last }}</div>
             {% else %}
-              {{ description | split: '[lang2]' | first | strip_html | strip_newlines | replace: '  ', ' ' | replace: '<p></p>', '' | replace: '<div></div>', '' }}
+              <div class="rte product-desc-rte">{{ description | split: '[lang2]' | first }}</div>
             {% endif %}
           </div>
         </div>
@@ -140,6 +147,34 @@
   .product-page-accordion { width: 100%; padding: 8px 0; }
   .product-page-accordion-item { margin-bottom: 0; border-bottom: 1px solid #e0e0e0; }
   .product-page-accordion-item:last-child { border-bottom: none; }
+  /* Top-level product tabs: primary navigation */
+  .product-page-accordion .container > .product-page-accordion-item > .product-page-accordion-toggle {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    padding: 16px 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    color: #222 !important;
+    user-select: none;
+  }
+  .product-page-accordion .container > .product-page-accordion-item > .product-page-accordion-toggle span {
+    font-weight: 700 !important;
+    font-size: 17px !important;
+  }
+  .product-page-accordion .container > .product-page-accordion-item > .product-page-accordion-content {
+    display: none !important;
+    padding: 20px 0 22px !important;
+    border-top: 2px solid #e8e8e8 !important;
+  }
+  .product-page-accordion .container > .product-page-accordion-item > .product-page-accordion-content.active {
+    display: block !important;
+  }
+  /* Shared toggle / icon (nested uses overrides below) */
   .product-page-accordion-toggle {
     display: flex !important;
     justify-content: space-between !important;
@@ -162,40 +197,188 @@
     border-top: 1px solid #f0f0f0 !important;
   }
   .product-page-accordion-content.active { display: block !important; }
+  .product-page-accordion-content .rte {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 300;
+    color: #555353;
+  }
+  .product-page-accordion-content .rte img { max-width: 100%; height: auto; }
+  .product-page-accordion-content .rte p { margin: 0 0 15px; }
+  .product-page-accordion-content .rte ul {
+    list-style: disc outside;
+    padding-left: 1.1em;
+    margin-bottom: 15px;
+  }
+  .product-page-accordion-content .rte ul li { list-style: inherit; }
+  .product-page-accordion-content .rte ol {
+    list-style: decimal outside;
+    padding-left: 1.25em;
+    margin-bottom: 15px;
+  }
+  .product-page-accordion-content .rte ol li { list-style: inherit; margin-bottom: 6px; }
+  .product-page-accordion-content .rte h3,
+  .product-page-accordion-content .rte h2,
+  .product-page-accordion-content .rte h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: #090909;
+  }
+  /* In-description sections: secondary, grouped “detail” UI */
+  .product-desc-sections {
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px 14px 12px 16px;
+    background: #f7f8fa;
+    border: 1px solid #e4e6eb;
+    border-radius: 10px;
+    border-left: 4px solid #0063d1;
+  }
+  .product-desc-lead {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #dce0e8;
+    color: #444;
+  }
+  .product-desc-sub-accordion {
+    border-bottom: 1px solid #e4e6eb;
+  }
+  .product-desc-sub-accordion:last-child { border-bottom: none; }
+  .product-desc-sub-accordion > .product-page-accordion-toggle {
+    padding: 10px 4px 10px 0 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    color: #3d3d3d !important;
+  }
+  .product-desc-sub-accordion > .product-page-accordion-toggle span {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+  .product-desc-sub-accordion > .product-page-accordion-toggle .accordion-icon {
+    font-size: 15px !important;
+    opacity: 0.75;
+  }
+  .product-desc-sub-accordion > .product-page-accordion-content {
+    padding: 8px 0 12px 12px !important;
+    margin-left: 2px;
+    border-top: 1px solid #e4e6eb !important;
+    border-left: 2px solid #e4e6eb;
+  }
+  .product-desc-sub-accordion > .product-page-accordion-content .rte {
+    font-size: 15px;
+    line-height: 1.55;
+  }
 </style>
 
 <script>
 (function () {
-  function bindProductAccordion() {
-    var root = document.querySelector('.product-page-accordion');
-    if (!root) return;
-    var toggles = root.querySelectorAll('.product-page-accordion-toggle');
-    toggles.forEach(function (toggle) {
-      if (toggle.dataset.accordionBound) return;
-      toggle.dataset.accordionBound = '1';
-      function onActivate() {
-        var content = toggle.nextElementSibling;
-        var icon = toggle.querySelector('.accordion-icon');
-        var isOpen = toggle.classList.toggle('active');
-        if (content && content.classList) content.classList.toggle('active', isOpen);
-        if (icon) {
-          icon.classList.remove('icon-plus', 'icon-minus');
-          icon.classList.add(isOpen ? 'icon-minus' : 'icon-plus');
+  function isSectionHeading(node) {
+    if (!node || node.nodeType !== 1) return false;
+    var t = node.tagName;
+    return t === 'H2' || t === 'H3' || t === 'H4';
+  }
+
+  function sectionizeProductDescriptions(root) {
+    root.querySelectorAll('.product-desc-rte').forEach(function (rte) {
+      if (rte.getAttribute('data-desc-sectionized')) return;
+      var queue = [];
+      while (rte.firstChild) queue.push(rte.removeChild(rte.firstChild));
+      if (!queue.some(isSectionHeading)) {
+        while (queue.length) rte.appendChild(queue.shift());
+        rte.setAttribute('data-desc-sectionized', 'flat');
+        return;
+      }
+      var sections = document.createElement('div');
+      sections.className = 'product-desc-sections';
+      var lead = null;
+      while (queue.length && !isSectionHeading(queue[0])) {
+        if (!lead) lead = document.createElement('div');
+        lead.className = 'product-desc-lead rte';
+        lead.appendChild(queue.shift());
+      }
+      if (lead && lead.childNodes.length) sections.appendChild(lead);
+      while (queue.length) {
+        var h = queue.shift();
+        if (!isSectionHeading(h)) continue;
+        var item = document.createElement('div');
+        item.className = 'product-page-accordion-item product-desc-sub-accordion';
+        var toggle = document.createElement('div');
+        toggle.className = 'product-page-accordion-toggle';
+        toggle.setAttribute('role', 'button');
+        toggle.setAttribute('tabindex', '0');
+        var span = document.createElement('span');
+        span.textContent = (h.textContent || '').replace(/\s+/g, ' ').trim();
+        var icon = document.createElement('i');
+        icon.className = 'icon-plus accordion-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        toggle.appendChild(span);
+        toggle.appendChild(icon);
+        var panel = document.createElement('div');
+        panel.className = 'product-page-accordion-content';
+        var inner = document.createElement('div');
+        inner.className = 'product-tabs-content-inner clearfix rte';
+        item.appendChild(toggle);
+        item.appendChild(panel);
+        panel.appendChild(inner);
+        while (queue.length && !isSectionHeading(queue[0])) inner.appendChild(queue.shift());
+        sections.appendChild(item);
+      }
+      rte.appendChild(sections);
+      rte.setAttribute('data-desc-sectionized', '1');
+      var firstToggle = sections.querySelector('.product-desc-sub-accordion > .product-page-accordion-toggle');
+      var firstPanel = firstToggle && firstToggle.nextElementSibling;
+      if (firstToggle && firstPanel) {
+        firstToggle.classList.add('active');
+        firstPanel.classList.add('active');
+        var ic = firstToggle.querySelector('.accordion-icon');
+        if (ic) {
+          ic.classList.remove('icon-plus');
+          ic.classList.add('icon-minus');
         }
       }
-      toggle.addEventListener('click', onActivate);
-      toggle.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onActivate();
-        }
-      });
     });
   }
+
+  function bindProductAccordionDelegated(root) {
+    if (root.dataset.accordionDelegated) return;
+    root.dataset.accordionDelegated = '1';
+    function activateToggle(toggle) {
+      var content = toggle.nextElementSibling;
+      var icon = toggle.querySelector('.accordion-icon');
+      var isOpen = toggle.classList.toggle('active');
+      if (content && content.classList) content.classList.toggle('active', isOpen);
+      if (icon) {
+        icon.classList.remove('icon-plus', 'icon-minus');
+        icon.classList.add(isOpen ? 'icon-minus' : 'icon-plus');
+      }
+    }
+    root.addEventListener('click', function (e) {
+      var toggle = e.target.closest('.product-page-accordion-toggle');
+      if (!toggle || !root.contains(toggle)) return;
+      activateToggle(toggle);
+    });
+    root.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var toggle = e.target.closest('.product-page-accordion-toggle');
+      if (!toggle || !root.contains(toggle)) return;
+      e.preventDefault();
+      activateToggle(toggle);
+    });
+  }
+
+  function init() {
+    var root = document.querySelector('.product-page-accordion');
+    if (!root) return;
+    sectionizeProductDescriptions(root);
+    bindProductAccordionDelegated(root);
+  }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindProductAccordion);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    bindProductAccordion();
+    init();
   }
 })();
 </script>
