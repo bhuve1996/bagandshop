@@ -281,12 +281,55 @@
     return t === 'H2' || t === 'H3' || t === 'H4';
   }
 
+  /** e.g. <p><strong>Features:</strong></p> — short label row, not body copy */
+  function isPseudoSectionTitle(node) {
+    if (!node || node.nodeType !== 1 || node.tagName !== 'P') return false;
+    var firstEl = node.firstElementChild;
+    if (!firstEl || firstEl.tagName !== 'STRONG') return false;
+    var pText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+    if (pText.length > 160) return false;
+    var sText = (firstEl.textContent || '').replace(/\s+/g, ' ').trim();
+    if (sText.length < 2 || sText.length > 130) return false;
+    var after = '';
+    var seen = false;
+    for (var ch = node.firstChild; ch; ch = ch.nextSibling) {
+      if (ch === firstEl) {
+        seen = true;
+        continue;
+      }
+      if (seen) after += ch.nodeType === 3 ? ch.textContent : ch.textContent || '';
+    }
+    after = after.replace(/\s+/g, ' ').trim();
+    if (after.length > 80) return false;
+    return true;
+  }
+
+  function sectionMode(queue) {
+    if (queue.some(isSectionHeading)) return 'heading';
+    if (queue.some(isPseudoSectionTitle)) return 'pseudo';
+    return null;
+  }
+
+  function isSectionStart(node, mode) {
+    if (mode === 'heading') return isSectionHeading(node);
+    if (mode === 'pseudo') return isPseudoSectionTitle(node);
+    return false;
+  }
+
+  function titleFromSectionNode(node, mode) {
+    if (mode === 'heading') return (node.textContent || '').replace(/\s+/g, ' ').trim();
+    var fs = node.firstElementChild;
+    if (fs && fs.tagName === 'STRONG') return (fs.textContent || '').replace(/\s+/g, ' ').trim();
+    return (node.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
   function sectionizeProductDescriptions(root) {
     root.querySelectorAll('.product-desc-rte').forEach(function (rte) {
       if (rte.getAttribute('data-desc-sectionized')) return;
       var queue = [];
       while (rte.firstChild) queue.push(rte.removeChild(rte.firstChild));
-      if (!queue.some(isSectionHeading)) {
+      var mode = sectionMode(queue);
+      if (!mode) {
         while (queue.length) rte.appendChild(queue.shift());
         rte.setAttribute('data-desc-sectionized', 'flat');
         return;
@@ -294,7 +337,7 @@
       var sections = document.createElement('div');
       sections.className = 'product-desc-sections';
       var lead = null;
-      while (queue.length && !isSectionHeading(queue[0])) {
+      while (queue.length && !isSectionStart(queue[0], mode)) {
         if (!lead) lead = document.createElement('div');
         lead.className = 'product-desc-lead rte';
         lead.appendChild(queue.shift());
@@ -302,7 +345,7 @@
       if (lead && lead.childNodes.length) sections.appendChild(lead);
       while (queue.length) {
         var h = queue.shift();
-        if (!isSectionHeading(h)) continue;
+        if (!isSectionStart(h, mode)) continue;
         var item = document.createElement('div');
         item.className = 'product-page-accordion-item product-desc-sub-accordion';
         var toggle = document.createElement('div');
@@ -310,7 +353,7 @@
         toggle.setAttribute('role', 'button');
         toggle.setAttribute('tabindex', '0');
         var span = document.createElement('span');
-        span.textContent = (h.textContent || '').replace(/\s+/g, ' ').trim();
+        span.textContent = titleFromSectionNode(h, mode);
         var icon = document.createElement('i');
         icon.className = 'icon-plus accordion-icon';
         icon.setAttribute('aria-hidden', 'true');
@@ -323,8 +366,14 @@
         item.appendChild(toggle);
         item.appendChild(panel);
         panel.appendChild(inner);
-        while (queue.length && !isSectionHeading(queue[0])) inner.appendChild(queue.shift());
+        while (queue.length && !isSectionStart(queue[0], mode)) inner.appendChild(queue.shift());
         sections.appendChild(item);
+      }
+      var subs = sections.querySelectorAll('.product-desc-sub-accordion');
+      if (!subs.length) {
+        while (sections.firstChild) rte.appendChild(sections.firstChild);
+        rte.setAttribute('data-desc-sectionized', 'flat');
+        return;
       }
       rte.appendChild(sections);
       rte.setAttribute('data-desc-sectionized', '1');
